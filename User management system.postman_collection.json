@@ -1,0 +1,540 @@
+{
+	"info": {
+		"_postman_id": "943f1790-41df-4c19-8534-ddb6475cc7f0",
+		"name": "User management system copy",
+		"description": "Uptime Bot API.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "USER_GET",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "df7752dd6fb52ad722cf8cff0bc54974085daea734d90ba076436df5674af031",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"action\": \"USER_GET\",\n\t\"email\": \"info@talaikis.com\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "USER_CREATE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"type": "text",
+						"value": ""
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"info@talaikis.com\",\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"password\": \"testpassword369\",\r\n    \"tosAgreement\": true,\r\n    \"action\": \"USER_CREATE\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "USER_EDIT",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "df7752dd6fb52ad722cf8cff0bc54974085daea734d90ba076436df5674af031",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"type": "text",
+						"value": ""
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"info@talaikis.com\",\r\n    \"firstName\": \"John Renamed\",\r\n    \"lastName\": \"Doe Renamed\",\r\n    \"password\": \"testpassword369\",\r\n    \"action\": \"USER_EDIT\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "USER_DESTROY",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "343a85066627a7d0ab2f554ecb4bfae01f0139567c5b7adba62054c67b5ac558",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"type": "text",
+						"value": ""
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action\": \"USER_DESTROY\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TOKEN_GET",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"tokenId\": \"df7752dd6fb52ad722cf8cff0bc54974085daea734d90ba076436df5674af031\",\n\t\"action\": \"TOKEN_GET\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000"
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TOKEN_EXTEND",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"tokenId\": \"df7752dd6fb52ad722cf8cff0bc54974085daea734d90ba076436df5674af031\",\n\t\"action\": \"TOKEN_EXTEND\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TOKEN_DESTROY",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"tokenId\": \"343a85066627a7d0ab2f554ecb4bfae01f0139567c5b7adba62054c67b5ac558\",\r\n    \"action\": \"TOKEN_DESTROY\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/tokens",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"tokens"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TOKEN_CREATE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"email\": \"info@talaikis.com\",\r\n    \"password\": \"testpassword369\",\r\n    \"action\": \"TOKEN_CREATE\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "TOKEN_CREATE",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\t\"email\": \"info@talaikis.com\",\r\n    \"password\": \"testpassword369\",\r\n    \"action\": \"TOKEN_CREATE\"\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 08 Feb 2019 20:45:11 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{}"
+				}
+			]
+		},
+		{
+			"name": "CONFIRM [account]",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"email\": \"info@talaikis,com\",\r\n    \"token\": \"d449251f6d5f97f82d2596b3ccb8e433851a28468928dfa7cf03f306a587f992\",\r\n    \"action\": \"CONFIRM\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RESET_CREATE",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"email\": \"info@talaikis.com\",\r\n    \"action\": \"RESET_CREATE\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REFER_REFRR",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "343a85066627a7d0ab2f554ecb4bfae01f0139567c5b7adba62054c67b5ac558",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action\": \"REFER_REFER\",\r\n    \"to\": \"talaikis.tadas@gmail.com\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/refer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"refer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REFER_USE",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action\": \"REFER_USE\",\r\n    \"token\": \"c026dfd2-f3f9-451a-8351-6ecef3643600\"\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:3000/refer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"refer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REFER_REGISTER",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "133f9a86b398e177c29a8e47befaccf3537f90a29677edc7d6e5778f53e50998",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"action\": \"REFER_REGISTER\",\r\n    \"token\": \"c026dfd2-f3f9-451a-8351-6ecef3643600\",\r\n    \"from\": \"info@talaikis.com\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/refer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"refer"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "d467e3d0-2fad-4294-9035-037145e63924",
+				"type": "string"
+			}
+		]
+	}
+}
