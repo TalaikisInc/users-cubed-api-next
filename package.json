@@ -17,7 +17,7 @@
     "users"
   ],
   "author": "Tadas Talaikis <info@talaikis.com>",
-  "license": "MIT",
+  "license": "GPL-v3",
   "bugs": {
     "url": "https://github.com/TalaikisInc/users-cubed-api-next/issues"
   },

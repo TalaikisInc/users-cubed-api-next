@@ -34,6 +34,9 @@ npm install -g serverless @aws-amplify/cli
 ## Deploy
 
 ```bash
+amplify init
+amplify add storage
+amplify push
 sls deploy
 # test:
 sls deploy --env test
@@ -42,3 +45,5 @@ sls deploy --env test
 ## Test
 
 ## Licence
+
+GPL v3
