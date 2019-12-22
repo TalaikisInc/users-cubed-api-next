@@ -7,10 +7,9 @@ strictEqual(typeof process.env.MAILGUN_FROM, 'string', 'You need MAILGUN_FROM!')
 strictEqual(typeof process.env.MAILGUN_DOMAIN, 'string', 'You need MAILGUN_DOMAIN!')
 strictEqual(typeof process.env.MAILGUN_KEY, 'string', 'You need MAILGUN_KEY!')
 
-export const API_KEY = process.env.API_KEY
-
 export const MOBILE_PROVIDER = 'twilio'
 export const EMAIL_PROVIDER = 'mailgun'
+export const DB_TYPE = 's3'
 
 export const MAILGUN = {
   nameFrom: process.env.MAILGUN_FROM,
@@ -28,11 +27,19 @@ export const HASH_SECRET = process.env.HASH_SECRET
 
 export const COMPANY = 'Talaikis Ltd.'
 
+export const BASE_URL = 'https://'
+
 export const FIRST_CONFIRM = 'email'
 
 export const USER_TOKEN_EXPIRY = 60 * 60
 
 export const FRONTEND_URL = 'https://cubed.talaikis.com/'
+
+export const ENCRYPTION_SALT = 'sd'
+
+export const ENCRYPTION_PASSWORD = ''
+
+export const USERS_BUCKET_NAME = process.env.USERS_BUCKET_NAME
 
 export const WORKERS = {
   tokenClean: 60 * 60,

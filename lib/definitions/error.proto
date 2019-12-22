@@ -1,0 +1,6 @@
+package cubed;
+syntax = "proto3";
+
+message Error {
+  string error = 1;
+}

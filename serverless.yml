@@ -1,100 +1,87 @@
-service: users-cubed-api-next
-app: users-cubed-api-next
+service: users-cubed-api
+app: users-cubed-api
 org: talaikis
 
 plugins:
   - serverless-dotenv-plugin
+  - serverless-apigw-binary
+  - serverless-api-compression
+  - serverless-plugin-log-retention
+  - serverless-plugin-aws-alerts
 
 provider:
   name: aws
   runtime: nodejs12.x
   region: ${env:REGION}
   stage: ${env:STAGE}
+  apiKeys:
+    - ${env:API_KEY}
+  apiGateway:
+    apiKeySourceType: HEADER
+    minimumCompressionSize: 1024
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+  functions:
+    app:
+      handler: index.handler
+      environment:
+        HASH_SECRET: ${env:HASH_SECRET}
+        TWILIO_FROM: ${env:TWILIO_FROM}
+        TWILIO_SID: ${env:TWILIO_SID}
+        TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
+        MAILGUN_FROM: ${env:MAILGUN_FROM}
+        MAILGUN_DOMAIN: ${env:MAILGUN_DOMAIN}
+        MAILGUN_KEY: ${env:MAILGUN_KEY}
+        FACEBOOK_APP_ID: ${env:FACEBOOK_APP_ID}
+        FACEBOOK_APP_SECRET: ${env:FACEBOOK_APP_SECRET}
+        GOOGLE_CLIENT_ID: ${env:GOOGLE_CLIENT_ID}
+        GOOGLE_CLIENT_SECRET: ${env:GOOGLE_CLIENT_SECRET}
+        STRIPE_TEST_SECRET: ${env:STRIPE_TEST_SECRET}
+        STRIPE_LIVE_SECRET: ${env:STRIPE_LIVE_SECRET}
+        AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
+        AUTH0_CLIENT_ID: ${env:AUTH0_CLIENT_ID}
+      events:
+        - http:
+          path: /
+          method: post
+          private: true
+          cors: true
+provisionedConcurrency: 0
 
-# you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
-
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
-
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
-
-functions:
-  app:
-    handler: index.handler
-#    The following are a few example events you can configure
-#    NOTE: Please make sure to change your handler code to work with those events
-#    Check the event documentation for details
-#    events:
-#      - http:
-#          path: users/create
-#          method: get
-#      - websocket: $connect
-#      - s3: ${env:BUCKET}
-#      - schedule: rate(10 minutes)
-#      - sns: greeter-topic
-#      - stream: arn:aws:dynamodb:region:XXXXXX:table/foo/stream/1970-01-01T00:00:00.000
-#      - alexaSkill: amzn1.ask.skill.xx-xx-xx-xx
-#      - alexaSmartHome: amzn1.ask.skill.xx-xx-xx-xx
-#      - iot:
-#          sql: "SELECT * FROM 'some_topic'"
-#      - cloudwatchEvent:
-#          event:
-#            source:
-#              - "aws.ec2"
-#            detail-type:
-#              - "EC2 Instance State-change Notification"
-#            detail:
-#              state:
-#                - pending
-#      - cloudwatchLog: '/aws/lambda/hello'
-#      - cognitoUserPool:
-#          pool: MyUserPool
-#          trigger: PreSignUp
-#      - alb:
-#          listenerArn: arn:aws:elasticloadbalancing:us-east-1:XXXXXX:listener/app/my-load-balancer/50dc6c495c0c9188/
-#          priority: 1
-#          conditions:
-#            host: example.com
-#            path: /hello
-
-#    Define function environment variables here
-#    environment:
-#      variable2: value2
-
-# you can add CloudFormation resource templates here
-#resources:
-#  Resources:
-#    NewResource:
-#      Type: AWS::S3::Bucket
-#      Properties:
-#        BucketName: my-new-bucket
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+custom:
+  bucket: <your-bucket-name>
+  contentCompression: 1024
+  logRetentionInDays: 30
+  apigwBinary:
+    types:
+      - 'application/x-protobuf'
+  alerts:
+    dashboards: true
+    nameTemplate: $[functionName]-$[metricName]-Alarm
+    topics:
+      ok: ${self:service}-${opt:stage}-alerts-ok
+      alarm: ${self:service}-${opt:stage}-alerts-alarm
+      insufficientData: ${self:service}-${opt:stage}-alerts-insufficientData
+    definitions:
+      functionErrors:
+        period: 300
+      customAlarm:
+        description: 'My custom alarm'
+        namespace: 'AWS/Lambda'
+        nameTemplate: $[functionName]-Duration-IMPORTANT-Alarm
+        metric: duration
+        threshold: 200
+        statistic: Average
+        period: 300
+        evaluationPeriods: 1
+        datapointsToAlarm: 1
+        comparisonOperator: GreaterThanOrEqualToThreshold
+    alarms:
+      - functionThrottles
+      - functionErrors
+      - functionInvocations
+      - functionDuration

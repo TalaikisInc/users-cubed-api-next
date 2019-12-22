@@ -23,6 +23,5 @@ export default {
     USE: 'REFER_USE',
     REGISTER: 'REFER_REGISTER'
   },
-  PING: 'PING',
   NOT_FOUND: 'NOT_FOUND'
 }

@@ -1,0 +1,12 @@
+deploy:
+  image: node:latest
+  environment:
+    - HOME=/home
+  volumes:
+    - .:/actions
+    - .:/handlers
+    - .:/amplify
+    - .:/lib
+    - $HOME/.aws:/home/.aws
+  working_dir: /src
+  command: "./deploy.sh"
