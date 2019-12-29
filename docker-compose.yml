@@ -3,10 +3,7 @@ deploy:
   environment:
     - HOME=/home
   volumes:
-    - .:/actions
-    - .:/handlers
-    - .:/amplify
-    - .:/lib
+    - .:/app
     - $HOME/.aws:/home/.aws
   working_dir: /src
   command: "./deploy.sh"

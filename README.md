@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://talaikis.com/">
+    <img alt="Talaikis Ltd." src="https://github.com/TalaikisInc/talaikis.com_react/blob/master/media/logo.png" width="228">
+  </a>
+</p>
+
 # Users Cubed
 
 This is the 4th generation user management/ CMS system for rapid project starts.
@@ -23,8 +29,6 @@ All requests should have following headers:
 * X-API-Key
 * Accept application/x-protobuf
 
-/// Throthling eror 429 status code
-
 ## Technologies
 
 * AWS Lambda via [serverless framework](https://serverless.com/)
@@ -35,11 +39,8 @@ All requests should have following headers:
 
 ## Requirements
 
-* AWS Lambda running Node
-* AWS API Gateway using Proxy Integration
-
 ```bash
-npm install -g serverless @aws-amplify/cli
+npm install -g serverless
 ```
 
 ## Previous versions
@@ -50,25 +51,33 @@ npm install -g serverless @aws-amplify/cli
 
 ## Frontend
 
+...
+
 ## Deploy
 
 ```bash
-sls deploy
-# test:
-sls deploy --env test
+# Create S3 bucket:
+node init/
+npm run deploy
 ```
 
 ## Test
 
+```bash
+# Local tests:
+npm run offline
+npm run test
+
+# Live logs:
+serverless invoke -f users-cubed-api-next -l
+serverless logs -f users-cubed-api-next -t
+```
+
 ## Possible improvements
 
-* S3 Select for more complex data
-* S3 partitioning
-* DynamoDb as a database option
-* Json-SQL for nested data, joins
-* Implement multiple access rules for other than owner users
 * Encryption password for each user (using Vault or KMS)
 * JSON SQL (lib/json-sql)
+* Throthling eror 429 status code (client side reporting)
 
 ## Licence
 

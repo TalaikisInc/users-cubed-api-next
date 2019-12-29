@@ -1,5 +1,5 @@
-service: users-cubed-api
-app: users-cubed-api
+service: users-cubed-api-next
+app: users-cubed-api-next
 org: talaikis
 
 plugins:
@@ -8,52 +8,50 @@ plugins:
   - serverless-api-compression
   - serverless-plugin-log-retention
   - serverless-plugin-aws-alerts
-
+  - serverless-offline
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs12.13
   region: ${env:REGION}
   stage: ${env:STAGE}
+  memorySize: 512
+  timeout: 10
+  versionFunctions: false
   apiKeys:
     - ${env:API_KEY}
   apiGateway:
     apiKeySourceType: HEADER
-    minimumCompressionSize: 1024
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - s3:PutObject
-        - s3:PutObjectAcl
-      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
-  functions:
-    app:
-      handler: index.handler
-      environment:
-        HASH_SECRET: ${env:HASH_SECRET}
-        TWILIO_FROM: ${env:TWILIO_FROM}
-        TWILIO_SID: ${env:TWILIO_SID}
-        TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
-        MAILGUN_FROM: ${env:MAILGUN_FROM}
-        MAILGUN_DOMAIN: ${env:MAILGUN_DOMAIN}
-        MAILGUN_KEY: ${env:MAILGUN_KEY}
-        FACEBOOK_APP_ID: ${env:FACEBOOK_APP_ID}
-        FACEBOOK_APP_SECRET: ${env:FACEBOOK_APP_SECRET}
-        GOOGLE_CLIENT_ID: ${env:GOOGLE_CLIENT_ID}
-        GOOGLE_CLIENT_SECRET: ${env:GOOGLE_CLIENT_SECRET}
-        STRIPE_TEST_SECRET: ${env:STRIPE_TEST_SECRET}
-        STRIPE_LIVE_SECRET: ${env:STRIPE_LIVE_SECRET}
-        AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
-        AUTH0_CLIENT_ID: ${env:AUTH0_CLIENT_ID}
-      events:
-        - http:
+functions:
+  handler:
+    handler: index.handler
+    name: ${env:LAMBDA_NAME}
+    events:
+      - http:
           path: /
           method: post
-          private: true
           cors: true
-provisionedConcurrency: 0
-
+          private: true
+    environment:
+      HASH_SECRET: ${env:HASH_SECRET}
+      TWILIO_FROM: ${env:TWILIO_FROM}
+      TWILIO_SID: ${env:TWILIO_SID}
+      TWILIO_AUTH_TOKEN: ${env:TWILIO_AUTH_TOKEN}
+      MAILGUN_FROM: ${env:MAILGUN_FROM}
+      MAILGUN_DOMAIN: ${env:MAILGUN_DOMAIN}
+      MAILGUN_KEY: ${env:MAILGUN_KEY}
+      STRIPE_TEST_SECRET: ${env:STRIPE_TEST_SECRET}
+      STRIPE_LIVE_SECRET: ${env:STRIPE_LIVE_SECRET}
+      AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
+      AUTH0_CLIENT_ID: ${env:AUTH0_CLIENT_ID}
+      S3_ACCESS_KEY: ${env:S3_ACCESS_KEY}
+      S3_ACCESS_SECRET: ${env:S3_ACCESS_SECRET}
+      S3_REGION: ${env:S3_REGION}
+      ENCRYPTION_SALT: ${env:ENCRYPTION_SALT}
+      ENCRYPTION_PASSWORD: ${env:ENCRYPTION_PASSWORD}
+      API_KEY: ${env:API_KEY}
+      USERS_BUCKET_NAME: ${env:USERS_BUCKET_NAME}
+      NODE_ENV: ${env:NODE_ENV}
 custom:
-  bucket: <your-bucket-name>
   contentCompression: 1024
   logRetentionInDays: 30
   apigwBinary:
@@ -85,3 +83,11 @@ custom:
       - functionErrors
       - functionInvocations
       - functionDuration
+  serverless-offline:
+    apiKey: ${env:API_KEY}
+    port: 4000
+package:
+  exclude:
+    - git/**
+    - dist/**
+    - test/**

@@ -1,0 +1,11 @@
+{
+    "plugins": [
+        "object-to-json-parse",
+        "transform-remove-console",
+        "@babel/plugin-transform-async-to-generator"
+    ],
+    "presets": [
+        "@babel/preset-env",
+        "minify"
+    ]
+}

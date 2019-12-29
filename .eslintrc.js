@@ -4,7 +4,8 @@ module.exports = {
     node: true
   },
   extends: [
-    'standard'
+    'standard',
+    'plugin:security/recommended'
   ],
   globals: {
     Atomics: 'readonly',
@@ -15,5 +16,9 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
-  }
+    'no-return-await': [0, 'always']
+  },
+  plugins: [
+    'security'
+  ]
 }
