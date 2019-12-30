@@ -1,0 +1,16 @@
+{
+    "nested": {
+      "Confirm": {
+        "fields": {
+          "action": {
+            "type": "string",
+            "id": 1
+          },
+          "token": {
+            "type": "string",
+            "id": 2
+          }
+        }
+      }
+    }
+  }

@@ -1,0 +1,242 @@
+{
+  "nested": {
+    "UserCreate": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "firstName": {
+          "type": "string",
+          "id": 2
+        },
+        "lastName": {
+          "type": "string",
+          "id": 3
+        },
+        "dialCode": {
+          "type": "string",
+          "id": 4
+        },
+        "phone": {
+          "type": "string",
+          "id": 5
+        },
+        "address": {
+          "type": "string",
+          "id": 6
+        },
+        "zipCode": {
+          "type": "string",
+          "id": 7
+        },
+        "city": {
+          "type": "string",
+          "id": 8
+        },
+        "country": {
+          "type": "string",
+          "id": 9
+        },
+        "dob": {
+          "type": "string",
+          "id": 10
+        },
+        "avatarUrl": {
+          "type": "string",
+          "id": 11
+        },
+        "referred": {
+          "type": "bytes",
+          "id": 12
+        },
+        "Confirmed": {
+          "type": "bytes",
+          "id": 13,
+          "fields": {
+            "email": {
+              "type": "bool",
+              "id": 1
+            },
+            "phone": {
+              "type": "bool",
+              "id": 2
+            }
+          }
+        },
+        "Social": {
+          "type": "bytes",
+          "id": 14,
+          "fields": {
+            "facebook": {
+              "SocialItem": {
+                "fields": {
+                  "id": {
+                    "type": "string",
+                    "id": 1
+                  },
+                  "nickName": {
+                    "type": "string",
+                    "id": 2
+                  },
+                  "picture": {
+                    "type": "string",
+                    "id": 3
+                  }
+                }
+              }
+            },
+            "twitter": {
+              "SocialItem": {
+                "fields": {
+                  "id": {
+                    "type": "string",
+                    "id": 1
+                  },
+                  "nickName": {
+                    "type": "string",
+                    "id": 2
+                  },
+                  "picture": {
+                    "type": "string",
+                    "id": 3
+                  }
+                }
+              }
+            },
+            "google": {
+              "SocialItem": {
+                "fields": {
+                  "id": {
+                    "type": "string",
+                    "id": 1
+                  },
+                  "nickName": {
+                    "type": "string",
+                    "id": 2
+                  },
+                  "picture": {
+                    "type": "string",
+                    "id": 3
+                  }
+                }
+              }
+            },
+            "linkedin": {
+              "SocialItem": {
+                "fields": {
+                  "id": {
+                    "type": "string",
+                    "id": 1
+                  },
+                  "nickName": {
+                    "type": "string",
+                    "id": 2
+                  },
+                  "picture": {
+                    "type": "string",
+                    "id": 3
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tosAgreement": {
+          "type": "bool",
+          "id": 15
+        },
+        "registeredAt": {
+          "type": "string",
+          "id": 16
+        },
+        "updatedAt": {
+          "type": "string",
+          "id": 17
+        },
+        "role": {
+          "type": "string",
+          "id": 18
+        }
+      }
+    }
+  },
+  "Social": {
+    "type": "bytes",
+    "id": 14,
+    "fields": {
+      "facebook": {
+        "SocialItem": {
+          "fields": {
+            "id": {
+              "type": "string",
+              "id": 1
+            },
+            "nickName": {
+              "type": "string",
+              "id": 2
+            },
+            "picture": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        }
+      },
+      "twitter": {
+        "SocialItem": {
+          "fields": {
+            "id": {
+              "type": "string",
+              "id": 1
+            },
+            "nickName": {
+              "type": "string",
+              "id": 2
+            },
+            "picture": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        }
+      },
+      "google": {
+        "SocialItem": {
+          "fields": {
+            "id": {
+              "type": "string",
+              "id": 1
+            },
+            "nickName": {
+              "type": "string",
+              "id": 2
+            },
+            "picture": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        }
+      },
+      "linkedin": {
+        "SocialItem": {
+          "fields": {
+            "id": {
+              "type": "string",
+              "id": 1
+            },
+            "nickName": {
+              "type": "string",
+              "id": 2
+            },
+            "picture": {
+              "type": "string",
+              "id": 3
+            }
+          }
+        }
+      }
+    }
+  }
+}

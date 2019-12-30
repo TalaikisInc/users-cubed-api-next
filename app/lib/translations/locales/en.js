@@ -1,4 +1,4 @@
-export default {
+export const en = {
   error: {
     unauthorized: 'Unauthorized.',
     not_allowed: 'Bad request.',
@@ -48,8 +48,39 @@ export default {
     account_reset_phone: 'Your code for {company} password reset: {code}',
   },
   ok: 'OK.',
-  email_password: 'Your new password for',
-  refer_email: 'Click the following link: <a href="{baseUrl}refer/{token}">{token}</a>',
-  reset_email: 'Please confirm your password reset for {company}',
-  reset_email_text: 'Click here to confirm password reset: <h4><a href="{baseUrl}confirm-reset/{code}">{code}</a></h4>'
+  refer: {
+    email: 'Click the following link: <a href="{baseUrl}refer/{token}">{token}</a>',
+  },
+  reset: {
+    email: 'Please confirm your password reset for {company}',
+    reset_email_text: 'Click here to confirm password reset: <h4><a href="{baseUrl}confirm-reset/{code}">{code}</a></h4>',
+    email_password: 'Your new password for'
+  }
+}
+
+export const langSchema = {
+  title: 'English schema v.1.0',
+  type: 'object',
+  required: ['error', 'token', 'account', 'refer', 'reset', 'ok'],
+  uniqueItems: true,
+  properties: {
+    error: {
+      type: 'object'
+    },
+    token: {
+      type: 'object'
+    },
+    account: {
+      type: 'object'
+    },
+    refer: {
+      type: 'object'
+    },
+    reset: {
+      type: 'object'
+    },
+    ok: {
+      type: 'string'
+    }
+  }
 }

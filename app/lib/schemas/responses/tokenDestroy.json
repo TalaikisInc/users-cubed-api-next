@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "TokenDestroy": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

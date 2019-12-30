@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "Refer": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

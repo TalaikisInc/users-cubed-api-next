@@ -7,8 +7,8 @@ import { confirmSchema } from './schema'
 import { sendError, finalizeRequest } from '../../lib/utils'
 
 const sendNewPassword = async (email, password, done) => {
-  const subject = `${t('email_password')} ${COMPANY}`
-  const msg = `${t('email_password')} <a href='${BASE_URL}'>${COMPANY}</a>:
+  const subject = `${t('reset.email_password')} ${COMPANY}`
+  const msg = `${t('reset.email_password')} <a href='${BASE_URL}'>${COMPANY}</a>:
     <h4>${password}</h4>`
   const e = await sendEmail(email, subject, msg).catch((e) => done(e))
   if (!e) {

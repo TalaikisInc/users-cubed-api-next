@@ -23,7 +23,7 @@ const _generateToken = async (email, done) => {
 
 const sendReferEmail = async (email, token, referringUser) => {
   const subject = `${referringUser} is inviting you to join ${COMPANY}`
-  const msg = t('refer_email', { baseUrl: BASE_URL, token: token })
+  const msg = t('refer.email', { baseUrl: BASE_URL, token: token })
   const e = await sendEmail(email, subject, msg)
     .catch((e) => e)
   if (!e) {

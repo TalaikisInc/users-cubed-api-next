@@ -16,7 +16,8 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
-    'no-return-await': [0, 'always']
+    'no-return-await': [0, 'always'],
+    'dot-notation': [0, 'always']
   },
   plugins: [
     'security'

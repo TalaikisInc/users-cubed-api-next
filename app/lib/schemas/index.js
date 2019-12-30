@@ -248,6 +248,46 @@ export const dialCodes = [
   { name: 'Zimbabwe', dial: '+263', code: 'ZW' }
 ]
 
+export const countriesSchema = {
+  title: 'Countries schema v.1.0',
+  type: 'array',
+  required: ['key', 'country'],
+  properties: {
+    key: {
+      type: 'string',
+      uniqueItems: true,
+      maxLength: 2,
+      minLength: 2
+    },
+    country: {
+      type: 'string',
+      uniqueItems: true
+    }
+  }
+}
+
+export const dialCodeSchema = {
+  title: 'Dial Code schema v.1.0',
+  type: 'array',
+  required: ['name', 'dial', 'code'],
+  properties: {
+    name: {
+      type: 'string',
+      uniqueItems: true
+    },
+    dial: {
+      type: 'string',
+      uniqueItems: true
+    },
+    code: {
+      type: 'string',
+      uniqueItems: true,
+      maxLength: 2,
+      minLength: 2
+    }
+  }
+}
+
 export const countries = [
   { key: '', country: '' },
   { key: 'af', country: 'Afghanistan' },

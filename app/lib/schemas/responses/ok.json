@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "Ok": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

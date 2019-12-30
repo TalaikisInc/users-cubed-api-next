@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=text mocha tests/",
+    "build:proto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./test.js ./test.proto",
+    "build:proto2": "./node_modules/.bin/pbjs -t proto3 -o ./test.proto ./app/lib/schemas/responses/userCreate.json",
     "upgrade:list": "ncu",
     "upgrade:install": "ncu -u",
     "offline": "serverless offline start --verbose --stage development --env development",
     "deploy": "serverless deploy --verbose --stage production --env production",
-    "build": "babel ./app --out-file ./dist/index.js --no-comments"
+    "build:js": "babel ./app --out-file ./dist/index.js --no-comments"
   },
   "repository": {
     "type": "git",
@@ -41,6 +43,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.3.0",
+    "chai-json-schema": "^1.5.1",
     "commitlint": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
@@ -65,6 +68,7 @@
     "serverless-offline": "^5.12.1",
     "serverless-plugin-aws-alerts": "^1.4.0",
     "serverless-plugin-log-retention": "^2.0.0",
+    "sinon": "^8.0.2",
     "supertest": "^4.0.2",
     "typescript": "^3.7.4"
   },

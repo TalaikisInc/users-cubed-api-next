@@ -1,0 +1,20 @@
+{
+  "nested": {
+    "TokenCreate": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        },
+        "email": {
+          "type": "string",
+          "id": 2
+        },
+        "password": {
+          "type": "string",
+          "id": 3
+        }
+      }
+    }
+  }
+}

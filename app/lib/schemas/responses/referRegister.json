@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "ReferRegister": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "nested": {
+    "UserEdit": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        },
+        "email": {
+          "type": "string",
+          "id": 2
+        },
+        "password": {
+          "type": "string",
+          "id": 3
+        },
+        "tosAgreement": {
+          "type": "string",
+          "id": 4
+        },
+        "firstName": {
+          "type": "string",
+          "id": 5
+        },
+        "lastName": {
+          "type": "string",
+          "id": 6
+        },
+        "dialCode": {
+          "type": "string",
+          "id": 7
+        },
+        "phone": {
+          "type": "string",
+          "id": 8
+        },
+        "address": {
+          "type": "string",
+          "id": 9
+        },
+        "zipCode": {
+          "type": "string",
+          "id": 10
+        },
+        "city": {
+          "type": "string",
+          "id": 11
+        },
+        "country": {
+          "type": "string",
+          "id": 12
+        },
+        "avatarUrl": {
+          "type": "string",
+          "id": 13
+        },
+        "dob": {
+          "type": "string",
+          "id": 14
+        }
+      }
+    }
+  }
+}

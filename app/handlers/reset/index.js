@@ -12,8 +12,8 @@ import { sendError } from '../../lib/utils'
 
 const _sendEmailReset = async (email, done) => {
   const token = await randomID(32).catch(() => done(t('error.confirmation_generate')))
-  const subject = t('reset_email', { company: COMPANY })
-  const msg = t('reset_email_text', { baseUrl: BASE_URL, code: token })
+  const subject = t('reset.email', { company: COMPANY })
+  const msg = t('reset.email_text', { baseUrl: BASE_URL, code: token })
   const obj = {
     email,
     type: 'reset',

@@ -67,20 +67,20 @@ export const getUser = async (data, done) => {
   await sendError(400, t('error.required'), done)
 }
 
-export const genUser = async (data, done) => {
+export const genUser = async (data, final) => {
   const valid = await createSchema.isValid(data.payload)
   if (valid) {
     await setLocale(data)
-    const u = await user(data).catch(async () => await sendError(400, t('error.required'), done))
+    const u = await user(data).catch(async () => await sendError(400, t('error.required'), final))
     if (u.email && u.password && u.tosAgreement) {
       await read('users', u.email).catch(async () => {
-        const hashedPassword = await hash(obj.password).catch(() => done(t('error.hash')))
+        const hashedPassword = await hash(obj.password).catch(async () => await sendError(400, t('error.hash'), final))
         if (hashedPassword) {
           const now = Date.now()
           const newObj = {
             firstName: u.firstName ? u.firstName : '',
             lastName: u.lastName ? u.lastName : '',
-            dialCoode: u.dialCode,
+            dialCode: u.dialCode,
             phone: u.phone ? u.phone : '',
             email: u.email,
             tosAgreement: u.tosAgreement,
@@ -107,28 +107,28 @@ export const genUser = async (data, done) => {
             role: 'user'
           }
 
-          await create('users', obj.email, newObj).catch(() => done(t('error.user_create')))
+          await create('users', u.email, newObj).catch(async () => await sendError(400, t('error.user_create'), final))
           if (FIRST_CONFIRM === 'email') {
-            const e = await sendEmailConfirmation(obj.email).catch(() => done(t('error.email')))
+            const e = await sendEmailConfirmation(u.email).catch(async () => await sendError(400, t('error.email'), final))
             if (!e) {
-              done(false)
+              await sendOk(final)
             }
           }
 
           if (FIRST_CONFIRM === 'phone') {
-            const e = await sendPhoneConfirmation(obj.phone, obj.email).catch(() => done(t('error.sms')))
+            const e = await sendPhoneConfirmation(u.phone, u.email).catch(async () => await sendError(400, t('error.sms'), final))
             if (!e) {
-              done(false)
+              await sendOk(final)
             }
           }
         }
-        await sendError(500, t('error.unknown'), done)
+        await sendError(500, t('error.unknown'), final)
       })
-      await sendError(500, t('error.user_exists'), done)
+      await sendError(500, t('error.user_exists'), final)
     }
-    await sendError(400, t('error.required'), done)
+    await sendError(400, t('error.required'), final)
   }
-  await sendError(400, t('error.required'), done)
+  await sendError(400, t('error.required'), final)
 }
 
 const _editFields = async (u, userData, done) => {
@@ -224,13 +224,11 @@ export const destroyUser = async (data, done) => {
   const valid = await userDestroy.isValid(data.payload)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data)
-      .catch(async () => await sendError(403, t('error.unauthorized'), done))
+    const tokenData = await auth(data).catch(async () => await sendError(403, t('error.unauthorized'), done))
     const userData = await read('users', tokenData.email).catch(async () => await sendError(403, t('error.cannot_read'), done))
     if (userData) {
       const refs = typeof userData.referred === 'object' && Array.isArray(userData.referred) ? userData.referred : []
-      await destroy('users', tokenData.email)
-        .catch((e) => sendError(400, t('error.user_delete'), done))
+      await destroy('users', tokenData.email).catch((e) => sendError(400, t('error.user_delete'), done))
       const e = await joinDelete('refers', refs)
       if (!e) {
         await sendOk()
@@ -258,6 +256,7 @@ const _getSocialProfile = (idToken, done) => {
 const getSocialProfile = promisify(_getSocialProfile)
 
 const _signinSocial = async (data, done) => {
+  /*
   const valid = await socialSchema.isValid(data.payload)
   if (valid) {
     const profile = await getSocialProfile(data.payload.idToken)
@@ -274,7 +273,7 @@ const _signinSocial = async (data, done) => {
     const newObj = {
       firstName: u.firstName ? u.firstName : '',
       lastName: u.lastName ? u.lastName : '',
-      dialCoode: u.dialCode,
+      dialCode: u.dialCode,
       phone: u.phone ? u.phone : '',
       email: u.email,
       tosAgreement: u.tosAgreement,
@@ -302,6 +301,7 @@ const _signinSocial = async (data, done) => {
     }
   }
   await sendError(400, t('error.required'), done)
+  */
 }
 
 export const signinSocial = promisify(_signinSocial)

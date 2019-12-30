@@ -1,30 +1,39 @@
-import { loadAsync } from 'protobufjs'
+import { resolve } from 'path'
+import protobuf from 'protobufjs'
 import { promisify } from 'util'
 
-const definitionsDirectory = '../definitions/'
+console.log('protobuf-------------------------------')
+console.log(protobuf)
+
+import { sendError } from '../utils'
+const definitionsDirectory = resolve(__dirname, '../schemas/')
 
 const _decode = async (buffer, filePath, messageType, done) => {
   try {
-    const root = await loadAsync(`${definitionsDirectory}${filePath}`)
+    const root = await protobuf.load(resolve(definitionsDirectory, 'requests', `${filePath}.json`))
     const MsgType = root.lookupType(messageType)
-    const buff = MsgType.decode(buffer)
-    done(null, buff)
+    const obj = MsgType.decode(buffer)
+    done(null, obj)
   } catch (err) {
-    done(err.message)
+    console.error(err.message)
+    const root = await protobuf.load(resolve(definitionsDirectory, 'responses', 'error.json'))
+    const MsgType = root.lookupType('Error')
+    const obj = MsgType.decode(buffer)
+    done(null, obj)
   }
 }
 
 export const decode = promisify(_decode)
 
 export const encode = async (filePath, output, messageType) => {
-  const root = await loadAsync(`${definitionsDirectory}${filePath}`)
+  const root = await protobuf.load(resolve(definitionsDirectory, 'responses', `${filePath}.json`))
   const MsgType = root.lookupType(messageType)
   const message = MsgType.create(output)
   return MsgType.encode(message).finish()
 }
 
-export const protoResponse = async (statusCode, output, filePath, messageType, callback) => {
-  const buffer = await encode(filePath, output, messageType)
+export const protoResponse = async (statusCode, output, filePath, messageType, final) => {
+  const buffer = await encode(filePath, output, messageType).catch(async () => await sendError(400, t('error.bad_request'), final))
   const response = {
     statusCode,
     headers: {
@@ -35,5 +44,5 @@ export const protoResponse = async (statusCode, output, filePath, messageType, c
     body: buffer.toString('base64'),
     isBase64Encoded: true
   }
-  callback(null, response)
+  final(null, response)
 }

@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "UserEdit": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

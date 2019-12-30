@@ -159,6 +159,42 @@ const _upload = (name, key, stream, done) => {
 
 export const upload = promisify(_upload)
 
+const _select = (bucket, key, query, done) => {
+  // ex.: 'SELECT s.* FROM S3Object[*][*] s WHERE s.price < 9 LIMIT 10'
+  const params = {
+    Bucket: bucket,
+    Key: key,
+    ExpressionType: 'SQL',
+    Expression: query,
+    InputSerialization: {
+      CompressionType: 'GZIP',
+      JSON: {
+        Type: 'DOCUMENT'
+      }
+    },
+    OutputSerialization: {
+      JSON: {
+        RecordDelimiter: ','
+      }
+    }
+  }
+  s3.selectObjectContent(params)
+    .promise()
+    .then((output) => {
+      output.Payload.on('data', (event) => {
+        if (event.Records) {
+          const buffer = event.Records.Payload
+          done(null, buffer.toString())
+        }
+      })
+    })
+    .then((err) => {
+      done(err)
+    })
+}
+
+export const select = promisify(_select)
+
 s3db.getData = getData
 s3db.saveUser = saveUser
 s3db.save = save

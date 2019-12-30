@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "TokenGet": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

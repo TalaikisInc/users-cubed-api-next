@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "UserGet": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

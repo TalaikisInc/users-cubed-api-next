@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "NotFound": {
+      "fields": {
+        "error": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

@@ -9,23 +9,23 @@ import { protoResponse } from '../proto'
 import dataLib from '../db'
 import { t } from '../translations'
 
-const _sendError = async (status, msg, callback) => {
-  const response = await protoResponse(status, msg, 'responses/error.proto', 'cubed.Error')
-  callback(null, response)
+const _sendError = async (status, msg, final) => {
+  const response = await protoResponse(status, msg, 'error', 'Error')
+  final(null, response)
 }
 
 export const sendError = promisify(_sendError)
 
-const _sendOk = async (callback) => {
-  const response = await protoResponse(200, 'Ok', 'responses/ok.proto', 'cubed.Ok')
-  callback(null, response)
+const _sendOk = async (final) => {
+  const response = await protoResponse(200, 'Ok', 'ok', 'Ok')
+  final(null, response)
 }
 
 export const sendOk = promisify(_sendOk)
 
-export const sendUser = async (msg, callback) => {
-  const response = await protoResponse(200, msg, 'responses/userEdit.proto', 'cubed.UserUpdated')
-  callback(null, response)
+export const sendUser = async (msg, final) => {
+  const response = await protoResponse(200, msg, 'userEdit', 'UserEdit')
+  final(null, response)
 }
 
 export const request = (schema, obj, done) => {
@@ -75,17 +75,17 @@ export const finalizeRequest = (collection, id, action, done, obj) => {
   }
 }
 
-const _validEmail = (email, done) => {
+const _validEmail = async (email, done) => {
   if (validate(email)) {
-    legit(email).then((res) => {
-      if (!res.isValid) {
-        done(false)
-      } else {
-        done(email)
-      }
-    })
+    const r = await legit(email).catch(() => done(null, false))
+    if (r && r.isValid) {
+      done(null, email)
+    } else {
+      done(null, false)
+    }
+  } else {
+    done(null, false)
   }
-  done(false)
 }
 
 export const validEmail = promisify(_validEmail)

@@ -6,6 +6,15 @@ strictEqual(typeof process.env.TWILIO_AUTH_TOKEN, 'string', 'You need TWILIO_AUT
 strictEqual(typeof process.env.MAILGUN_FROM, 'string', 'You need MAILGUN_FROM!')
 strictEqual(typeof process.env.MAILGUN_DOMAIN, 'string', 'You need MAILGUN_DOMAIN!')
 strictEqual(typeof process.env.MAILGUN_KEY, 'string', 'You need MAILGUN_KEY!')
+strictEqual(typeof process.env.ENCRYPTION_SALT, 'string', 'You need ENCRYPTION_SALT!')
+strictEqual(typeof process.env.ENCRYPTION_PASSWORD, 'string', 'You need ENCRYPTION_PASSWORD!')
+strictEqual(typeof process.env.USERS_BUCKET_NAME, 'string', 'You need USERS_BUCKET_NAME!')
+strictEqual(typeof process.env.AUTH0_CLIENT_ID, 'string', 'You need AUTH0_CLIENT_ID!')
+strictEqual(typeof process.env.AUTH0_DOMAIN, 'string', 'You need AUTH0_CLIENT_ID!')
+strictEqual(typeof process.env.S3_ACCESS_KEY, 'string', 'You need S3_ACCESS_KEY!')
+strictEqual(typeof process.env.S3_ACCESS_SECRET, 'string', 'You need S3_ACCESS_SECRET!')
+strictEqual(typeof process.env.S3_REGION, 'string', 'You need S3_REGION!')
+strictEqual(typeof process.env.API_KEY, 'string', 'You need API_KEY!')
 
 export const MOBILE_PROVIDER = 'twilio'
 export const EMAIL_PROVIDER = 'mailgun'

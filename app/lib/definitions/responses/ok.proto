@@ -1,6 +1,0 @@
-package cubed;
-syntax = "proto3";
-
-message Ok {
-  string status = 1;
-}

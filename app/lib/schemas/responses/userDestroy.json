@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "UserDestroy": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

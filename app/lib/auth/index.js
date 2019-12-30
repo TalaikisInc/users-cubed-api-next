@@ -1,4 +1,4 @@
-import { xss }from '../security'
+import { xss } from '../security'
 
 export const validRequest = async (event) => {
   const accept = event.headers.Accept

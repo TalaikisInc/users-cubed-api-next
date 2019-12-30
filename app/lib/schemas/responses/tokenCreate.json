@@ -1,0 +1,12 @@
+{
+  "nested": {
+    "TokenCreate": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

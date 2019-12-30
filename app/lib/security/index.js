@@ -143,8 +143,7 @@ const tokenHeader = promisify(_tokenHeader)
 const _auth = async (data, done) => {
   const token = await tokenHeader(data).catch((e) => done(e))
   if (token) {
-    const tokenData = await read('tokens', token)
-      .catch(() => t('token.expired'))
+    const tokenData = await read('tokens', token).catch(() => t('token.expired'))
     if (tokenData && tokenData.expiry > Date.now()) {
       done(null, tokenData)
     }
