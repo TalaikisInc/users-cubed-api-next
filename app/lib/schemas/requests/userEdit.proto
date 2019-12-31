@@ -1,0 +1,17 @@
+syntax="proto3";
+
+message UserEdit {
+  string action = 1;
+  string email = 2;
+  string password = 3;
+  string firstName = 4;
+  string lastName = 5;
+  string dialCode = 6;
+  string phone = 7;
+  string address = 8;
+  string zipCode = 9;
+  string city = 10;
+  string country = 11;
+  string avatarUrl = 12;
+  string dob = 13;
+}

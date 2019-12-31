@@ -54,8 +54,8 @@ export const xss = async (event) => {
   return event
 }
 
-const _encrypt = (data, done) => {
-  const iv = Buffer.alloc(16, 0)
+const _encrypt = (data, key, iv, done) => {
+  // const iv = Buffer.alloc(16, 0)
   const cipher = createDecipheriv(algorithm, key, iv)
   let encrypted = ''
   cipher.on('readable', () => {
@@ -72,8 +72,8 @@ const _encrypt = (data, done) => {
   cipher.end()
 }
 
-const _decrypt = (key, encrypted, done) => {
-  const iv = Buffer.alloc(16, 0)
+const _decrypt = (encrypted, key, iv, done) => {
+  // const iv = Buffer.alloc(16, 0)
   const decipher = createCipheriv(algorithm, key, iv)
   let decrypted = ''
   decipher.on('readable', () => {
@@ -91,7 +91,7 @@ const _decrypt = (key, encrypted, done) => {
 }
 
 export const md5 = (data) => {
-  createHash('md5').update(data).digest('hex')
+  return createHash('md5').update(data).digest('hex')
 }
 
 export const encrypt = promisify(_encrypt)
@@ -108,7 +108,7 @@ export const uuidv4 = () => {
 
 const _hash = (msg, done) => {
   if (typeof msg === 'string' && msg.length > 0) {
-    done(false, createHmac('sha256', HASH_SECRET).update(msg).digest('hex'))
+    done(null, createHmac('sha256', HASH_SECRET).update(msg).digest('hex'))
   } else {
     done(t('error.hashing'))
   }
@@ -121,7 +121,7 @@ const _randomID = (n, done) => {
     if (err) {
       done(t('error.bytes'))
     } else {
-      done(false, buf.toString('hex'))
+      done(null, buf.toString('hex'))
     }
   })
 }
@@ -132,13 +132,13 @@ const _tokenHeader = (data, done) => {
   if (data.headers && typeof data.headers.authorization === 'string') {
     let token = data.headers.authorization.replace('Bearer ', '')
     token = token.length === 64 ? token : false
-    done(false, token)
+    done(null, token)
   } else {
     done(t('error.unauthorized'))
   }
 }
 
-const tokenHeader = promisify(_tokenHeader)
+export const tokenHeader = promisify(_tokenHeader)
 
 const _auth = async (data, done) => {
   const token = await tokenHeader(data).catch((e) => done(e))

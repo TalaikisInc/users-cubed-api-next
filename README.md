@@ -64,7 +64,7 @@ npm run test
 
 # Live logs:
 serverless invoke -f users-cubed-api-next -l
-serverless logs -f users-cubed-api-next -t
+serverless logs -f users-cubed-api-next -t -s production -e production
 ```
 
 ## Previous versions

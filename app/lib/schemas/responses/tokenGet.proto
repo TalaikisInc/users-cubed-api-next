@@ -1,0 +1,5 @@
+syntax="proto3";
+
+message TokenGet {
+  string action = 1;
+}

@@ -4,4 +4,4 @@ require('@babel/register')({
 })
 require('dotenv').config({ path: './.env' })
 
-module.exports = require('./index.js')
+module.exports = require('./api.js')

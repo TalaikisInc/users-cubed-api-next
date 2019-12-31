@@ -7,7 +7,7 @@ import { t } from '../translations'
 strictEqual(typeof TWILIO.sid, 'string')
 strictEqual(typeof TWILIO.authToken, 'string')
 
-export default (phone, msg, done) => {
+export default async (phone, msg, done) => {
   const validPhone = typeof phone === 'string' && phone.length >= 11 ? phone : false
   const validMsg = typeof msg === 'string' && msg.trim().length > 0 ? msg.trim() : false
 
@@ -28,14 +28,11 @@ export default (phone, msg, done) => {
       }
     }
 
-    request('https', obj, (err) => {
-      if (!err) {
-        done(false)
-      } else {
-        done(err)
-      }
-    })
+    const e = await request('https', obj).catch((e) => done(e))
+    if (!e) {
+      done(null, false)
+    }
   } else {
-    done({ error: t('error.phone') })
+    done(t('error.phone'))
   }
 }

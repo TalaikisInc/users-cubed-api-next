@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message TokenExtend {
+  string action = 1;
+  string tokenId = 2;
+}

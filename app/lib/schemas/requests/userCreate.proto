@@ -1,0 +1,8 @@
+syntax="proto3";
+
+message UserCreate {
+  string action = 1;
+  string email = 2;
+  string password = 3;
+  bool tosAgreement = 4;
+}

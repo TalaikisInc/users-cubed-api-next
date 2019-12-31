@@ -581,11 +581,11 @@ const _loose = async (data, email, done) => {
     if (valid) {
       const out = await userFields(data).catch((e) => done(e))
       out.email = email
-      done(false, out)
+      done(null, out)
     }
   } else {
     const out = await userFields(data).catch((e) => done(e))
-    done(false, out)
+    done(null, out)
   }
 }
 
@@ -597,7 +597,7 @@ const _userObj = async (data, done) => {
     if (email) {
       const out = await loose(data, email).catch((e) => done(e))
       out.email = email
-      done(false, out)
+      done(null, out)
     }
     done(t('error.invalid_email'))
   }

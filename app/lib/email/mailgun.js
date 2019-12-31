@@ -10,7 +10,7 @@ strictEqual(typeof MAILGUN.domainName, 'string')
 strictEqual(typeof MAILGUN.apiKey, 'string')
 strictEqual(typeof MAILGUN.nameFrom, 'string')
 
-const _mailgun = (email, subject, msg, done) => {
+const _mailgun = async (email, subject, msg, done) => {
   const validMsg = typeof msg === 'string' && msg.trim().length > 0 ? msg.trim() : false
 
   if (validate(email) && validMsg) {
@@ -37,13 +37,10 @@ const _mailgun = (email, subject, msg, done) => {
       }
     }
 
-    request('https', obj, (err) => {
-      if (!err) {
-        done(false)
-      } else {
-        done(err)
-      }
-    })
+    const e = await request('https', obj).catch((e) => done(e))
+    if (!e) {
+      done(null, false)
+    }
   } else {
     done(t('error.email'))
   }

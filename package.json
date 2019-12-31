@@ -9,8 +9,8 @@
     "build:proto2": "./node_modules/.bin/pbjs -t proto3 -o ./test.proto ./app/lib/schemas/responses/userCreate.json",
     "upgrade:list": "ncu",
     "upgrade:install": "ncu -u",
-    "offline": "serverless offline start --verbose --stage development --env development",
-    "deploy": "serverless deploy --verbose --stage production --env production",
+    "offline": "serverless offline start -v -s development -e development",
+    "deploy": "serverless deploy -v --s production -e production",
     "build:js": "babel ./app --out-file ./dist/index.js --no-comments"
   },
   "repository": {
@@ -42,8 +42,10 @@
     "babel-preset-minify": "^0.5.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chai-asserttype-extra": "^1.2.0",
     "chai-http": "^4.3.0",
     "chai-json-schema": "^1.5.1",
+    "chai-uuid": "^1.0.6",
     "commitlint": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
@@ -74,6 +76,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.596.0",
+    "chalk": "^3.0.0",
     "dotenv": "^8.2.0",
     "frenchkiss": "^0.2.1",
     "isemail": "^3.2.0",

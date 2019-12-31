@@ -1,0 +1,5 @@
+syntax="proto3";
+
+message UserCreateSocial {
+  string action = 1;
+}

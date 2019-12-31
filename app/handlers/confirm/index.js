@@ -12,7 +12,7 @@ const sendNewPassword = async (email, password, done) => {
     <h4>${password}</h4>`
   const e = await sendEmail(email, subject, msg).catch((e) => done(e))
   if (!e) {
-    done(false)
+    done(null)
   }
 }
 
@@ -42,10 +42,12 @@ const _confirm = async (id, done) => {
       await selectType(tokenData, userData, (status, data) => {
         done(status, data)
       })
+    } else {
+      await sendError(403, t('error.token_invalid'), done)
     }
-    await sendError(403, t('error.token_invalid'), done)
+  } else {
+    await sendError(403, t('error.token_expired'), done)
   }
-  await sendError(403, t('error.token_expired'), done)
 }
 
 export default async (data, done) => {

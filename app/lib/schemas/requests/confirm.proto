@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message Confirm {
+  string action = 1;
+  string token = 2;
+}

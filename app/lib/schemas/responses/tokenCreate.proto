@@ -1,0 +1,5 @@
+syntax="proto3";
+
+message TokenCreate {
+  string error = 1;
+}

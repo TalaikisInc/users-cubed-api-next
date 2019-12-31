@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message Refer {
+  string action = 1;
+  string to = 2;
+}

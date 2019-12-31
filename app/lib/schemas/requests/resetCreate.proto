@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message ResetCreate {
+  string action = 1;
+  string email = 2;
+}

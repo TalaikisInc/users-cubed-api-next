@@ -17,7 +17,8 @@ module.exports = {
   },
   rules: {
     'no-return-await': [0, 'always'],
-    'dot-notation': [0, 'always']
+    'dot-notation': [0, 'always'],
+    'import/first': [0, 'always']
   },
   plugins: [
     'security'

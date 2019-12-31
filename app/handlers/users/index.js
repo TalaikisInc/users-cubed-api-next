@@ -25,7 +25,7 @@ const _sendEmailConfirmation = async (email, done) => {
   await create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
   const e = await sendEmail(email, subject, msg).catch((e) => done(e))
   if (!e) {
-    done(false)
+    done(null)
   }
 }
 
@@ -41,13 +41,10 @@ const _sendPhoneConfirmation = async (phone, email, done) => {
   }
 
   await create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
-  sendSMS(phone, msg, (err) => {
-    if (!err.error) {
-      done(false)
-    } else {
-      done(err)
-    }
-  })
+  const e = await sendSMS(phone, msg).catch((e) => done(e))
+  if (!e) {
+    done(null)
+  }
 }
 
 const sendPhoneConfirmation = promisify(_sendPhoneConfirmation)
@@ -178,7 +175,7 @@ const _editFields = async (u, userData, done) => {
       userData.email = u.email
       const e = await sendEmailConfirmation(u.email).catch(() => done(t('error.email')))
       if (!e) {
-        done(false)
+        done(null)
       }
     }
   }

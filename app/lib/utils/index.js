@@ -28,7 +28,7 @@ export const sendUser = async (msg, final) => {
   final(null, response)
 }
 
-export const request = (schema, obj, done) => {
+const _request = (schema, obj, done) => {
   const schemaLib = typeof schema === 'string' && schema === 'http' ? http : https
   const payloadString = stringify(obj.data)
   obj.headers['Content-Length'] = Buffer.byteLength(payloadString)
@@ -36,38 +36,39 @@ export const request = (schema, obj, done) => {
   const req = schemaLib.request(obj, (res) => {
     const status = res.statusCode
     if (status === 200 || status === 201) {
-      done({ error: false })
+      done(null)
     } else {
-      done({ error: status })
+      done(status)
     }
   })
 
   req.on('error', (err) => {
-    // @TODO log here
-    done({ error: err.message })
+    done(err.message)
   })
 
   req.on('timeout', () => {
-    // @TODO log here
-    done({ error: 'Request timed out.' })
+    done(t('error.timeout'))
   })
 
   req.write(payloadString)
   req.end()
 }
 
+export const request = promisify(_request)
+
 export const finalizeRequest = (collection, id, action, done, obj) => {
   if (typeof obj === 'object') {
     dataLib[action](collection, id, obj, async (err, data) => {
       if (!err) {
-        done(200, { status: t('ok') })
+        await sendOk()
+      } else {
+        await sendError(500, t('error.internal'), done)
       }
-      await sendError(500, t('error.internal'), done)
     })
   } else {
     dataLib[action](collection, id, async (err, data) => {
       if (!err) {
-        done(200, { status: t('ok') })
+        await sendOk()
       } else {
         await sendError(500, t('error.internal'), done)
       }

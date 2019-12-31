@@ -1,7 +1,7 @@
 import { promisify } from 'util'
 
 import { DB_TYPE } from '../../config'
-import { read, create, update, destroy, listDir } from './functions'
+import db from './functions'
 import { t } from '../translations'
 
 const _joinDelete = (table, col, done) => {
@@ -33,4 +33,4 @@ const _joinDelete = (table, col, done) => {
 
 export const joinDelete = promisify(_joinDelete)
 
-export default DB_TYPE === 's3' ? { read, create, update, destroy, listDir } : {}
+export default DB_TYPE === 's3' ? db : {}

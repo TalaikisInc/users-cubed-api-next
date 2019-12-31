@@ -36,7 +36,8 @@ export const en = {
     join_delete: 'Error occurred when deleting some column from table.',
     no_payload: 'No payload.',
     invalid_email: 'Invalid email.',
-    profile: 'There was an error getting the profile.'
+    profile: 'There was an error getting the profile.',
+    timeout: 'Request timed out.'
   },
   token: {
     expired: 'Token expired.'
