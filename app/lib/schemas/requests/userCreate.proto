@@ -1,8 +1,8 @@
 syntax="proto3";
 
 message UserCreate {
-  string action = 1;
-  string email = 2;
-  string password = 3;
-  bool tosAgreement = 4;
+  string email = 1;
+  string password = 2;
+  bool tosAgreement = 3;
+  string locale = 4;
 }

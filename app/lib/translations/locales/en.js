@@ -37,7 +37,9 @@ export const en = {
     no_payload: 'No payload.',
     invalid_email: 'Invalid email.',
     profile: 'There was an error getting the profile.',
-    timeout: 'Request timed out.'
+    timeout: 'Request timed out.',
+    fileType: 'Wrong file type, only png, jpeg and webp are accepted.',
+    bad_request: 'Bad request.'
   },
   token: {
     expired: 'Token expired.'
@@ -62,7 +64,7 @@ export const en = {
 export const langSchema = {
   title: 'English schema v.1.0',
   type: 'object',
-  required: ['error', 'token', 'account', 'refer', 'reset', 'ok'],
+  required: ['ok'],
   uniqueItems: true,
   properties: {
     error: {

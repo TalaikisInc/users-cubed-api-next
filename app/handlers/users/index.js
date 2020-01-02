@@ -1,7 +1,7 @@
 import { promisify } from 'util'
 import jwtDecode from 'jwt-decode'
 
-import { read, update, create, destroy, joinDelete } from '../../lib/db'
+import db, { joinedTableDelete } from '../../lib/db'
 import { user, countries } from '../../lib/schemas'
 import { COMPANY, BASE_URL, FIRST_CONFIRM } from '../../config'
 import { randomID, hash, auth } from '../../lib/security'
@@ -9,7 +9,7 @@ import sendEmail from '../../lib/email'
 import sendSMS from '../../lib/phone'
 import { t, setLocale } from '../../lib/translations'
 import { createSchema, userUpdate, userDestroy, userGet, socialSchema, setRoleSchema } from './schema'
-import { sendError, sendOk, validEmail, sendUser, loose } from '../../lib/utils'
+import { sendErr, validEmail, loose } from '../../lib/utils'
 
 const _sendEmailConfirmation = async (email, done) => {
   const token = await randomID(32).catch(() => done(t('error.confirmation_generate')))
@@ -22,10 +22,10 @@ const _sendEmailConfirmation = async (email, done) => {
     expiry: Date.now() + 1000 * 60 * 60
   }
 
-  await create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
+  await db.create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
   const e = await sendEmail(email, subject, msg).catch((e) => done(e))
   if (!e) {
-    done(null)
+    done()
   }
 }
 
@@ -40,38 +40,40 @@ const _sendPhoneConfirmation = async (phone, email, done) => {
     expiry: Date.now() + 1000 * 60 * 60
   }
 
-  await create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
+  await db.create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
   const e = await sendSMS(phone, msg).catch((e) => done(e))
   if (!e) {
-    done(null)
+    done()
   }
 }
 
 const sendPhoneConfirmation = promisify(_sendPhoneConfirmation)
 
-export const getUser = async (data, done) => {
-  const valid = await userGet.isValid(data.payload)
+export const getUser = async (data, final) => {
+  const valid = await userGet.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch((e) => sendError(403, e, done))
-    const userData = await read('users', tokenData.email).catch(async () => await sendError(400, t('error.cannot_read'), done))
+    const tokenData = await auth(data).catch((e) => final({ s: 403, e }))
+    const userData = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.cannot_read') }))
     if (userData) {
       delete userData.password
-      done(200, userData)
+      final(null, { s: 200, userData })
+    } else {
+      final({ s: 400, e: t('error.no_user') })
     }
-    await sendError(400, t('error.no_user'), done)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  await sendError(400, t('error.required'), done)
 }
 
 export const genUser = async (data, final) => {
-  const valid = await createSchema.isValid(data.payload)
+  const valid = await createSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const u = await user(data).catch(async () => await sendError(400, t('error.required'), final))
+    const u = await user(data).catch(() => final({ s: 400, e: t('error.required') }))
     if (u.email && u.password && u.tosAgreement) {
-      await read('users', u.email).catch(async () => {
-        const hashedPassword = await hash(obj.password).catch(async () => await sendError(400, t('error.hash'), final))
+      const exists = await db.read('users', u.email).catch(async () => {
+        const hashedPassword = await hash(u.password).catch(() => final({ s: 400, e: t('error.hash') }))
         if (hashedPassword) {
           const now = Date.now()
           const newObj = {
@@ -104,28 +106,37 @@ export const genUser = async (data, final) => {
             role: 'user'
           }
 
-          await create('users', u.email, newObj).catch(async () => await sendError(400, t('error.user_create'), final))
+          const userData = await db.create('users', u.email, newObj).catch(() => final({ s: 400, e: t('error.user_create') }))
           if (FIRST_CONFIRM === 'email') {
-            const e = await sendEmailConfirmation(u.email).catch(async () => await sendError(400, t('error.email'), final))
+            // @FIXME
+            const e = await sendEmailConfirmation(u.email).catch(() => final({ s: 400, e: t('error.email') }))
+            console.log('e')
+            console.log(e)
             if (!e) {
-              await sendOk(final)
+              final(null, { s: 200, o: { status: 'created' } })
             }
           }
 
           if (FIRST_CONFIRM === 'phone') {
-            const e = await sendPhoneConfirmation(u.phone, u.email).catch(async () => await sendError(400, t('error.sms'), final))
+            const e = await sendPhoneConfirmation(u.phone, u.email).catch(() => final({ s: 400, e: t('error.sms') }))
             if (!e) {
-              await sendOk(final)
+              final(null, { s: 200, o: { status: 'created' } })
             }
           }
+        } else {
+          final({ s: 500, e: t('error.unknown') })
         }
-        await sendError(500, t('error.unknown'), final)
       })
-      await sendError(500, t('error.user_exists'), final)
+
+      if (exists) {
+        final({ s: 500, e: t('error.user_exists') })
+      }
+    } else {
+      final({ s: 400, e: t('error.required') })
     }
-    await sendError(400, t('error.required'), final)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  await sendError(400, t('error.required'), final)
 }
 
 const _editFields = async (u, userData, done) => {
@@ -175,7 +186,7 @@ const _editFields = async (u, userData, done) => {
       userData.email = u.email
       const e = await sendEmailConfirmation(u.email).catch(() => done(t('error.email')))
       if (!e) {
-        done(null)
+        done()
       }
     }
   }
@@ -193,47 +204,52 @@ const _editFields = async (u, userData, done) => {
 
 const editFields = promisify(_editFields)
 
-export const edit = async (data, done) => {
-  const valid = await userUpdate.isValid(data.payload)
+export const edit = async (data, final) => {
+  const valid = await userUpdate.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch(async () => await sendError(403, t('error.unauthorized'), done))
-    const u = await loose(data, undefined).catch(async (e) => await sendError(400, e, done))
-    const userData = await read('users', tokenData.email).catch(async () => await sendError(500, t('error.cannot_read'), done))
+    const tokenData = await auth(data).catch(() => final({ s: 403, e: t('error.unauthorized') }))
+    const u = await loose(data, undefined).catch(async (e) => final({ s: 400, e }))
+    const userData = await db.read('users', tokenData.email).catch(() => final({ s: 500, e: t('error.cannot_read') }))
     if (userData.confirmed.email || userData.confirmed.phone) {
-      const newData = await editFields(u, userData).catch(async () => await sendError(400, t('error.unknown'), done))
+      const newData = await editFields(u, userData).catch(() => final({ s: 400, e: t('error.unknown') }))
       if (newData) {
-        await update('users', tokenData.email, newData).catch(async () => await sendError(500, t('error.cannot_update'), done))
-        const returnUuser = await read('users', tokenData.email).catch(async () => await sendError(500, t('error.cannot_read'), done))
+        await db.update('users', tokenData.email, newData).catch(() => final({ s: 500, e: t('error.cannot_update') }))
+        const returnUuser = await db.read('users', tokenData.email).catch(() => final({ s: 500, e: t('error.cannot_read') }))
         if (returnUuser) {
           delete returnUuser.password
-          await sendUser(returnUuser)
+          final(null, { s: 200, o: returnUuser })
+        } else {
+          final({ s: 500, e: t('error.cannot_read') })
         }
-        await sendError(500, t('error.cannot_read'), done)
       }
+    } else {
+      final({ s: 400, e: t('error.confirmed') })
     }
-    await sendError(400, t('error.confirmed'), done)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  await sendError(400, t('error.required'), done)
 }
 
-export const destroyUser = async (data, done) => {
-  const valid = await userDestroy.isValid(data.payload)
+export const destroyUser = async (data, final) => {
+  const valid = await userDestroy.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch(async () => await sendError(403, t('error.unauthorized'), done))
-    const userData = await read('users', tokenData.email).catch(async () => await sendError(403, t('error.cannot_read'), done))
+    const tokenData = await auth(data).catch(() => final({ s: 403, e: t('error.unauthorized') }))
+    const userData = await db.read('users', tokenData.email).catch(() => final({ s: 403, e: t('error.cannot_read') }))
     if (userData) {
       const refs = typeof userData.referred === 'object' && Array.isArray(userData.referred) ? userData.referred : []
-      await destroy('users', tokenData.email).catch((e) => sendError(400, t('error.user_delete'), done))
-      const e = await joinDelete('refers', refs)
+      await db.destroy('users', tokenData.email).catch((e) => final({ s: 400, e: t('error.user_delete') }))
+      const e = await joinedTableDelete('refers', refs)
       if (!e) {
-        await sendOk()
+        final(null, { s: 200, o: { status: 'ok' } })
       }
+    } else {
+      final({ s: 400, e: t('error.no_user') })
     }
-    await sendError(400, t('error.no_user'), done)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  await sendError(400, t('error.required'), done)
 }
 
 export const confirmPhone = (data, done) => {
@@ -252,14 +268,14 @@ const _getSocialProfile = (idToken, done) => {
 
 const getSocialProfile = promisify(_getSocialProfile)
 
-const _signinSocial = async (data, done) => {
+export const signinSocial = async (data, done) => {
   /*
-  const valid = await socialSchema.isValid(data.payload)
+  const valid = await socialSchema.isValid(data.body)
   if (valid) {
-    const profile = await getSocialProfile(data.payload.idToken)
+    const profile = await getSocialProfile(data.body.idToken)
     const out = {
-      idToken: data.payload.idToken,
-      accessToken: data.payload.accessToken,
+      idToken: data.body.idToken,
+      accessToken: data.body.accessToken,
       nickname: profile.nickname,
       picture: profile.picture
     }
@@ -297,23 +313,23 @@ const _signinSocial = async (data, done) => {
       role: 'user'
     }
   }
-  await sendError(400, t('error.required'), done)
+  sendErr(400, t('error.required'), done)
   */
 }
 
-export const signinSocial = promisify(_signinSocial)
-
-export const setRole = async (data, done) => {
-  const valid = await setRoleSchema.isValid(data.payload)
+export const setRole = async (data, final) => {
+  const valid = await setRoleSchema.isValid(data.body)
   if (valid) {
-    const tokenData = await read('tokens', data.payload.tokenId).catch(async () => await sendError(403, t('error.unauthorized'), done))
+    const tokenData = await db.read('tokens', data.body.tokenId).catch(() => final({ s: 403, e: t('error.unauthorized') }))
     if (tokenData && tokenData.role === 'admin') {
-      const userData = await read('users', tokenData.email).catch(async () => await sendError(400, t('error.no_user'), done))
-      userData.role = data.payload.role
-      await update('users', tokenData.email, userData).catch(async () => await sendError(403, t('error.cannot_update'), done))
-      await sendOk()
+      const userData = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.no_user') }))
+      userData.role = data.body.role
+      await db.update('users', tokenData.email, userData).catch(() => final({ s: 403, e: t('error.cannot_update') }))
+      final(null, { s: 200, o: { status: 'ok' } })
+    } else {
+      final({ s: 403, e: t('error.unauthorized') })
     }
-    await sendError(403, t('error.unauthorized'), done)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  await sendError(400, t('error.required'), done)
 }

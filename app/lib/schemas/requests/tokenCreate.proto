@@ -1,7 +1,7 @@
 syntax="proto3";
 
 message TokenCreate {
-  string action = 1;
-  string email = 2;
-  string password = 3;
+  string email = 1;
+  string password = 2;
+  string locale = 3;
 }

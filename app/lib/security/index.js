@@ -1,6 +1,6 @@
 import { inHTMLData } from 'xss-filters'
 import { promisify } from 'util'
-import { createHash, createHmac, scrypt, createCipheriv, createDecipheriv, randomBytes } from 'crypto'
+import { createHash, createHmac, createCipheriv, createDecipheriv, randomBytes } from 'crypto'
 
 import { read } from '../db'
 import { HASH_SECRET } from '../../config'
@@ -17,18 +17,6 @@ const _random = (n, done) => {
 }
 
 export const random = promisify(_random)
-
-const _onUserCreate = async (done) => {
-  const salt = await random(16)
-  const password = await random(20)
-  const id = await random(12)
-  scrypt(password, salt, 32, async (key) => {
-    await set(id, key)
-    done(null, 1)
-  })
-}
-
-export const onUserCreate = promisify(_onUserCreate)
 
 const _clean = (data, done) => {
   let isObject = false
@@ -55,39 +43,25 @@ export const xss = async (event) => {
 }
 
 const _encrypt = (data, key, iv, done) => {
-  // const iv = Buffer.alloc(16, 0)
-  const cipher = createDecipheriv(algorithm, key, iv)
-  let encrypted = ''
-  cipher.on('readable', () => {
-    let chunk
-    while ((chunk = cipher.read() !== null)) {
-      encrypted += chunk.toString('hex')
-    }
-  })
-  cipher.on('end', () => {
+  try {
+    const cipher = createCipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'))
+    let encrypted = cipher.update(data, 'utf8', 'hex')
+    encrypted += cipher.final('hex')
     done(null, encrypted)
-  })
-
-  cipher.write(data)
-  cipher.end()
+  } catch (e) {
+    done(e)
+  }
 }
 
 const _decrypt = (encrypted, key, iv, done) => {
-  // const iv = Buffer.alloc(16, 0)
-  const decipher = createCipheriv(algorithm, key, iv)
-  let decrypted = ''
-  decipher.on('readable', () => {
-    let chunk
-    while ((chunk = decipher.read() !== null)) {
-      decrypted += chunk.toString('utf8')
-    }
-  })
-  decipher.on('end', () => {
+  try {
+    const decipher = createDecipheriv(algorithm, Buffer.from(key, 'hex'), Buffer.from(iv, 'hex'))
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+    decrypted += decipher.final('utf8')
     done(null, decrypted)
-  })
-
-  decipher.write(encrypted, 'hex')
-  decipher.end()
+  } catch (e) {
+    done(e)
+  }
 }
 
 export const md5 = (data) => {
@@ -143,7 +117,7 @@ export const tokenHeader = promisify(_tokenHeader)
 const _auth = async (data, done) => {
   const token = await tokenHeader(data).catch((e) => done(e))
   if (token) {
-    const tokenData = await read('tokens', token).catch(() => t('token.expired'))
+    const tokenData = await db.read('tokens', token).catch(() => t('token.expired'))
     if (tokenData && tokenData.expiry > Date.now()) {
       done(null, tokenData)
     }

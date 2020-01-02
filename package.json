@@ -4,7 +4,8 @@
   "description": "User management system/ CMS API on Lambda + S3.",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=text mocha tests/",
+    "test": "mocha --timeout 60000 tests/",
+    "coverage": "nyc --reporter=text mocha --timeout 60000 tests/",
     "build:proto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./test.js ./test.proto",
     "build:proto2": "./node_modules/.bin/pbjs -t proto3 -o ./test.proto ./app/lib/schemas/responses/userCreate.json",
     "upgrade:list": "ncu",
@@ -38,7 +39,6 @@
     "@typescript-eslint/eslint-plugin": "^2.13.0",
     "@typescript-eslint/parser": "^2.13.0",
     "babel-plugin-object-to-json-parse": "0.0.8",
-    "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-preset-minify": "^0.5.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -71,6 +71,7 @@
     "serverless-plugin-aws-alerts": "^1.4.0",
     "serverless-plugin-log-retention": "^2.0.0",
     "sinon": "^8.0.2",
+    "sinon-chai": "^3.4.0",
     "supertest": "^4.0.2",
     "typescript": "^3.7.4"
   },

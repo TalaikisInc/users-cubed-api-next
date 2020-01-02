@@ -1,6 +1,6 @@
 import { promisify } from 'util'
 
-import { validEmail, validPhone } from '../utils'
+import { validEmail } from '../utils'
 import { t } from '../translations'
 
 export const dialCodes = [
@@ -542,10 +542,10 @@ export const countries = [
   { key: 'zw', country: 'Zimbabwe' }
 ]
 
-const _userFields = (data, done) => {
-  const { firstName, lastName, dialCode, password, tosAgreement, address, zipCode, city, country, avatarUrl, dob } = data.payload
+const _userFields = (data, email, done) => {
+  const { firstName, lastName, dialCode, password, tosAgreement, phone, address, zipCode, city, country, avatarUrl, dob } = data.body
+  const _phone = typeof phone === 'string' && phone.length >= 11 ? phone : false
   const _dialCode = typeof dialCode === 'string' && typeof dialCodes.filter((e) => e.dial === dialCode) !== 'undefined' ? dialCode : false
-  const _phone = validPhone(data)
   const _firstName = typeof firstName === 'string' && firstName.trim().length > 0 ? firstName.trim() : false
   const _lastName = typeof lastName === 'string' && lastName.trim().length > 0 ? lastName.trim() : false
   const _password = typeof password === 'string' && password.trim().length > 11 ? password.trim() : false
@@ -557,13 +557,14 @@ const _userFields = (data, done) => {
   const _avatarUrl = typeof avatarUrl === 'string' && avatarUrl.trim().length > 0 ? avatarUrl.trim() : false
   const _dob = typeof dob === 'string' && dob.trim().length > 0 ? dob.trim() : false
 
-  done({
+  done(null, {
+    email,
+    password: _password,
+    tosAgreement: _tosAgreement,
     dialCode: _dialCode,
     phone: _phone,
     firstName: _firstName,
     lastName: _lastName,
-    password: _password,
-    tosAgreement: _tosAgreement,
     address: _address,
     zipCode: _zipCode,
     city: _city,
@@ -575,33 +576,23 @@ const _userFields = (data, done) => {
 
 const userFields = promisify(_userFields)
 
-const _loose = async (data, email, done) => {
-  if (!email) {
-    const valid = await validEmail(data.payload.email).catch((e) => done(e))
-    if (valid) {
-      const out = await userFields(data).catch((e) => done(e))
-      out.email = email
-      done(null, out)
-    }
-  } else {
-    const out = await userFields(data).catch((e) => done(e))
-    done(null, out)
-  }
+const loose = async (data, email) => {
+  return await userFields(data, email)
 }
 
-export const loose = promisify(_loose)
-
 const _userObj = async (data, done) => {
-  if (data.payload) {
-    const email = await validEmail(data.payload.email).catch((e) => done(e))
+  if (typeof data.body === 'object') {
+    const email = await validEmail(data.body.email).catch((e) => done(e))
     if (email) {
-      const out = await loose(data, email).catch((e) => done(e))
+      const out = await loose(data, email)
       out.email = email
       done(null, out)
+    } else {
+      done(t('error.invalid_email'))
     }
-    done(t('error.invalid_email'))
+  } else {
+    done(t('error.no_payload'))
   }
-  done(t('error.no_payload'))
 }
 
 export const user = promisify(_userObj)

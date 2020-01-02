@@ -8,7 +8,7 @@ import sendEmail from '../../lib/email'
 import sendSMS from '../../lib/phone'
 import { t, setLocale } from '../../lib/translations'
 import { resetSchema } from './schema'
-import { sendError } from '../../lib/utils'
+import { sendErr } from '../../lib/utils'
 
 const _sendEmailReset = async (email, done) => {
   const token = await randomID(32).catch(() => done(t('error.confirmation_generate')))
@@ -21,7 +21,7 @@ const _sendEmailReset = async (email, done) => {
     expiry: Date.now() + 1000 * 60 * 60
   }
 
-  await create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
+  await db.create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
   const e = await sendEmail(email, subject, msg).catch((e) => done(e))
   if (!e) {
     done(null)
@@ -40,7 +40,7 @@ const _sendPhoneConfirmation = async (phone, email, done) => {
     expiry: Date.now() + 1000 * 60 * 60
   }
 
-  await create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
+  await db.create('confirms', token, obj).catch(() => done(t('error.confirmation_save')))
   const e = await sendSMS(phone, msg).catch((e) => done(e))
   if (!e) {
     done(null)
@@ -62,20 +62,20 @@ const _sendReset = async (email, phone, done) => {
 const sendReset = promisify(_sendReset)
 
 export default async (data, done) => {
-  const valid = await resetSchema.isValid(data.payload)
+  const valid = await resetSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
     const u = await user(data)
-      .catch(async () => await sendError(400, t('error.required'), done))
+      .catch(() => sendErr(400, t('error.required'), done))
     if (u.email) {
-      const userData = await read('users', u.email).catch(async () => await sendError(400, t('error.no_user'), done))
+      const userData = await db.read('users', u.email).catch(() => sendErr(400, t('error.no_user'), done))
       if (userData) {
-        await sendReset(u.email, userData.phone).catch(async () => await sendError(500, t('error.email'), done))
+        await sendReset(u.email, userData.phone).catch(() => sendErr(500, t('error.email'), done))
         return { status: 200, out: t('ok') }
       }
-      await sendError(400, t('error.no_user'), done)
+      sendErr(400, t('error.no_user'), done)
     }
-    await sendError(400, t('error.required'), done)
+    sendErr(400, t('error.required'), done)
   }
-  await sendError(400, t('error.required'), done)
+  sendErr(400, t('error.required'), done)
 }

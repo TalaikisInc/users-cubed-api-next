@@ -1,4 +1,3 @@
-import { validate } from 'isemail'
 import { strictEqual } from 'assert'
 import { promisify } from 'util'
 
@@ -10,10 +9,10 @@ strictEqual(typeof MAILGUN.domainName, 'string')
 strictEqual(typeof MAILGUN.apiKey, 'string')
 strictEqual(typeof MAILGUN.nameFrom, 'string')
 
-const _mailgun = async (email, subject, msg, done) => {
+export const _mailgun = async (email, subject, msg, done) => {
   const validMsg = typeof msg === 'string' && msg.trim().length > 0 ? msg.trim() : false
 
-  if (validate(email) && validMsg) {
+  if (validMsg) {
     // const logo = createReadStream(join(__dirname, '../../.data', 'assets', 'logo.png'))
     // const htmlMsg = `<img src="cid:logo.png" width="200px"><br /><h3>${subject}</h3><p>${msg}</p>`
 
@@ -37,10 +36,8 @@ const _mailgun = async (email, subject, msg, done) => {
       }
     }
 
-    const e = await request('https', obj).catch((e) => done(e))
-    if (!e) {
-      done(null, false)
-    }
+    await request('https', obj).catch((e) => done(e))
+    done()
   } else {
     done(t('error.email'))
   }

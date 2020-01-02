@@ -1,3 +1,7 @@
+import db from '../../lib/db'
+import { protoResponse } from '../../lib/proto'
+const table = 'blog_'
+
 export const getArticlesByTitle = () => {
     
 }

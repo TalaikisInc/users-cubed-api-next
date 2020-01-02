@@ -1,8 +1,8 @@
 syntax="proto3";
 
 message UserCreateSocial {
-  string action = 1;
   string provider = 2;
   string idToken = 3;
   string accessToken = 4;
+  string locale = 5;
 }

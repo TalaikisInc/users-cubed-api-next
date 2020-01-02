@@ -1,10 +1,10 @@
 import { BASE_URL, COMPANY } from '../../config'
-import { read } from '../../lib/db'
+import db from '../../lib/db'
 import { hash, randomID } from '../../lib/security'
 import sendEmail from '../../lib/email'
 import { t, setLocale } from '../../lib/translations'
 import { confirmSchema } from './schema'
-import { sendError, finalizeRequest } from '../../lib/utils'
+import { finalizeRequest } from '../../lib/utils'
 
 const sendNewPassword = async (email, password, done) => {
   const subject = `${t('reset.email_password')} ${COMPANY}`
@@ -12,7 +12,7 @@ const sendNewPassword = async (email, password, done) => {
     <h4>${password}</h4>`
   const e = await sendEmail(email, subject, msg).catch((e) => done(e))
   if (!e) {
-    done(null)
+    done()
   }
 }
 
@@ -24,40 +24,36 @@ const selectType = async (tokenData, userData, done) => {
     userData.updatedAt = Date.now()
     await sendNewPassword(userData.email, password, (err) => {
       if (!err) {
-        finalizeRequest('users', tokenData.email, 'update', done, userData)
+        finalizeRequest('users', tokenData.email, 'update', userData, done)
+      } else {
+        done(err)
       }
-      done(err)
     })
   } else if (tokenData.type === 'email' || tokenData.type === 'phone') {
     userData.confirmed[tokenData.type] = true
-    finalizeRequest('users', tokenData.email, 'update', done, userData)
+    finalizeRequest('users', tokenData.email, 'update', userData, done)
   }
 }
 
-const _confirm = async (id, done) => {
-  const tokenData = await read('confirms', id).catch(async () => await sendError(403, t('error.token_notfound'), done))
-  if (tokenData.expiry > Date.now()) {
-    if (tokenData.token === id) {
-      const userData = await read('users', tokenData.email).catch(async () => await sendError(400, t('error.no_user'), done))
-      await selectType(tokenData, userData, (status, data) => {
-        done(status, data)
-      })
-    } else {
-      await sendError(403, t('error.token_invalid'), done)
-    }
-  } else {
-    await sendError(403, t('error.token_expired'), done)
-  }
-}
-
-export default async (data, done) => {
-  const valid = await confirmSchema.isValid(data.payload)
+export default async (data, final) => {
+  const valid = await confirmSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    await _confirm(data.payload.token, (status, data) => {
-      return { status, out: data }
-    })
+    const id = data.body.token
+    const tokenData = await db.read('confirms', id).catch(() => final({ s: 403, e: t('error.token_notfound') }))
+    if (tokenData.expiry > Date.now()) {
+      if (tokenData.token === id) {
+        const userData = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.no_user') }))
+        await selectType(tokenData, userData, (status, data) => {
+          final(null, { s: status, o: data })
+        })
+      } else {
+        final({ s: 403, e: t('error.token_invalid') })
+      }
+    } else {
+      final({ s: 403, e: t('error.token_expired') })
+    }
   } else {
-    await sendError(400, t('error.required'), done)
+    final({ s: 400, e: t('error.required') })
   }
 }

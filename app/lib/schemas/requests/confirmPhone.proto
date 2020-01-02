@@ -1,5 +1,5 @@
 syntax="proto3";
 
 message ConfirmPhone {
-  string action = 1;
+  string locale = 1;
 }

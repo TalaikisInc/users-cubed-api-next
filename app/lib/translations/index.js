@@ -8,7 +8,7 @@ set('fr', fr)
 set('en', en)
 
 const _setLocale = (data, done) => {
-  const loc = typeof data.payload.locale === 'string' ? data.payload.locale : 'en'
+  const loc = typeof data.body.locale === 'string' ? data.body.locale : 'en'
   locale(loc)
   done()
 }

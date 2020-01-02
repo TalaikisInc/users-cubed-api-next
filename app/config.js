@@ -65,5 +65,13 @@ export const LANGUAGES = ['en', 'fr']
 export const S3_ACCESS_KEY = process.env.AWS_ACCESS_KEY_ID
 export const S3_ACCESS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
 export const S3_REGION = process.env.S3_REGION
+export const UPLOAD_TABLE = 'avatars'
 
 export const API_KEY = process.env.API_KEY
+export const ALLOW_ORIGIN = '*'
+
+export const STRIPE_TEST_SECRET = process.env.STRIPE_TEST_SECRET
+export const STRIPE_LIVE_SECRET = process.env.STRIPE_LIVE_SECRET
+export const STRIPE_ACCOUNT = ''
+export const STRIPE_WEBHOOK_SECRET = ''
+export const STRIPE_ENV = ''

@@ -4,13 +4,13 @@ import { DB_TYPE } from '../../config'
 import db from './functions'
 import { t } from '../translations'
 
-const _joinDelete = (table, col, done) => {
+const _joinedTableDelete = (table, col, done) => {
   const toDelete = col.length
   if (toDelete > 0) {
     let deleted = 0
     let errors = false
     col.forEach((id) => {
-      delete (table, id, (err) => {
+      db.destroy(table, id, (err) => {
         if (!err) {
           deleted += 1
         } else {
@@ -19,7 +19,7 @@ const _joinDelete = (table, col, done) => {
 
         if (deleted === toDelete) {
           if (!errors) {
-            done(null, {})
+            done()
           } else {
             done(t('error.join_delete'))
           }
@@ -31,6 +31,6 @@ const _joinDelete = (table, col, done) => {
   }
 }
 
-export const joinDelete = promisify(_joinDelete)
+export const joinedTableDelete = promisify(_joinedTableDelete)
 
 export default DB_TYPE === 's3' ? db : {}

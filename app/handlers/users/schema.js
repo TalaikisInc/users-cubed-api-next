@@ -16,8 +16,6 @@ export const createSchema = object().shape({
   country: string().transform((cv, ov) => ov === '' ? undefined : cv).length(2),
   dob: string().transform((cv, ov) => ov === '' ? undefined : cv),
   avatarUrl: string().transform((cv, ov) => ov === '' ? undefined : cv).url(),
-  key: string().required(),
-  action: string().required().oneOf(['USER_CREATE']),
   locale: string().required().oneOf(LANGUAGES)
 })
 
@@ -35,26 +33,22 @@ export const userUpdate = object().shape({
   dob: string().transform((cv, ov) => ov === '' ? undefined : cv),
   avatarUrl: string().transform((cv, ov) => ov === '' ? undefined : cv).url(),
   key: string().required(),
-  action: string().required().oneOf(['USER_EDIT']),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const userDestroy = object().shape({
   key: string().required(),
-  action: string().required().oneOf(['USER_DESTROY']),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const userGet = object().shape({
   key: string().required(),
-  action: string().required().oneOf(['USER_GET']),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const socialSchema = object().shape({
   provider: string().required().oneOf(['facebook', 'google', 'twitter']),
   key: string().required(),
-  action: string().required().oneOf(['USER_CREATE_SOCIAL']),
   locale: string().required().oneOf(LANGUAGES)
 })
 
@@ -62,6 +56,5 @@ export const setRoleSchema = object().shape({
   tokenId: string().required().length(64),
   role: string().required().oneOf(['user', 'admin', 'editor']),
   key: string().required(),
-  action: string().required().oneOf(['USER_SET_ROLE']),
   locale: string().required().oneOf(LANGUAGES)
 })

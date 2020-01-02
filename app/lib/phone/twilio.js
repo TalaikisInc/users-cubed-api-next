@@ -1,13 +1,14 @@
 import { strictEqual } from 'assert'
+import { promisify } from 'util'
 
 import { TWILIO } from '../../config'
-import request from '../utils'
+import { request } from '../utils'
 import { t } from '../translations'
 
 strictEqual(typeof TWILIO.sid, 'string')
 strictEqual(typeof TWILIO.authToken, 'string')
 
-export default async (phone, msg, done) => {
+export const _twilio = async (phone, msg, done) => {
   const validPhone = typeof phone === 'string' && phone.length >= 11 ? phone : false
   const validMsg = typeof msg === 'string' && msg.trim().length > 0 ? msg.trim() : false
 
@@ -28,11 +29,11 @@ export default async (phone, msg, done) => {
       }
     }
 
-    const e = await request('https', obj).catch((e) => done(e))
-    if (!e) {
-      done(null, false)
-    }
+    await request('https', obj).catch((e) => done(e))
+    done()
   } else {
     done(t('error.phone'))
   }
 }
+
+export default promisify(_twilio)

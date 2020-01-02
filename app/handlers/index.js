@@ -39,6 +39,8 @@ export const handlers = {
   [ACTIONS.BLOG.CATEGORY_DELETE]: { file: 'resetCreate', class: 'ResetCreate', h: import('./blog').default },
   [ACTIONS.BLOG.CATEGORIES_GET]: { file: 'resetCreate', class: 'ResetCreate', h: import('./blog').default },
 
+  [ACTIONS.UPLOAD]: { file: 'upload', class: 'NotFound', h: import('./upload').default },
+  [ACTIONS.CONTACT_US]: { file: 'contactUs', class: 'NotFound', h: import('./contact-us').default },
   [ACTIONS.NOT_FOUND]: { file: 'notFound', class: 'NotFound', h: import('./generics/notFound').default }
 }
 
