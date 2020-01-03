@@ -16,21 +16,39 @@ This repo is in development.
 
 ## Features
 
+* User signin/ signout/ signup/ reset password/ confirm, delete account
+* Minimal role system
+* Minimal referral system
+* E-commerce (in progress)
+* Blog (in progress)
+* Contact us service
+* Upload service
+
+Tech features:
+
 * API key protected
 * One route (with O(1) routing)
 * Protocol buffers for requests and responses
+* Schema validation
 * Ability to easily change database type
+* Fully internationalized (just add translations  to `app/lib/translations/locales`)
 
 ## API Clients
 
 All requests should have following headers:
 
 * X-API-Key
-* Accept application/x-protobuf
+* Accept `application/x-protobuf`
 
 User's request should have additional token:
 
-* Authorization
+* Authorization `Bearer ...`
+
+The request schemas are in `app/lib/schemas/requests`
+
+All API responses have `Action` header with `messageType` for frontend decoding.
+
+All request from frontend should have `Action` header for routing.
 
 ## Technologies
 
@@ -39,6 +57,7 @@ User's request should have additional token:
 * [Protocol Buffers](https://developers.google.com/protocol-buffers) (backend - frontend communication)
 * [Node.js](https://github.com/nodejs/node)
 * Social signup/ signin via [Auth0](https://auth0.com/)
+* [Yup](https://github.com/jquense/yup) for schema validation
 
 ## Install
 

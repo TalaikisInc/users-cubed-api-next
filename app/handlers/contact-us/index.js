@@ -1,29 +1,28 @@
 import { sendEmail } from '../../lib/email'
 import { t, setLocale } from '../../lib/translations'
-import { sendErr, validEmail, sendOk } from '../../lib/utils'
+import { validEmail } from '../../lib/utils'
+import { contactUsSchema } from './schema'
 
 export default async (data, final) => {
-  const email = typeof data.body.email === 'string' ? data.body.email : false
-  const msg = typeof data.body.msg === 'string' ? data.body.msg : false
-  const name = typeof data.body.name === 'string' ? data.body.name : false
-  const locale = typeof data.body.locale === 'string' ? data.body.locale : 'en'
+  const valid = await contactUsSchema.isValid(data.body)
 
-  if (locale !== 'en') {
-    await setLocale(locale)
-  }
+  if (valid) {
+    const locale = data.body.locale
+    if (locale !== 'en') {
+      await setLocale(locale)
+    }
 
-  if (email && msg && name) {
-    const valid = await validEmail(email).catch(() => sendErr(400, t('error.invalid_email'), final))
+    const valid = await validEmail(data.body.email).catch(() => final({ s: 400, e: t('error.invalid_email') }))
     if (valid) {
-      const subject = `Message from: ${name}`
-      const e = await sendEmail(email, subject, msg)
+      const subject = `Message from: ${data.body.name}`
+      const e = await sendEmail(data.body.email, subject, data.body.msg)
       if (!e) {
-        sendOk(final)
+        final({ s: 200, o: { status: 'ok' } })
       }
     } else {
-      sendErr(400, t('error.invalid_email'), final)
+      final({ s: 400, e: t('error.invalid_email') })
     }
   } else {
-    sendErr(400, t('error.required'), final)
+    final({ s: 400, e: t('error.required') })
   }
 }

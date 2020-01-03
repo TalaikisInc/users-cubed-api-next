@@ -3,18 +3,18 @@ import jwtDecode from 'jwt-decode'
 
 import db, { joinedTableDelete } from '../../lib/db'
 import { user, countries } from '../../lib/schemas'
-import { COMPANY, BASE_URL, FIRST_CONFIRM } from '../../config'
+import { COMPANY, BASE_URL, ROLES, FIRST_CONFIRM } from '../../config'
 import { randomID, hash, auth } from '../../lib/security'
 import sendEmail from '../../lib/email'
 import sendSMS from '../../lib/phone'
 import { t, setLocale } from '../../lib/translations'
 import { createSchema, userUpdate, userDestroy, userGet, socialSchema, setRoleSchema } from './schema'
-import { sendErr, validEmail, loose } from '../../lib/utils'
+import { validEmail, loose, sendErr } from '../../lib/utils'
 
 const _sendEmailConfirmation = async (email, done) => {
   const token = await randomID(32).catch(() => done(t('error.confirmation_generate')))
-  const subject = t('account_confirm_subject', { company: COMPANY })
-  const msg = t('account_confirm_message', { company: COMPANY, baseUrl: BASE_URL, code: token })
+  const subject = t('account.confirm_subject', { company: COMPANY })
+  const msg = t('account.confirm_message', { company: COMPANY, baseUrl: BASE_URL, code: token })
   const obj = {
     email,
     token,
@@ -33,7 +33,7 @@ const sendEmailConfirmation = promisify(_sendEmailConfirmation)
 
 const _sendPhoneConfirmation = async (phone, email, done) => {
   const token = await randomID(6).catch(() => done(t('error.confirmation_generate')))
-  const msg = t('account_confirm_phone', { company: COMPANY, code: token })
+  const msg = t('account.confirm_phone', { company: COMPANY, code: token })
   const obj = {
     email,
     token,
@@ -103,25 +103,18 @@ export const genUser = async (data, final) => {
             },
             registeredAt: now,
             updatedAt: now,
-            role: 'user'
+            role: ROLES[0]
           }
 
           const userData = await db.create('users', u.email, newObj).catch(() => final({ s: 400, e: t('error.user_create') }))
           if (FIRST_CONFIRM === 'email') {
-            // @FIXME
-            const e = await sendEmailConfirmation(u.email).catch(() => final({ s: 400, e: t('error.email') }))
-            console.log('e')
-            console.log(e)
-            if (!e) {
-              final(null, { s: 200, o: { status: 'created' } })
-            }
+            await sendEmailConfirmation(u.email).catch(() => final({ s: 400, e: t('error.email') }))
+            final(null, { s: 200, o: { status: 'ok' } })
           }
 
           if (FIRST_CONFIRM === 'phone') {
-            const e = await sendPhoneConfirmation(u.phone, u.email).catch(() => final({ s: 400, e: t('error.sms') }))
-            if (!e) {
-              final(null, { s: 200, o: { status: 'created' } })
-            }
+            await sendPhoneConfirmation(u.phone, u.email).catch(() => final({ s: 400, e: t('error.sms') }))
+            final(null, { s: 200, o: { status: 'created' } })
           }
         } else {
           final({ s: 500, e: t('error.unknown') })
@@ -310,7 +303,7 @@ export const signinSocial = async (data, done) => {
       },
       registeredAt: now,
       updatedAt: now,
-      role: 'user'
+      role: ROLES[0]
     }
   }
   sendErr(400, t('error.required'), done)
@@ -321,7 +314,7 @@ export const setRole = async (data, final) => {
   const valid = await setRoleSchema.isValid(data.body)
   if (valid) {
     const tokenData = await db.read('tokens', data.body.tokenId).catch(() => final({ s: 403, e: t('error.unauthorized') }))
-    if (tokenData && tokenData.role === 'admin') {
+    if (tokenData && tokenData.role === ROLES[1]) {
       const userData = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.no_user') }))
       userData.role = data.body.role
       await db.update('users', tokenData.email, userData).catch(() => final({ s: 403, e: t('error.cannot_update') }))
@@ -332,4 +325,8 @@ export const setRole = async (data, final) => {
   } else {
     final({ s: 400, e: t('error.required') })
   }
+}
+
+export const getUsers = (data, final) => {
+  // only admins
 }

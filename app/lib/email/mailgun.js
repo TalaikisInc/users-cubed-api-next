@@ -28,7 +28,6 @@ export const _mailgun = async (email, subject, msg, done) => {
         subject: subject,
         text: msg,
         html: msg
-        // text: msg,
         // inline: [logo]
       },
       headers: {
@@ -36,7 +35,7 @@ export const _mailgun = async (email, subject, msg, done) => {
       }
     }
 
-    await request('https', obj).catch((e) => done(e))
+    if (!(process.env.NODE_ENV === 'testing')) await request('https', obj).catch((e) => done(e))
     done()
   } else {
     done(t('error.email'))

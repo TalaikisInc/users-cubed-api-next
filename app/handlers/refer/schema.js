@@ -10,13 +10,11 @@ export const referSchema = object().shape({
 
 export const useSchema = object().shape({
   token: string().required().length(36),
-  key: string().required(),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const registerSchema = object().shape({
   from: string().required().email(),
   token: string().required().length(36),
-  key: string().required(),
   locale: string().required().oneOf(LANGUAGES)
 })

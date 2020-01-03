@@ -7,34 +7,34 @@ export const getProducts = async (data, final) => {
   protoResponse()
 }
 
-export const getProductById = () => {
+export const getProductById = (data, final) => {
 
 }
 
-export const addToCart = () => {
+export const addToCart = (data, final) => {
     
 }
 
-export const removeFromCart = () => {
+export const removeFromCart = (data, final) => {
     
 }
 
-export const getCart = () => {
+export const getCart = (data, final) => {
     
 }
 
-export const checkout = () => {
+export const checkout = (data, final) => {
 
 }
 
-export const addToWishlist = () => {
+export const addToWishlist = (data, final) => {
 
 }
 
-export const removeFromWishlist = () => {
+export const removeFromWishlist = (data, final) => {
 
 }
 
-export const getWishlist = () => {
+export const getWishlist = (data, final) => {
 
 }

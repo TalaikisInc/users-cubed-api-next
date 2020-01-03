@@ -6,17 +6,13 @@ export const validRequest = async (event) => {
   const accept = valid && event.headers['Accept'] ? event.headers['Accept'] : false
   const action = valid && event.headers['Action'] ? event.headers['Action'] : false
   const authorized = valid && event.headers['X-API-Key'] === API_KEY
-  if (accept && accept === 'application/x-protobuf' && action && authorized) {
-    return true
-  }
+  if (accept && accept === 'application/x-protobuf' && action && authorized) return true
   return false
 }
 
 export const apiAuth = async (event) => {
-  const valid = validRequest(event)
+  const valid = await validRequest(event)
   event.body = await xss(event.body)
-  if (valid) {
-    return event
-  }
+  if (valid) return event
   return false
 }

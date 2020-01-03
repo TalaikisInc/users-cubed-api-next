@@ -1,6 +1,6 @@
 import { object, string, bool } from 'yup'
 
-import { LANGUAGES } from '../../config'
+import { LANGUAGES, ROLES } from '../../config'
 
 export const createSchema = object().shape({
   email: string().required().email(),
@@ -32,29 +32,26 @@ export const userUpdate = object().shape({
   country: string().transform((cv, ov) => ov === '' ? undefined : cv).length(2),
   dob: string().transform((cv, ov) => ov === '' ? undefined : cv),
   avatarUrl: string().transform((cv, ov) => ov === '' ? undefined : cv).url(),
-  key: string().required(),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const userDestroy = object().shape({
-  key: string().required(),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const userGet = object().shape({
-  key: string().required(),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const socialSchema = object().shape({
-  provider: string().required().oneOf(['facebook', 'google', 'twitter']),
-  key: string().required(),
+  provider: string().required().oneOf(['facebook', 'google']),
+  idToken: string().required().min(5),
+  accessToken: string().required().min(5),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const setRoleSchema = object().shape({
   tokenId: string().required().length(64),
-  role: string().required().oneOf(['user', 'admin', 'editor']),
-  key: string().required(),
+  role: string().required().oneOf(ROLES),
   locale: string().required().oneOf(LANGUAGES)
 })

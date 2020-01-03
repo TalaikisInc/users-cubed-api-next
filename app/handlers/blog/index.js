@@ -2,42 +2,42 @@ import db from '../../lib/db'
 import { protoResponse } from '../../lib/proto'
 const table = 'blog_'
 
-export const getArticlesByTitle = () => {
+export const getArticlesByTitle = (data, final) => {
     
 }
 
-export const getArticlesByCategory = () => {
+export const getArticlesByCategory = (data, final) => {
     
 }
 
-export const getArticle = () => {
+export const getArticle = (data, final) => {
     
 }
 
-export const addArticle = () => {
-
+export const addArticle = (data, final) => {
+  // only users
 }
 
-export const editArticle = () => {
+export const editArticle = (data, final) => {
+  // only user's own
+}
+
+export const deleteArticle = (data, final) => {
+  // only user's own or admins/ editors
+}
+
+export const addCategory = (data, final) => {
+  // only admins/ editors
+}
+
+export const editCategory = (data, final) => {
     
 }
 
-export const deleteArticle = () => {
-    
+export const removeCategory = (data, final) => {
+  // only admins/ editors
 }
 
-export const addCategory = () => {
-    
-}
-
-export const editCategory = () => {
-    
-}
-
-export const removeCategory = () => {
-    
-}
-
-export const getCategories = () => {
+export const getCategories = (data, final) => {
     
 }

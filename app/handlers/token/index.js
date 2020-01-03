@@ -1,25 +1,26 @@
 import { randomID, hash } from '../../lib/security'
 import { USER_TOKEN_EXPIRY } from '../../config'
-import { read, create } from '../../lib/db'
+import db from '../../lib/db'
 import { user } from '../../lib/schemas'
 import { createSchema, tokenGet, tokenExtend, tokenDestroy } from './schema'
 import { t, setLocale } from '../../lib/translations'
-import { sendErr, finalizeRequest } from '../../lib/utils'
+import { finalizeRequest } from '../../lib/utils'
 
-export const get = async (data, done) => {
+export const get = async (data, final) => {
   const valid = await tokenGet.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await db.read('tokens', data.body.tokenId).catch(() => sendErr(403, t('error.token_notfound'), done))
-    done(200, tokenData)
+    const tokenData = await db.read('tokens', data.body.tokenId).catch(() => final({ s: 403, e: t('error.token_notfound') }))
+    final(null, { s: 200, o: { tokenData } })
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  sendErr(400, t('error.required'), done)
 }
 
 const _hash = async (u, userData, done) => {
-  const hashed = await hash(u.password).catch(() => sendErr(500, t('error.internal'), done))
+  const hashed = await hash(u.password).catch(() => done(t('error.internal')))
   if (userData.password === hashed) {
-    const tokenId = await randomID(32).catch(() => sendErr(500, t('error.id'), done))
+    const tokenId = await randomID(32).catch(() => done(t('error.id')))
     const expiry = Date.now() + 1000 * USER_TOKEN_EXPIRY
     const tokenObj = {
       expiry,
@@ -28,62 +29,76 @@ const _hash = async (u, userData, done) => {
       email: u.email
     }
 
-    await db.create('tokens', tokenId, tokenObj).catch(() => sendErr(400, t('error.token'), done))
-    done(200, { token: tokenId })
+    await db.create('tokens', tokenId, tokenObj).catch(() => done(t('error.token')))
+    done(null, tokenId)
+  } else {
+    done(t('error.invalid_password'))
   }
-  sendErr(400, t('error.invalid_password'), done)
 }
 
-export const gen = async (data, done) => {
-  const valid = await db.createSchema.isValid(data.body)
+export const gen = async (data, final) => {
+  const valid = await createSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const u = await user(data).catch(() => sendErr(400, t('error.required'), done))
+    const u = await user(data).catch(() => final({ s: 400, e: t('error.required') }))
     if ((u.email && u.password) || (u.phone && u.password)) {
-      const userData = await db.read('users', u.email).catch(async (e) => sendErr(400, t('error.cannot_read'), done))
+      const userData = await db.read('users', u.email).catch(() => final({ s: 400, e: t('error.cannot_read') }))
       if (userData) {
         if (userData.confirmed.email || userData.confirmed.phone) {
-          await _hash(u, userData, (status, out) => {
-            done(status, out)
+          await _hash(u, userData, (e, tokenId) => {
+            if (!e && tokenId) {
+              final({ s: 200, o: { tokenId } })
+            } else {
+              final({ s: 400, e })
+            }
           })
+        } else {
+          final({ s: 400, e: t('error.confirmed') })
         }
-        sendErr(400, t('error.confirmed'), done)
+      } else {
+        final({ s: 400, e: t('error.no_user') })
       }
-      sendErr(400, t('error.no_user'), done)
+    } else {
+      final({ s: 400, e: t('error.required') })
     }
-    sendErr(400, t('error.required'), done)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  sendErr(400, t('error.required'), done)
 }
 
-export const extend = async (data, done) => {
+export const extend = async (data, final) => {
   const valid = await tokenExtend.isValid(data.body)
   if (valid) {
     await setLocale(data)
     const id = data.body.tokenId
     if (id) {
-      const tokenData = await db.read('tokens', id).catch(() => sendErr(400, t('error.token_notfound'), done))
+      const tokenData = await db.read('tokens', id).catch(() => final({ s: 400, e: t('error.token_notfound') }))
       if (tokenData.expiry > Date.now()) {
         tokenData.expiry = Date.now() + 1000 * USER_TOKEN_EXPIRY
-        finalizeRequest('tokens', id, 'update', tokenData, done)
+        finalizeRequest('tokens', id, 'update', tokenData, final)
+      } else {
+        final({ s: 400, e: t('error.token_expired') })
       }
-      sendErr(400, t('error.token_expired'), done)
+    } else {
+      final({ s: 400, e: t('error.required') })
     }
-    sendErr(400, t('error.required'), done)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  sendErr(400, t('error.required'), done)
 }
 
-export const destroy = async (data, done) => {
+export const destroy = async (data, final) => {
   const valid = await tokenDestroy.isValid(data.body)
   if (valid) {
     await setLocale(data)
     const token = data.body.tokenId
     if (token) {
-      await db.read('tokens', token).catch(() => sendErr(400, t('error.token_notfound'), done))
-      finalizeRequest('tokens', token, 'delete', {}, done)
+      await db.read('tokens', token).catch(() => final({ s: 400, e: t('error.token_notfound') }))
+      finalizeRequest('tokens', token, 'delete', {}, final)
+    } else {
+      final({ s: 400, e: t('error.required') })
     }
-    sendErr(400, t('error.required'), done)
+  } else {
+    final({ s: 400, e: t('error.required') })
   }
-  sendErr(400, t('error.required'), done)
 }

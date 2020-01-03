@@ -22,14 +22,14 @@ export const sendOk = (final) => {
 export const _request = (schema, obj, done) => {
   const schemaLib = typeof schema === 'string' && schema === 'http' ? http : https
   const payloadString = typeof obj.data === 'object' ? stringify(obj.data) : false
-  if (payloadString && typeof obj.headers === 'string') {
+  if (payloadString && typeof obj.headers === 'object') {
     obj.headers['Content-Length'] = Buffer.byteLength(payloadString)
     const req = schemaLib.request(obj, (res) => {
       const status = res.statusCode
       if (status === 200 || status === 201) {
         done()
       } else {
-        done(status)
+        done(`Response status: ${status}`)
       }
     })
 
@@ -108,18 +108,19 @@ export const response = async (event, callback) => {
   if (payload) {
     const action = event.headers.Action
     const handler = typeof handlers[action] !== 'undefined' ? handlers[action] : handlers.NOT_FOUND
-    const { s, o } = await handler.h(payload).catch(() => sendErr(500, t('error.server'), callback))
-    if (s && o) {
-      protoResponse(s, o, handler.file, handler.class, (err, res) => {
-        if (!err && res) {
-          callback(null, res)
-        } else {
-          sendErr(err.s, err.e, callback)
-        }
-      })
-    } else {
-      sendErr(500, t('error.server'), callback)
-    }
+    await handler.h(payload, (e, r) => {
+      if (!e && r && r.s && r.o) {
+        protoResponse(r.s, r.o, handler.file, handler.class, (err, res) => {
+          if (!err && res) {
+            callback(null, res)
+          } else {
+            sendErr(500, err, callback)
+          }
+        })
+      } else if (e && e.s && e.e) {
+        sendErr(e.s, e.e, callback)
+      }
+    })
   } else {
     sendErr(403, t('error.unauthorized'), callback)
   }

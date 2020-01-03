@@ -1,24 +1,25 @@
 import db from '../../lib/db'
-import { sendErr } from '../../lib/utils'
 import { randomID } from '../../lib/security'
 import { UPLOAD_TABLE } from '../../config'
 import { t, setLocale } from '../../lib/translations'
+import { uploadSchema } from './schema'
 const accceptedTypes = ['image/png', 'image/jpeg', 'image/webp']
 
 export default async (data, final) => {
-  const length = Object.keys(data.files).length
+  const valid = uploadSchema.isValid(data.body)
   await setLocale(data)
-  if (length) {
-    const file = data.files.file
+  if (valid) {
+    const file = data.body
     if (accceptedTypes.includes(file.mimetype)) {
       const ext = file.name.split('.')[1]
-      const id = await randomID().catch(() => sendErr(500, t('error.bytes'), final))
+      const id = await randomID().catch(() => final({ s: 500, e: t('error.bytes') }))
       const fileName = `${id}.${ext}`
-      await db.create(UPLOAD_TABLE, fileName, file.data).catch(async (e) => sendErr(500, e, final))
+      await db.create(UPLOAD_TABLE, fileName, file.data).catch((e) => final({ s: 500, e }))
+      final({ s: 200, o: { status: 'ok', fileName } })
     } else {
-      sendErr(400, t('error.fileType'), final)
+      final({ s: 400, e: t('error.fileType') })
     }
   } else {
-    sendErr(400, t('error.required'), final)
+    final({ s: 400, e: t('error.required') })
   }
 }

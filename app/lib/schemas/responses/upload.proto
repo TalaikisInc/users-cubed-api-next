@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message Upload {
+  string status = 1;
+  string fileName = 2;
+}

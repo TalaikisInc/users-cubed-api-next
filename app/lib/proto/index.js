@@ -64,7 +64,8 @@ export const protoResponse = (statusCode, output, filePath, messageType, final) 
         headers: {
           'Content-Type': 'application/x-protobuf',
           'Access-Control-Allow-Origin': ALLOW_ORIGIN,
-          'Access-Control-Allow-Credentials': true
+          'Access-Control-Allow-Credentials': true,
+          Action: messageType
         },
         body: buffer.toString('base64'),
         isBase64Encoded: true
@@ -72,7 +73,8 @@ export const protoResponse = (statusCode, output, filePath, messageType, final) 
       final(null, response)
     })
     .catch((e) => {
-      console.log('Protoresponse', e)
-      final(t('error.bad_request'))
+      console.log(e)
+      // @FIXME? circular aftr success
+      // protoResponse(500, { error: t('error.bad_request') }, 'error', 'Error', final)
     })
 }

@@ -19,6 +19,7 @@ strictEqual(typeof process.env.API_KEY, 'string', 'You need API_KEY!')
 export const MOBILE_PROVIDER = 'twilio'
 export const EMAIL_PROVIDER = 'mailgun'
 export const DB_TYPE = 's3'
+export const ROLES = ['user', 'admin', 'editor'] // 1st should be always default, 2nd - admin
 
 export const MAILGUN = {
   nameFrom: process.env.MAILGUN_FROM,

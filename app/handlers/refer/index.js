@@ -6,7 +6,7 @@ import sendEmail from '../../lib/email'
 import { uuidv4, tokenHeader } from '../../lib/security'
 import { t, setLocale } from '../../lib/translations'
 import { referSchema, useSchema, registerSchema } from './schema'
-import { sendErr, finalizeRequest, validEmail } from '../../lib/utils'
+import { finalizeRequest, validEmail } from '../../lib/utils'
 
 const _generateToken = async (email, done) => {
   const token = uuidv4()

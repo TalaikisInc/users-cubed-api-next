@@ -45,10 +45,10 @@ export const en = {
     expired: 'Token expired.'
   },
   account: {
-    account_confirm_subject: 'Please confirm your account for {company}',
-    account_confirm_message: 'Your code for <a href="{baseUrl}">{company}</a> account:<h4><a href="{baseUrl}confirm/{code}">{code}</a></h4>',
-    account_confirm_phone: 'Your code for {company} account: {code}',
-    account_reset_phone: 'Your code for {company} password reset: {code}',
+    confirm_subject: 'Please confirm your account for {company}',
+    confirm_message: 'Your code for <a href="{baseUrl}">{company}</a> account:<h4><a href="{baseUrl}confirm/{code}">{code}</a></h4>',
+    confirm_phone: 'Your code for {company} account: {code}',
+    reset_phone: 'Your code for {company} password reset: {code}',
   },
   ok: 'OK.',
   refer: {
