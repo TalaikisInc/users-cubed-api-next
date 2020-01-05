@@ -5,7 +5,8 @@ module.exports = {
   },
   extends: [
     'standard',
-    'plugin:security/recommended'
+    'plugin:security/recommended',
+    'plugin:json/recommended'
   ],
   globals: {
     Atomics: 'readonly',
