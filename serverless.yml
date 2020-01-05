@@ -11,10 +11,10 @@ plugins:
   - serverless-offline
 provider:
   name: aws
-  runtime: nodejs12.13
   region: ${env:REGION}
   stage: ${env:STAGE}
-  memorySize: 512
+  runtime: ${env:LAMBDA_RUNTIME}
+  memorySize: 256
   timeout: 10
   versionFunctions: false
   apiKeys:

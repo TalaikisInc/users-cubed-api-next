@@ -9,6 +9,7 @@ AWS.config.apiVersions = {
   region: process.env.S3_REGION
 }
 const s3 = new AWS.S3()
+const { user } = require('./schema')
 
 const createBucket = (done) => {
   const params = {
@@ -23,7 +24,32 @@ const createBucket = (done) => {
   })
 }
 
+const save = (id, data, done) => {
+  const s = typeof data === 'object' ? JSON.stringify(data) : data
+  const params = {
+    Body: Buffer.from(s),
+    Bucket: process.env.USERS_BUCKET_NAME,
+    Key: id
+  }
+
+  s3.putObject(params, (err, data) => {
+    if (err) {
+      done(err.message)
+    } else {
+      done(null, JSON.parse(params.Body.toString('utf8')))
+    }
+  })
+}
+
 createBucket((err, data) => {
+  if (data && !err) {
+    console.log(data)
+  } else {
+    console.error(err)
+  }
+})
+
+save('schemas/user', user, (err, data) => {
   if (data && !err) {
     console.log(data)
   } else {

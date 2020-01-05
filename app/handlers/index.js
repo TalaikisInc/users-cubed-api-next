@@ -42,6 +42,8 @@ export const handlers = {
   [ACTIONS.UPLOAD]: { file: 'upload', class: 'Upload', h: require('./upload').default },
   [ACTIONS.CONTACT_US]: { file: 'contactUs', class: 'ContactUs', h: require('./contact-us').default },
   [ACTIONS.NOT_FOUND]: { file: 'notFound', class: 'NotFound', h: require('./generics/notFound').default },
+  [ACTIONS.MODULE.CREATE]: { file: 'moduleCreate', class: 'ModuleCreate', h: require('./module').create },
+  [ACTIONS.MODULE.MIGRATE]: { file: 'moduleMigrate', class: 'ModuleMigrate', h: require('./module').migrate },
   [ACTIONS.NOTIFY.PUSH]: { file: 'notify', class: 'Notify', h: require('./notifications').push },
   [ACTIONS.NOTIFY.SUBSCRIBE]: { file: 'notifySubscribe', class: 'NotifySubscribe', h: require('./notifications').pushSubscribe }
 }

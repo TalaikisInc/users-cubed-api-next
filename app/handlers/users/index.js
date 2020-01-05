@@ -9,7 +9,7 @@ import sendEmail from '../../lib/email'
 import sendSMS from '../../lib/phone'
 import { t, setLocale } from '../../lib/translations'
 import { createSchema, userUpdate, userDestroy, userGet, socialSchema, setRoleSchema } from './schema'
-import { validEmail, sendOk } from '../../lib/utils'
+import { validEmail } from '../../lib/utils'
 
 const _sendEmailConfirmation = async (email, done) => {
   const token = await randomID(32).catch(() => done(t('error.confirmation_generate')))
@@ -287,6 +287,7 @@ export const destroyUser = async (data, final) => {
       const refs = typeof userData.referred === 'object' && Array.isArray(userData.referred) ? userData.referred : []
       await db.destroy('users', tokenData.email).catch(() => final({ s: 400, e: t('error.user_delete') }))
       const e = await joinedTableDelete('refers', refs).catch(() => final({ s: 400, e: t('error.join_delete') }))
+      // @TODO for each user module - joindelete
       if (!e) {
         final(null, { s: 200, o: { status: 'ok' } })
       }

@@ -1,0 +1,6 @@
+syntax="proto3";
+
+message ModuleCreate {
+  string field = 1;
+  string locale = 2;
+}

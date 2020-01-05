@@ -44,14 +44,14 @@ The request schemas are in `app/lib/schemas/requests`
 
 All API responses have `Action` header with `messageType` for frontend decoding.
 
-All request from frontend should have `Action` header for routing.
+All requests from frontend should have `Action` header for routing.
 
 Dates should be converted with `parseInt(decoded.dateField, 10)`
 
 ## Technologies
 
 * AWS Lambda via [serverless framework](https://serverless.com/)
-* AWS S3 (as database) via [Amplify](https://github.com/aws-amplify/amplify-js)
+* AWS S3 (as database) via [AWS SDK](https://github.com/aws/aws-sdk-js)
 * [Protocol Buffers](https://developers.google.com/protocol-buffers) (backend - frontend communication)
 * [Node.js](https://github.com/nodejs/node)
 * Social signup/ signin via [Auth0](https://auth0.com/)
@@ -69,6 +69,8 @@ npm i
 ```bash
 # Create S3 bucket:
 node init/
+# Edit .env.production
+# Then:
 npm run deploy
 ```
 
@@ -76,8 +78,9 @@ npm run deploy
 
 ```bash
 # Local tests:
-npm run offline
 npm run test
+
+# npm run offline 
 
 # Live logs:
 serverless invoke -f users-cubed-api-next -l

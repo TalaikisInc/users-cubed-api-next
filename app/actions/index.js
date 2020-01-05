@@ -48,6 +48,10 @@ export default {
   },
   UPLOAD: 'UPLOAD',
   CONTACT_US: 'CONTACT_US',
+  MODULE: {
+    CREATE: 'MODULE_CREATE',
+    MIGRATE: 'MODULE_MIGRATE'
+  },
   NOT_FOUND: 'NOT_FOUND',
   NOTIFY: {
     PUSH: 'NOTIFY',
