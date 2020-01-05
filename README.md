@@ -112,10 +112,8 @@ Primary:
 
 Other:
 
-* Throthling error 429 status code (client side reporting)
 * Phone confirm
 * Cleanup for old data in S3
-* Autocompile proto files to avoid parser overhead
 
 Nice to have:
 
