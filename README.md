@@ -71,6 +71,7 @@ npm i
 node init/
 # Edit .env.production
 # Then:
+npm run build:proto
 npm run deploy
 ```
 

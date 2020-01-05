@@ -12,11 +12,11 @@ import { apiAuth } from '../auth'
 import { handlers } from '../../handlers'
 
 export const sendErr = async (status, msg) => {
-  return await protoResponse(status, { error: msg }, 'error', 'Error')
+  return await protoResponse(status, { error: msg }, 'Error')
 }
 
 export const sendOk = async () => {
-  return await protoResponse(200, { status: 'Ok' }, 'ok', 'Ok')
+  return await protoResponse(200, { status: 'Ok' }, 'Ok')
 }
 
 export const _request = (schema, obj, done) => {
@@ -90,7 +90,7 @@ const _decodeRequest = async (event, done) => {
   if (authorized) {
     const action = event.headers.Action
     const handler = typeof handlers[action] !== 'undefined' ? handlers[action] : handlers.NOT_FOUND
-    const body = await decode(handler.file, event.body, handler.class).catch((e) => done(e))
+    const body = await decode(event.body, handler.class).catch((e) => done(e))
     const obj = {
       body,
       headers: event.headers
@@ -110,7 +110,7 @@ const _response = async (event, done) => {
     const handler = typeof handlers[action] !== 'undefined' ? handlers[action] : handlers.NOT_FOUND
     await handler.h(payload, async (e, r) => {
       if (!e && r && r.s && r.o) {
-        done(null, await protoResponse(r.s, r.o, handler.file, handler.class))
+        done(null, await protoResponse(r.s, r.o, handler.class))
       } else if (e && e.s && e.e) {
         done(null, await sendErr(e.s, e.e))
       }

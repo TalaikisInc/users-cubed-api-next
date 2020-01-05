@@ -6,8 +6,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=testing mocha --timeout 60000 --exit tests/",
     "coverage": "cross-env NODE_ENV=testing nyc --reporter=text mocha --timeout 60000 tests/",
-    "build:toproto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./test.js ./test.proto",
-    "build:fromproto": "./node_modules/.bin/pbjs -t proto3 -o ./test.proto ./app/lib/schemas/responses/userCreate.json",
+    "build:proto": "pbjs -t json ./app/lib/schemas/requests/* > ./app/lib/schemas/reqBundle.json && pbjs -t json ./app/lib/schemas/responses/* > ./app/lib/schemas/resBundle.json",
     "upgrade:list": "ncu",
     "upgrade:install": "ncu -u",
     "offline": "serverless offline start -v -s development -e development",

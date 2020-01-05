@@ -1,0 +1,332 @@
+{
+  "nested": {
+    "Confirm": {
+      "fields": {
+        "token": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "ConfirmPhone": {
+      "fields": {
+        "locale": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ContactUs": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "name": {
+          "type": "string",
+          "id": 2
+        },
+        "msg": {
+          "type": "string",
+          "id": 3
+        },
+        "locale": {
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "DecoderTest": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        },
+        "email": {
+          "type": "string",
+          "id": 2
+        },
+        "password": {
+          "type": "string",
+          "id": 3
+        },
+        "tosAgreement": {
+          "type": "bool",
+          "id": 4
+        }
+      }
+    },
+    "ModuleCreate": {
+      "fields": {
+        "field": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "ModuleMigrate": {
+      "fields": {
+        "field": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "Refer": {
+      "fields": {
+        "to": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "ReferRegister": {
+      "fields": {
+        "locale": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ReferUse": {
+      "fields": {
+        "locale": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ResetCreate": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "SetRole": {
+      "fields": {
+        "role": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "TokenCreate": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "password": {
+          "type": "string",
+          "id": 2
+        },
+        "locale": {
+          "type": "string",
+          "id": 3
+        }
+      }
+    },
+    "TokenDestroy": {
+      "fields": {
+        "locale": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "TokenExtend": {
+      "fields": {
+        "tokenId": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "TokenGet": {
+      "fields": {
+        "tokenId": {
+          "type": "string",
+          "id": 1
+        },
+        "locale": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "Upload": {
+      "fields": {
+        "name": {
+          "type": "string",
+          "id": 1
+        },
+        "mimetype": {
+          "type": "string",
+          "id": 2
+        },
+        "data": {
+          "type": "string",
+          "id": 3
+        },
+        "locale": {
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "UserCreate": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "password": {
+          "type": "string",
+          "id": 2
+        },
+        "tosAgreement": {
+          "type": "bool",
+          "id": 3
+        },
+        "locale": {
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "UserCreateSocial": {
+      "fields": {
+        "provider": {
+          "type": "string",
+          "id": 1
+        },
+        "idToken": {
+          "type": "string",
+          "id": 2
+        },
+        "accessToken": {
+          "type": "string",
+          "id": 3
+        },
+        "locale": {
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "UserDestroy": {
+      "fields": {
+        "locale": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "UserEdit": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "firstName": {
+          "type": "string",
+          "id": 2
+        },
+        "lastName": {
+          "type": "string",
+          "id": 3
+        },
+        "dialCode": {
+          "type": "string",
+          "id": 4
+        },
+        "phone": {
+          "type": "string",
+          "id": 5
+        },
+        "address": {
+          "type": "string",
+          "id": 6
+        },
+        "zipCode": {
+          "type": "string",
+          "id": 7
+        },
+        "city": {
+          "type": "string",
+          "id": 8
+        },
+        "country": {
+          "type": "string",
+          "id": 9
+        },
+        "dob": {
+          "type": "string",
+          "id": 10
+        },
+        "avatarUrl": {
+          "type": "string",
+          "id": 11
+        },
+        "locale": {
+          "type": "string",
+          "id": 12
+        }
+      }
+    },
+    "UserGet": {
+      "fields": {
+        "locale": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "UserSetRole": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "role": {
+          "type": "string",
+          "id": 2
+        },
+        "locale": {
+          "type": "string",
+          "id": 3
+        }
+      }
+    }
+  }
+}

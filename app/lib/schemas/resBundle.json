@@ -1,0 +1,463 @@
+{
+  "nested": {
+    "Confirm": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ConfirmPhone": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ContactUs": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "DecoderTest": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        },
+        "email": {
+          "type": "string",
+          "id": 2
+        },
+        "password": {
+          "type": "string",
+          "id": 3
+        },
+        "tosAgreement": {
+          "type": "bool",
+          "id": 4
+        }
+      }
+    },
+    "Error": {
+      "fields": {
+        "error": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ModuleCreate": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ModuleMigrate": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "NotFound": {
+      "fields": {
+        "error": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "Notify": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "Ok": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "Refer": {
+      "fields": {
+        "error": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ReferRegister": {
+      "fields": {
+        "error": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ReferUse": {
+      "fields": {
+        "error": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "ResetCreate": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "SetRole": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "TokenCreate": {
+      "fields": {
+        "tokenId": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "TokenDestroy": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "TokenExtend": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        },
+        "tokenId": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "TokenGet": {
+      "fields": {
+        "expiry": {
+          "type": "int64",
+          "id": 1
+        },
+        "tokenId": {
+          "type": "string",
+          "id": 2
+        },
+        "role": {
+          "type": "string",
+          "id": 3
+        },
+        "email": {
+          "type": "string",
+          "id": 4
+        }
+      }
+    },
+    "Upload": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        },
+        "fileName": {
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
+    "UserCreate": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "UserCreateSocial": {
+      "fields": {
+        "tokenId": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "UserDestroy": {
+      "fields": {
+        "status": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    },
+    "UserEdit": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "firstName": {
+          "type": "string",
+          "id": 2
+        },
+        "lastName": {
+          "type": "string",
+          "id": 3
+        },
+        "dialCode": {
+          "type": "string",
+          "id": 4
+        },
+        "phone": {
+          "type": "string",
+          "id": 5
+        },
+        "address": {
+          "type": "string",
+          "id": 6
+        },
+        "zipCode": {
+          "type": "string",
+          "id": 7
+        },
+        "city": {
+          "type": "string",
+          "id": 8
+        },
+        "country": {
+          "type": "string",
+          "id": 9
+        },
+        "dob": {
+          "type": "string",
+          "id": 10
+        },
+        "avatarUrl": {
+          "type": "string",
+          "id": 11
+        },
+        "role": {
+          "type": "string",
+          "id": 12
+        }
+      }
+    },
+    "UserGet": {
+      "fields": {
+        "email": {
+          "type": "string",
+          "id": 1
+        },
+        "firstName": {
+          "type": "string",
+          "id": 2
+        },
+        "lastName": {
+          "type": "string",
+          "id": 3
+        },
+        "dialCode": {
+          "type": "string",
+          "id": 4
+        },
+        "phone": {
+          "type": "string",
+          "id": 5
+        },
+        "tosAgreement": {
+          "type": "bool",
+          "id": 6
+        },
+        "referred": {
+          "rule": "repeated",
+          "type": "string",
+          "id": 7
+        },
+        "address": {
+          "type": "string",
+          "id": 8
+        },
+        "zipCode": {
+          "type": "string",
+          "id": 9
+        },
+        "city": {
+          "type": "string",
+          "id": 10
+        },
+        "country": {
+          "type": "string",
+          "id": 11
+        },
+        "dob": {
+          "type": "string",
+          "id": 12
+        },
+        "avatarUrl": {
+          "type": "string",
+          "id": 13
+        },
+        "confirmed": {
+          "type": "Confirmed",
+          "id": 14
+        },
+        "social": {
+          "type": "Social",
+          "id": 15
+        },
+        "registeredAt": {
+          "type": "int64",
+          "id": 16
+        },
+        "updatedAt": {
+          "type": "int64",
+          "id": 17
+        },
+        "role": {
+          "type": "string",
+          "id": 18
+        }
+      },
+      "nested": {
+        "Confirmed": {
+          "fields": {
+            "email": {
+              "type": "bool",
+              "id": 1
+            },
+            "phone": {
+              "type": "bool",
+              "id": 2
+            }
+          }
+        },
+        "SocialItem": {
+          "fields": {
+            "idToken": {
+              "type": "string",
+              "id": 1
+            },
+            "accessToken": {
+              "type": "string",
+              "id": 2
+            },
+            "nickname": {
+              "type": "string",
+              "id": 3
+            },
+            "picture": {
+              "type": "string",
+              "id": 4
+            },
+            "email": {
+              "type": "string",
+              "id": 5
+            },
+            "emailVerified": {
+              "type": "bool",
+              "id": 6
+            },
+            "givenName": {
+              "type": "string",
+              "id": 7
+            },
+            "familyName": {
+              "type": "string",
+              "id": 8
+            },
+            "name": {
+              "type": "string",
+              "id": 9
+            },
+            "phoneNumber": {
+              "type": "string",
+              "id": 10
+            },
+            "phoneVerified": {
+              "type": "bool",
+              "id": 11
+            },
+            "blocked": {
+              "type": "bool",
+              "id": 12
+            },
+            "lastIp": {
+              "type": "string",
+              "id": 13
+            },
+            "createdAt": {
+              "type": "int64",
+              "id": 14
+            },
+            "updatedAt": {
+              "type": "int64",
+              "id": 15
+            },
+            "userId": {
+              "type": "string",
+              "id": 16
+            }
+          }
+        },
+        "Social": {
+          "fields": {
+            "auth0": {
+              "type": "SocialItem",
+              "id": 1
+            },
+            "facebok": {
+              "type": "SocialItem",
+              "id": 2
+            },
+            "google": {
+              "type": "SocialItem",
+              "id": 3
+            },
+            "twitter": {
+              "type": "SocialItem",
+              "id": 4
+            },
+            "linkedin": {
+              "type": "SocialItem",
+              "id": 5
+            }
+          }
+        }
+      }
+    },
+    "UserSetRole": {
+      "fields": {
+        "action": {
+          "type": "string",
+          "id": 1
+        }
+      }
+    }
+  }
+}

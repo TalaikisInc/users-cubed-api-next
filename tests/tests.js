@@ -92,34 +92,25 @@ describe('API tests', () => {
         .catch((e) => done(e))
     })
 
-    it('Db list should work', (done) => {
+    it('Db list should work', async () => {
       const table = 'users'
       const id2 = faker.internet.email()
       const id3 = faker.internet.email()
       const id4 = faker.internet.email()
       const data = { name: 'John', phone: '+000000000' }
 
-      db.create(table, id2, data)
-        .then(async () => {
-          await db.create(table, id3, data).catch((e) => done(e))
-          await db.create(table, id4, data).catch((e) => done(e))
-          const ls = await db.listDir(table).catch((e) => done(e))
-          ls.length.should.be.equal(4)
-          done()
-        })
-        .catch((e) => done(e))
+      await db.create(table, id2, data).catch((e) => e)
+      await db.create(table, id3, data).catch((e) => e)
+      await db.create(table, id4, data).catch((e) => e)
+      const ls = await db.listDir(table).catch((e) => e)
+      ls.length.should.be.equal(4)
     })
 
-    it('Db destroy should work', (done) => {
+    it('Db destroy should work', async () => {
       const table = 'users'
-
-      db.destroy(table, id1)
-        .then(async () => {
-          const ls = await db.listDir(table).catch((e) => done(e))
-          ls.length.should.be.equal(3)
-          done()
-        })
-        .catch((e) => done(e))
+      await db.destroy(table, id1).catch((e) => e)
+      const ls = await db.listDir(table).catch((e) => e)
+      ls.length.should.be.equal(3)
     })
 
     it('Join delete should work', async () => {
@@ -329,11 +320,10 @@ describe('API tests', () => {
       .catch((e) => done(e))
   })
 
-  it('Should encode and decode protobuffers', (done) => {
+  it('Should encode and decode protobuffers', async () => {
     const action = 'USER_CREATE'
     const email = faker.internet.email()
     const password = faker.internet.password()
-    const testPath = 'decoderTest'
     const messageType = 'DecoderTest'
     const output = {
       action,
@@ -341,22 +331,14 @@ describe('API tests', () => {
       password,
       tosAgreement: true
     }
-    encode(testPath, output, messageType)
-      .then((buffer) => {
-        const str = buffer.toString('base64')
-        str.should.be.string()
-        decode(testPath, str, messageType)
-          .then((obj) => {
-            obj.should.be.deep.equal(output)
-            done()
-          })
-          .catch((e) => done(e))
-      })
-      .catch((e) => done(e))
+    const buffer = await encode(output, messageType).catch((e) => e)
+    const str = buffer.toString('base64')
+    str.should.be.string()
+    const obj = await decode(str, messageType).catch((e) => e)
+    obj.should.be.deep.equal(output)
   })
 
   it('Encoder should not break on wrong data', (done) => {
-    const testPath = 'decoderTest'
     const messageType = 'DecoderTest'
     const output = {
       action: 10,
@@ -364,7 +346,7 @@ describe('API tests', () => {
       password: true,
       tosAgreement: 'test'
     }
-    encode(testPath, output, messageType)
+    encode(output, messageType)
       .then((buffer) => {
         const str = buffer.toString('base64')
         str.should.be.string()
@@ -374,7 +356,6 @@ describe('API tests', () => {
   })
 
   it('Decoder should not break on wrong data', (done) => {
-    const testPath = 'decoderTest'
     const messageType = 'DecoderTest'
     const output = {
       action: 10,
@@ -382,11 +363,11 @@ describe('API tests', () => {
       password: true,
       tosAgreement: 'test'
     }
-    encode(testPath, output, messageType)
+    encode(output, messageType)
       .then((buffer) => {
         const str = buffer.toString('base64')
         ;(typeof str).should.be.equal('string')
-        decode(testPath, str, messageType)
+        decode(str, messageType)
           .then((obj) => {
             obj.should.be.deep.equal(output)
             done()
@@ -401,7 +382,6 @@ describe('API tests', () => {
     const password1 = faker.internet.password()
 
     it('Should create user', async () => {
-      const filePath = handlers['USER_CREATE'].file
       const messageType = handlers['USER_CREATE'].class
       const output = {
         email: email1,
@@ -409,7 +389,7 @@ describe('API tests', () => {
         tosAgreement: true,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -428,7 +408,6 @@ describe('API tests', () => {
     })
 
     it('Handler lifecycle should return errors', async () => {
-      const filePath = handlers['USER_CREATE'].file
       const messageType = handlers['USER_CREATE'].class
       const output = {
         email: 'a',
@@ -436,7 +415,7 @@ describe('API tests', () => {
         tosAgreement: true,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -457,7 +436,6 @@ describe('API tests', () => {
     it('Should not allow calls w/o API key', async () => {
       const email = faker.internet.email()
       const password = faker.internet.password()
-      const filePath = handlers['USER_CREATE'].file
       const messageType = handlers['USER_CREATE'].class
       const output = {
         email,
@@ -465,7 +443,7 @@ describe('API tests', () => {
         tosAgreement: true,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -484,7 +462,6 @@ describe('API tests', () => {
     })
 
     it('Should confirm account', async () => {
-      const filePath = handlers['CONFIRM'].file
       const messageType = handlers['CONFIRM'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'confirms')
       const dir = readdirSync(d)
@@ -498,7 +475,7 @@ describe('API tests', () => {
         token: o.token,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -517,7 +494,6 @@ describe('API tests', () => {
     })
 
     it('Should sign in', async () => {
-      const filePath = handlers['TOKEN_CREATE'].file
       const messageType = handlers['TOKEN_CREATE'].class
 
       const output = {
@@ -525,7 +501,7 @@ describe('API tests', () => {
         password: password1,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -552,7 +528,6 @@ describe('API tests', () => {
     })
 
     it('Should get token', async () => {
-      const filePath = handlers['TOKEN_GET'].file
       const messageType = handlers['TOKEN_GET'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
@@ -563,7 +538,7 @@ describe('API tests', () => {
         tokenId: o.tokenId,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -581,7 +556,6 @@ describe('API tests', () => {
     })
 
     it('Should extend token', async () => {
-      const filePath = handlers['TOKEN_EXTEND'].file
       const messageType = handlers['TOKEN_EXTEND'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
@@ -593,7 +567,7 @@ describe('API tests', () => {
         tokenId: o.tokenId,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -615,7 +589,6 @@ describe('API tests', () => {
     })
 
     it('Should set role', async () => {
-      const filePath = handlers['SET_ROLE'].file
       const messageType = handlers['SET_ROLE'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
@@ -632,7 +605,7 @@ describe('API tests', () => {
         role: 'user',
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -654,7 +627,6 @@ describe('API tests', () => {
     })
 
     it('Should get own account', async () => {
-      const filePath = handlers['USER_GET'].file
       const messageType = handlers['USER_GET'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
@@ -666,7 +638,7 @@ describe('API tests', () => {
         locale: 'en'
       }
       const m = new Jm({ isPrint: true, isKb: true })
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -682,7 +654,7 @@ describe('API tests', () => {
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
-      const decoded = await decodeResponse(filePath, res.body, messageType).catch((e) => e)
+      const decoded = await decodeResponse(res.body, messageType).catch((e) => e)
       const meter = m.stop()
       console.log(meter)
       decoded.confirmed.email.should.be.equal(true)
@@ -691,7 +663,6 @@ describe('API tests', () => {
     it('Should edit user', async () => {
       const firstName = faker.name.firstName()
       const lastName = faker.name.lastName()
-      const filePath = handlers['USER_EDIT'].file
       const messageType = handlers['USER_EDIT'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
@@ -714,7 +685,7 @@ describe('API tests', () => {
         locale: 'en'
       }
 
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -730,14 +701,13 @@ describe('API tests', () => {
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
-      const decoded = await decodeResponse(filePath, res.body, messageType).catch((e) => e)
+      const decoded = await decodeResponse(res.body, messageType).catch((e) => e)
       decoded.firstName.should.be.equal(firstName)
       decoded.lastName.should.be.equal(lastName)
       decoded.email.should.be.equal(o.email)
     })
 
     it('Should sign out', async () => {
-      const filePath = handlers['TOKEN_DESTROY'].file
       const messageType = handlers['TOKEN_DESTROY'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
@@ -748,7 +718,7 @@ describe('API tests', () => {
       const output = {
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -769,7 +739,6 @@ describe('API tests', () => {
     })
 
     it('Should reset password', async () => {
-      const filePath = handlers['RESET_CREATE'].file
       const messageType = handlers['RESET_CREATE'].class
       const d1 = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'confirms')
       rimraf.sync(d1)
@@ -778,7 +747,7 @@ describe('API tests', () => {
         email: email1,
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -801,13 +770,12 @@ describe('API tests', () => {
       o1.type.should.be.equal('reset')
       o1.expiry.should.be.above(Date.now())
       const token = o1.token
-      const filePath1 = handlers['CONFIRM'].file
       const messageType1 = handlers['CONFIRM'].class
       const output1 = {
         token,
         locale: 'en'
       }
-      const buffer1 = await encodeRequest(filePath1, output1, messageType1).catch((e) => e)
+      const buffer1 = await encodeRequest(output1, messageType1).catch((e) => e)
       const event1 = {
         body: buffer1.toString('base64'),
         headers: {
@@ -826,7 +794,6 @@ describe('API tests', () => {
     })
 
     it('Should sign in with social', async () => {
-      const filePath = handlers['USER_CREATE_SOCIAL'].file
       const messageType = handlers['USER_CREATE_SOCIAL'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
 
@@ -836,7 +803,7 @@ describe('API tests', () => {
         accessToken: 'test123456789',
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {
@@ -861,7 +828,6 @@ describe('API tests', () => {
     })
 
     it('Should delete user', async () => {
-      const filePath = handlers['USER_DESTROY'].file
       const messageType = handlers['USER_DESTROY'].class
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
@@ -875,7 +841,7 @@ describe('API tests', () => {
       const output = {
         locale: 'en'
       }
-      const buffer = await encodeRequest(filePath, output, messageType).catch((e) => e)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
       const event = {
         body: buffer.toString('base64'),
         headers: {

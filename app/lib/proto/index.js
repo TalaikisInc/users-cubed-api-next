@@ -4,7 +4,7 @@ import { promisify } from 'util'
 
 import { ALLOW_ORIGIN } from '../../config'
 import { sendErr } from '../utils'
-const definitionsDirectory = resolve(__dirname, '../schemas/')
+const definitionsDirectory = resolve(__dirname, '../schemas')
 
 const decoder = (p, base64Buffer, messageType, done) => {
   protobuf.load(p, (err, root) => {
@@ -23,8 +23,8 @@ const decoder = (p, base64Buffer, messageType, done) => {
   })
 }
 
-const _decode = async (filePath, base64Buffer, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'requests', `${filePath}.proto`)
+const _decode = async (base64Buffer, messageType, done) => {
+  const p = resolve(definitionsDirectory, 'reqBundle.json')
   decoder(p, base64Buffer, messageType, done)
 }
 
@@ -47,29 +47,29 @@ const encoder = (p, output, messageType, done) => {
   })
 }
 
-const _encode = (filePath, output, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'responses', `${filePath}.proto`)
+const _encode = (output, messageType, done) => {
+  const p = resolve(definitionsDirectory, 'resBundle.json')
   encoder(p, output, messageType, done)
 }
 
 export const encode = promisify(_encode)
 
-const _encodeRequest = (filePath, output, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'requests', `${filePath}.proto`)
+const _encodeRequest = (output, messageType, done) => {
+  const p = resolve(definitionsDirectory, 'reqBundle.json')
   encoder(p, output, messageType, done)
 }
 
 export const encodeRequest = promisify(_encodeRequest)
 
-const _decodeResponse = (filePath, base64Buffer, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'responses', `${filePath}.proto`)
+const _decodeResponse = (base64Buffer, messageType, done) => {
+  const p = resolve(definitionsDirectory, 'resBundle.json')
   decoder(p, base64Buffer, messageType, done)
 }
 
 export const decodeResponse = promisify(_decodeResponse)
 
-const _protoResponse = async (statusCode, output, filePath, messageType, done) => {
-  const buffer = await encode(filePath, output, messageType).catch(async (e) => done(await sendErr(500, e)))
+const _protoResponse = async (statusCode, output, messageType, done) => {
+  const buffer = await encode(output, messageType).catch(async (e) => done(await sendErr(500, e)))
   done(null, {
     statusCode,
     headers: {
