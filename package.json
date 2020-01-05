@@ -4,8 +4,8 @@
   "description": "User management system/ CMS API on Lambda + S3.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 60000 --exit tests/",
-    "coverage": "nyc --reporter=text mocha --timeout 60000 tests/",
+    "test": "cross-env NODE_ENV=testing mocha --timeout 60000 --exit tests/",
+    "coverage": "cross-env NODE_ENV=testing nyc --reporter=text mocha --timeout 60000 tests/",
     "build:toproto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./test.js ./test.proto",
     "build:fromproto": "./node_modules/.bin/pbjs -t proto3 -o ./test.proto ./app/lib/schemas/responses/userCreate.json",
     "upgrade:list": "ncu",
@@ -108,6 +108,7 @@
   },
   "lint-staged": {
     "app/**/*.{js,ts,json}": [
+      "git add .",
       "eslint",
       "npm run coverage",
       "git-precommit-checks"
