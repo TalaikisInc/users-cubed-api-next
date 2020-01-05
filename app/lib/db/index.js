@@ -27,7 +27,7 @@ const _joinedTableDelete = (table, col, done) => {
       })
     })
   } else {
-    done(null, {})
+    done()
   }
 }
 

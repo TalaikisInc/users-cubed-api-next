@@ -23,12 +23,12 @@ const _update = async (dir, file, newData, done) => {
 }
 
 const _delete = async (dir, file, done) => {
-  const res = await s3.remove(`${dir}/${file}`).catch((e) => done(e))
-  done(null, res)
+  await s3.remove(`${dir}/${file}`).catch((e) => done(e))
+  done()
 }
 
 const _list = async (dir, done) => {
-  const res = await s3.listItems(`${dir}/`).catch((e) => done(e))
+  const res = await s3.listItems(dir).catch((e) => done(e))
   done(null, res)
 }
 

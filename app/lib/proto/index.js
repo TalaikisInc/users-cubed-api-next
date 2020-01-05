@@ -2,12 +2,11 @@ import { resolve } from 'path'
 import protobuf from 'protobufjs'
 import { promisify } from 'util'
 
-import { t } from '../translations'
 import { ALLOW_ORIGIN } from '../../config'
+import { sendErr } from '../utils'
 const definitionsDirectory = resolve(__dirname, '../schemas/')
 
-const _decode = async (filePath, base64Buffer, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'requests', `${filePath}.proto`)
+const decoder = (p, base64Buffer, messageType, done) => {
   protobuf.load(p, (err, root) => {
     if (!err && root) {
       try {
@@ -16,12 +15,17 @@ const _decode = async (filePath, base64Buffer, messageType, done) => {
         const obj = MsgType.toObject(message)
         done(null, obj)
       } catch (e) {
-        done(e)
+        done(e.message)
       }
     } else if (err) {
-      done(err)
+      done(err.message)
     }
   })
+}
+
+const _decode = async (filePath, base64Buffer, messageType, done) => {
+  const p = resolve(definitionsDirectory, 'requests', `${filePath}.proto`)
+  decoder(p, base64Buffer, messageType, done)
 }
 
 export const decode = promisify(_decode)
@@ -32,12 +36,13 @@ const encoder = (p, output, messageType, done) => {
       try {
         const MsgType = root.lookupType(messageType)
         const message = MsgType.create(output)
-        done(null, MsgType.encode(message).finish())
+        const enc = MsgType.encode(message).finish()
+        done(null, enc)
       } catch (e) {
-        done(e)
+        done(e.message)
       }
     } else {
-      done(err)
+      done(err.message)
     }
   })
 }
@@ -56,25 +61,26 @@ const _encodeRequest = (filePath, output, messageType, done) => {
 
 export const encodeRequest = promisify(_encodeRequest)
 
-export const protoResponse = (statusCode, output, filePath, messageType, final) => {
-  encode(filePath, output, messageType)
-    .then((buffer) => {
-      const response = {
-        statusCode,
-        headers: {
-          'Content-Type': 'application/x-protobuf',
-          'Access-Control-Allow-Origin': ALLOW_ORIGIN,
-          'Access-Control-Allow-Credentials': true,
-          Action: messageType
-        },
-        body: buffer.toString('base64'),
-        isBase64Encoded: true
-      }
-      final(null, response)
-    })
-    .catch((e) => {
-      console.log(e)
-      // @FIXME? circular aftr success
-      // protoResponse(500, { error: t('error.bad_request') }, 'error', 'Error', final)
-    })
+const _decodeResponse = (filePath, base64Buffer, messageType, done) => {
+  const p = resolve(definitionsDirectory, 'responses', `${filePath}.proto`)
+  decoder(p, base64Buffer, messageType, done)
 }
+
+export const decodeResponse = promisify(_decodeResponse)
+
+const _protoResponse = async (statusCode, output, filePath, messageType, done) => {
+  const buffer = await encode(filePath, output, messageType).catch(async (e) => done(await sendErr(500, e)))
+  done(null, {
+    statusCode,
+    headers: {
+      'Content-Type': 'application/x-protobuf',
+      'Access-Control-Allow-Origin': ALLOW_ORIGIN,
+      'Access-Control-Allow-Credentials': true,
+      Action: messageType
+    },
+    body: buffer.toString('base64'),
+    isBase64Encoded: true
+  })
+}
+
+export const protoResponse = promisify(_protoResponse)

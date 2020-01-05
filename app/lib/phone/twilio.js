@@ -29,7 +29,7 @@ export const _twilio = async (phone, msg, done) => {
       }
     }
 
-    await request('https', obj).catch((e) => done(e))
+    if (!(process.env.NODE_ENV === 'testing')) await request('https', obj).catch((e) => done(e))
     done()
   } else {
     done(t('error.phone'))

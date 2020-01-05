@@ -10,7 +10,7 @@ export default {
     DESTROY: 'USER_DESTROY',
     GET: 'USER_GET',
     CONFIRM_PHONE: 'USER_CONFIRM_PHONE',
-    SET_ROLE: 'USER_SET_ROLE'
+    SET_ROLE: 'SET_ROLE'
   },
   TOKEN: {
     CREATE: 'TOKEN_CREATE',
@@ -48,5 +48,9 @@ export default {
   },
   UPLOAD: 'UPLOAD',
   CONTACT_US: 'CONTACT_US',
-  NOT_FOUND: 'NOT_FOUND'
+  NOT_FOUND: 'NOT_FOUND',
+  NOTIFY: {
+    PUSH: 'NOTIFY',
+    SUBSCRIBE: 'NOTIFY_SUBSCRIBE'
+  }
 }

@@ -39,7 +39,10 @@ export const en = {
     profile: 'There was an error getting the profile.',
     timeout: 'Request timed out.',
     fileType: 'Wrong file type, only png, jpeg and webp are accepted.',
-    bad_request: 'Bad request.'
+    bad_request: 'Bad request.',
+    token_delete: 'Error with confirmation token.',
+    social_decline: 'Account email not verified or account is blocked.',
+    notify: 'Error sending notifications.'
   },
   token: {
     expired: 'Token expired.'

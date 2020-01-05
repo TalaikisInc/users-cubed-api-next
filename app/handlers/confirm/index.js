@@ -35,7 +35,7 @@ const selectType = async (tokenData, userData, done) => {
   }
 }
 
-export default async (data, final) => {
+export const confirm = async (data, final) => {
   const valid = await confirmSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
@@ -44,8 +44,13 @@ export default async (data, final) => {
     if (tokenData.expiry > Date.now()) {
       if (tokenData.token === id) {
         const userData = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.no_user') }))
-        await selectType(tokenData, userData, (status, data) => {
-          final(null, { s: status, o: data })
+        await selectType(tokenData, userData, async (e, data) => {
+          if (!e && data) {
+            await db.destroy('confirms', id).catch(() => final({ s: 400, e: t('error.token_delete') }))
+            final(null, data)
+          } else {
+            final({ s: 400, e })
+          }
         })
       } else {
         final({ s: 403, e: t('error.token_invalid') })

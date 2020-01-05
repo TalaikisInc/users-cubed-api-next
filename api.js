@@ -1,5 +1,5 @@
 import { response } from './app/lib/utils'
 
-module.exports.handler = async (event, context, callback) => {
-  await response(event, callback)
+module.exports.handler = async (event) => {
+  return await response(event)
 }

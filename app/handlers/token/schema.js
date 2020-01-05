@@ -14,7 +14,6 @@ export const tokenExtend = object().shape({
 })
 
 export const tokenDestroy = object().shape({
-  tokenId: string().required().length(64),
   locale: string().required().oneOf(LANGUAGES)
 })
 

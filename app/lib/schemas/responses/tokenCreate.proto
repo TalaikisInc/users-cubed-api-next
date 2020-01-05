@@ -1,5 +1,5 @@
 syntax="proto3";
 
 message TokenCreate {
-  string error = 1;
+  string tokenId = 1;
 }

@@ -1,7 +1,7 @@
 import { xss } from '../security'
 import { API_KEY } from '../../config'
 
-export const validRequest = async (event) => {
+export const validRequest = (event) => {
   const valid = event.headers && typeof event.headers === 'object'
   const accept = valid && event.headers['Accept'] ? event.headers['Accept'] : false
   const action = valid && event.headers['Action'] ? event.headers['Action'] : false
@@ -11,7 +11,7 @@ export const validRequest = async (event) => {
 }
 
 export const apiAuth = async (event) => {
-  const valid = await validRequest(event)
+  const valid = validRequest(event)
   event.body = await xss(event.body)
   if (valid) return event
   return false

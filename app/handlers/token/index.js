@@ -1,4 +1,4 @@
-import { randomID, hash } from '../../lib/security'
+import { randomID, hash, auth } from '../../lib/security'
 import { USER_TOKEN_EXPIRY } from '../../config'
 import db from '../../lib/db'
 import { user } from '../../lib/schemas'
@@ -10,8 +10,8 @@ export const get = async (data, final) => {
   const valid = await tokenGet.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await db.read('tokens', data.body.tokenId).catch(() => final({ s: 403, e: t('error.token_notfound') }))
-    final(null, { s: 200, o: { tokenData } })
+    const t = await db.read('tokens', data.body.tokenId).catch(() => final({ s: 403, e: t('error.token_notfound') }))
+    final(null, { s: 200, o: { expiry: t.expiry, tokenId: t.tokenId, role: t.role, email: t.email } })
   } else {
     final({ s: 400, e: t('error.required') })
   }
@@ -47,7 +47,7 @@ export const gen = async (data, final) => {
         if (userData.confirmed.email || userData.confirmed.phone) {
           await _hash(u, userData, (e, tokenId) => {
             if (!e && tokenId) {
-              final({ s: 200, o: { tokenId } })
+              final(null, { s: 200, o: { tokenId } })
             } else {
               final({ s: 400, e })
             }
@@ -91,10 +91,9 @@ export const destroy = async (data, final) => {
   const valid = await tokenDestroy.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const token = data.body.tokenId
-    if (token) {
-      await db.read('tokens', token).catch(() => final({ s: 400, e: t('error.token_notfound') }))
-      finalizeRequest('tokens', token, 'delete', {}, final)
+    const tokenData = await auth(data)
+    if (tokenData) {
+      finalizeRequest('tokens', tokenData.tokenId, 'destroy', '', final)
     } else {
       final({ s: 400, e: t('error.required') })
     }

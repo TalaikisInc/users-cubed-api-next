@@ -11,12 +11,12 @@ import { t } from '../translations'
 import { apiAuth } from '../auth'
 import { handlers } from '../../handlers'
 
-export const sendErr = (status, msg, final) => {
-  protoResponse(status, { error: msg }, 'error', 'Error', final)
+export const sendErr = async (status, msg) => {
+  return await protoResponse(status, { error: msg }, 'error', 'Error')
 }
 
-export const sendOk = (final) => {
-  protoResponse(200, { status: 'Ok' }, 'ok', 'Ok', final)
+export const sendOk = async () => {
+  return await protoResponse(200, { status: 'Ok' }, 'ok', 'Ok')
 }
 
 export const _request = (schema, obj, done) => {
@@ -103,25 +103,21 @@ const _decodeRequest = async (event, done) => {
 
 export const decodeRequest = promisify(_decodeRequest)
 
-export const response = async (event, callback) => {
-  const payload = await decodeRequest(event).catch((e) => sendErr(403, e, callback))
+const _response = async (event, done) => {
+  const payload = await decodeRequest(event).catch(async (e) => done(null, await sendErr(403, e)))
   if (payload) {
     const action = event.headers.Action
     const handler = typeof handlers[action] !== 'undefined' ? handlers[action] : handlers.NOT_FOUND
-    await handler.h(payload, (e, r) => {
+    await handler.h(payload, async (e, r) => {
       if (!e && r && r.s && r.o) {
-        protoResponse(r.s, r.o, handler.file, handler.class, (err, res) => {
-          if (!err && res) {
-            callback(null, res)
-          } else {
-            sendErr(500, err, callback)
-          }
-        })
+        done(null, await protoResponse(r.s, r.o, handler.file, handler.class))
       } else if (e && e.s && e.e) {
-        sendErr(e.s, e.e, callback)
+        done(null, await sendErr(e.s, e.e))
       }
     })
   } else {
-    sendErr(403, t('error.unauthorized'), callback)
+    done(null, await sendErr(403, t('error.unauthorized')))
   }
 }
+
+export const response = promisify(_response)

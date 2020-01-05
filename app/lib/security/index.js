@@ -2,7 +2,7 @@ import { inHTMLData } from 'xss-filters'
 import { promisify } from 'util'
 import { createHash, createHmac, createCipheriv, createDecipheriv, randomBytes } from 'crypto'
 
-import { read } from '../db'
+import db from '../db'
 import { HASH_SECRET } from '../../config'
 import { t } from '../translations'
 const algorithm = 'aes-256-cbc'
@@ -103,8 +103,8 @@ const _randomID = (n, done) => {
 export const randomID = promisify(_randomID)
 
 const _tokenHeader = (data, done) => {
-  if (data.headers && typeof data.headers.authorization === 'string') {
-    let token = data.headers.authorization.replace('Bearer ', '')
+  if (data.headers && typeof data.headers.Authorization === 'string') {
+    let token = data.headers.Authorization.replace('Bearer ', '')
     token = token.length === 64 ? token : false
     done(null, token)
   } else {

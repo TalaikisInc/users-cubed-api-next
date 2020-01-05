@@ -18,8 +18,15 @@ strictEqual(typeof process.env.API_KEY, 'string', 'You need API_KEY!')
 
 export const MOBILE_PROVIDER = 'twilio'
 export const EMAIL_PROVIDER = 'mailgun'
+export const PAYMENT_PROVIDER = 'stripe'
 export const DB_TYPE = 's3'
 export const ROLES = ['user', 'admin', 'editor'] // 1st should be always default, 2nd - admin
+export const FIRST_USER_ROLE = ROLES[1]
+export const SOCIAL_PROVIDERS = ['auth0', 'google', 'facebook', 'twitter', 'linkedin']
+
+export const WAPID_PUBLIC = process.env.WAPID_PUBLIC
+export const WAPID_PRIVATE = process.env.WAPID_PRIVATE
+export const WAPID_EMAIL = ''
 
 export const MAILGUN = {
   nameFrom: process.env.MAILGUN_FROM,

@@ -4,15 +4,16 @@
   "description": "User management system/ CMS API on Lambda + S3.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --timeout 60000 tests/",
+    "test": "mocha --timeout 60000 --exit tests/",
     "coverage": "nyc --reporter=text mocha --timeout 60000 tests/",
-    "build:proto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./test.js ./test.proto",
-    "build:proto2": "./node_modules/.bin/pbjs -t proto3 -o ./test.proto ./app/lib/schemas/responses/userCreate.json",
+    "build:toproto": "./node_modules/.bin/pbjs -t static-module -w commonjs -o ./test.js ./test.proto",
+    "build:fromproto": "./node_modules/.bin/pbjs -t proto3 -o ./test.proto ./app/lib/schemas/responses/userCreate.json",
     "upgrade:list": "ncu",
     "upgrade:install": "ncu -u",
     "offline": "serverless offline start -v -s development -e development",
-    "deploy": "serverless deploy -v --s production -e production",
-    "build:js": "babel ./app --out-file ./dist/index.js --no-comments"
+    "deploy": "serverless deploy -v -s production -e production",
+    "build:js": "babel ./api.js --out-file ./dist/index.js --no-comments",
+    "wapid": "web-push generate-vapid-keys"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
   },
   "keywords": [
     "cms",
-    "users"
+    "users",
+    "user management sytsem"
   ],
   "author": "Tadas Talaikis <info@talaikis.com>",
   "license": "GPL-v3",
@@ -28,6 +30,20 @@
     "url": "https://github.com/TalaikisInc/users-cubed-api-next/issues"
   },
   "homepage": "https://github.com/TalaikisInc/users-cubed-api-next#readme",
+  "dependencies": {
+    "aws-sdk": "^2.597.0",
+    "dotenv": "^8.2.0",
+    "frenchkiss": "^0.2.1",
+    "isemail": "^3.2.0",
+    "jwt-decode": "^2.2.0",
+    "legit": "^1.0.7",
+    "node-pushnotifications": "^1.2.0",
+    "protobufjs": "^6.8.8",
+    "stripe": "^7.15.0",
+    "web-push": "^3.4.3",
+    "xss-filters": "^1.2.7",
+    "yup": "^0.28.0"
+  },
   "devDependencies": {
     "@babel/cli": "^7.7.7",
     "@babel/core": "^7.7.7",
@@ -35,10 +51,12 @@
     "@babel/polyfill": "^7.7.0",
     "@babel/preset-env": "^7.7.7",
     "@babel/register": "^7.7.7",
-    "@commitlint/config-conventional": "^8.2.0",
-    "@typescript-eslint/eslint-plugin": "^2.13.0",
-    "@typescript-eslint/parser": "^2.13.0",
-    "babel-plugin-object-to-json-parse": "0.0.8",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "^2.14.0",
+    "@typescript-eslint/parser": "^2.14.0",
+    "babel-plugin-minify-mangle-names": "^0.5.0",
+    "babel-plugin-object-to-json-parse": "0.0.9",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-preset-minify": "^0.5.1",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
@@ -46,7 +64,7 @@
     "chai-http": "^4.3.0",
     "chai-json-schema": "^1.5.1",
     "chai-uuid": "^1.0.6",
-    "commitlint": "^8.2.0",
+    "commitlint": "^8.3.4",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.19.1",
@@ -63,7 +81,8 @@
     "mock-aws-s3": "^3.0.0",
     "npm-check-updates": "^4.0.1",
     "nyc": "^15.0.0",
-    "serverless": "^1.60.4",
+    "rimraf": "^3.0.0",
+    "serverless": "^1.60.5",
     "serverless-api-compression": "^1.0.1",
     "serverless-apigw-binary": "^0.4.4",
     "serverless-dotenv-plugin": "^2.1.1",
@@ -75,31 +94,16 @@
     "supertest": "^4.0.2",
     "typescript": "^3.7.4"
   },
-  "dependencies": {
-    "aws-sdk": "^2.596.0",
-    "chalk": "^3.0.0",
-    "dotenv": "^8.2.0",
-    "frenchkiss": "^0.2.1",
-    "isemail": "^3.2.0",
-    "jwt-decode": "^2.2.0",
-    "legit": "^1.0.7",
-    "protobufjs": "^6.8.8",
-    "stripe": "^7.14.0",
-    "xss-filters": "^1.2.7",
-    "yup": "^0.28.0"
-  },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
     "src/**/*.{js,ts,json}": [
       "eslint --fix",
-      "npm run build",
-      "git-precommit-checks",
-      "git add"
+      "git-precommit-checks"
     ]
   },
   "git-precommit-checks": {

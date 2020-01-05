@@ -1,5 +1,16 @@
 syntax="proto3";
 
 message UserEdit {
-  string action = 1;
+  string email = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string dialCode = 4;
+  string phone = 5;
+  string address = 6;
+  string zipCode = 7;
+  string city = 8;
+  string country = 9;
+  string dob = 10;
+  string avatarUrl = 11;
+  string role = 12;
 }

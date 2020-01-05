@@ -1,6 +1,6 @@
 syntax="proto3";
 
 message Confirm {
-  string token = 2;
-  string locale = 3;
+  string token = 1;
+  string locale = 2;
 }

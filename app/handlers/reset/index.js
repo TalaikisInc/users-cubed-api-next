@@ -8,6 +8,7 @@ import sendEmail from '../../lib/email'
 import sendSMS from '../../lib/phone'
 import { t, setLocale } from '../../lib/translations'
 import { resetSchema } from './schema'
+import { sendOk } from '../../lib/utils'
 
 const _sendEmailReset = async (email, done) => {
   const token = await randomID(32).catch(() => done(t('error.confirmation_generate')))
@@ -69,9 +70,9 @@ export default async (data, final) => {
       const userData = await db.read('users', u.email).catch(() => final({ s: 400, e: t('error.no_user') }))
       if (userData) {
         await sendReset(u.email, userData.phone).catch(() => final({ s: 500, e: t('error.email') }))
-        final(null, { status: 200, out: t('ok') })
+        final(null, { s: 200, o: { status: 'ok' } })
       } else {
-        final(400, t('error.no_user'), done)
+        final({ s: 400, e: t('error.no_user') })
       }
     } else {
       final({ s: 400, e: t('error.required') })

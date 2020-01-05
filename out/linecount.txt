@@ -1,0 +1,125 @@
+===============================================================================
+EXTENSION NAME : linecount
+EXTENSION VERSION : 0.1.7
+-------------------------------------------------------------------------------
+count time : 2020-01-04 00:04:31
+count workspace : c:\Users\Dxenu\Desktop\users-cubed-api-next
+total files : 113
+total code lines : 19945
+total comment lines : 575
+total blank lines : 508
+
+.babelrc, code is 9, comment is 2, blank is 1.
+.env, code is 22, comment is 0, blank is 6.
+.env.development, code is 23, comment is 0, blank is 6.
+.eslintrc.js, code is 24, comment is 0, blank is 2.
+.gitignore, code is 7, comment is 0, blank is 3.
+.node-version, code is 1, comment is 0, blank is 0.
+.nvmrc, code is 1, comment is 0, blank is 0.
+.nyc_output\7a81f2ee-3fcf-4bac-a075-37427bfb8517.json, code is 1, comment is 0, blank is 0.
+.nyc_output\processinfo\7a81f2ee-3fcf-4bac-a075-37427bfb8517.json, code is 1, comment is 0, blank is 0.
+.nyc_output\processinfo\index.json, code is 1, comment is 0, blank is 0.
+.serverless\cloudformation-template-create-stack.json, code is 66, comment is 0, blank is 1.
+.serverless\cloudformation-template-update-stack.json, code is 734, comment is 0, blank is 30.
+.serverless\custom-resources.zip, it is a binary file.
+.serverless\serverless-state.json, code is 959, comment is 0, blank is 35.
+.serverless\users-cubed-api-next.zip, it is a binary file.
+api.js, code is 4, comment is 0, blank is 1.
+app\actions\index.js, code is 52, comment is 0, blank is 0.
+app\config.js, code is 61, comment is 1, blank is 18.
+app\handlers\blog\index.js, code is 23, comment is 5, blank is 15.
+app\handlers\blog\schema.js, code is 0, comment is 0, blank is 0.
+app\handlers\confirm\index.js, code is 60, comment is 0, blank is 3.
+app\handlers\confirm\schema.js, code is 6, comment is 0, blank is 2.
+app\handlers\contact-us\index.js, code is 25, comment is 0, blank is 3.
+app\handlers\contact-us\schema.js, code is 8, comment is 0, blank is 2.
+app\handlers\generics\notFound.js, code is 5, comment is 0, blank is 1.
+app\handlers\index.js, code is 106, comment is 0, blank is 5.
+app\handlers\refer\index.js, code is 101, comment is 15, blank is 9.
+app\handlers\refer\schema.js, code is 16, comment is 0, blank is 4.
+app\handlers\reset\index.js, code is 72, comment is 0, blank is 10.
+app\handlers\reset\schema.js, code is 6, comment is 0, blank is 2.
+app\handlers\shop\index.js, code is 23, comment is 0, blank is 17.
+app\handlers\shop\schema.js, code is 0, comment is 0, blank is 0.
+app\handlers\token\index.js, code is 98, comment is 0, blank is 6.
+app\handlers\token\schema.js, code is 19, comment is 0, blank is 5.
+app\handlers\upload\index.js, code is 24, comment is 0, blank is 1.
+app\handlers\upload\schema.js, code is 8, comment is 0, blank is 2.
+app\handlers\users\index.js, code is 272, comment is 47, blank is 35.
+app\handlers\users\schema.js, code is 49, comment is 0, blank is 7.
+app\lib\auth\index.js, code is 16, comment is 0, blank is 2.
+app\lib\db\functions.js, code is 38, comment is 0, blank is 9.
+app\lib\db\index.js, code is 31, comment is 0, blank is 5.
+app\lib\email\index.js, code is 3, comment is 0, blank is 1.
+app\lib\email\mailgun.js, code is 35, comment is 3, blank is 7.
+app\lib\orm\index.js, code is 68, comment is 2, blank is 18.
+app\lib\payments\index.js, code is 0, comment is 0, blank is 0.
+app\lib\payments\stripe.js, code is 42, comment is 0, blank is 6.
+app\lib\phone\index.js, code is 3, comment is 0, blank is 1.
+app\lib\phone\twilio.js, code is 33, comment is 0, blank is 6.
+app\lib\proto\index.js, code is 81, comment is 2, blank is 12.
+app\lib\s3\index.js, code is 3, comment is 0, blank is 1.
+app\lib\s3\mock.js, code is 112, comment is 0, blank is 20.
+app\lib\s3\s3.js, code is 186, comment is 1, blank is 27.
+app\lib\schemas\index.js, code is 587, comment is 0, blank is 11.
+app\lib\schemas\requests\confirm.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\requests\confirmPhone.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\requests\contactUs.proto, code is 7, comment is 0, blank is 1.
+app\lib\schemas\requests\decoderTest.proto, code is 7, comment is 0, blank is 1.
+app\lib\schemas\requests\refer.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\requests\referRegister.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\requests\referUse.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\requests\resetCreate.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\requests\setRole.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\requests\tokenCreate.proto, code is 6, comment is 0, blank is 1.
+app\lib\schemas\requests\tokenDestroy.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\requests\tokenExtend.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\requests\tokenGet.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\requests\upload.proto, code is 7, comment is 0, blank is 1.
+app\lib\schemas\requests\userCreate.proto, code is 7, comment is 0, blank is 1.
+app\lib\schemas\requests\userCreateSocial.proto, code is 7, comment is 0, blank is 1.
+app\lib\schemas\requests\userDestroy.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\requests\userEdit.proto, code is 16, comment is 0, blank is 1.
+app\lib\schemas\requests\userGet.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\requests\userSetRole.proto, code is 6, comment is 0, blank is 1.
+app\lib\schemas\responses\confirm.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\confirmPhone.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\contactUs.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\decoderTest.proto, code is 7, comment is 0, blank is 1.
+app\lib\schemas\responses\error.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\notFound.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\ok.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\refer.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\referRegister.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\referUse.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\resetCreate.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\setRole.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\tokenCreate.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\tokenDestroy.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\responses\tokenExtend.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\responses\tokenGet.proto, code is 7, comment is 0, blank is 1.
+app\lib\schemas\responses\upload.proto, code is 5, comment is 0, blank is 1.
+app\lib\schemas\responses\userCreate.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\userCreateSocial.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\userDestroy.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\userEdit.proto, code is 4, comment is 0, blank is 1.
+app\lib\schemas\responses\userGet.proto, code is 36, comment is 0, blank is 4.
+app\lib\schemas\responses\userSetRole.proto, code is 4, comment is 0, blank is 1.
+app\lib\security\index.js, code is 106, comment is 0, blank is 22.
+app\lib\translations\index.js, code is 14, comment is 0, blank is 6.
+app\lib\translations\locales\en.js, code is 88, comment is 0, blank is 1.
+app\lib\translations\locales\fr.js, code is 5, comment is 0, blank is 0.
+app\lib\utils\index.js, code is 123, comment is 0, blank is 14.
+deploy.sh, code is 2, comment is 1, blank is 1.
+docker-compose.yml, code is 9, comment is 0, blank is 0.
+index.js, code is 6, comment is 0, blank is 1.
+init\index.js, code is 29, comment is 0, blank is 3.
+package-lock.json, code is 14561, comment is 0, blank is 0.
+package.json, code is 134, comment is 0, blank is 3.
+README.md, code is 40, comment is 0, blank is 17.
+serverless.yml, code is 90, comment is 3, blank is 1.
+tests\buckets\.gitkeep, code is 0, comment is 0, blank is 0.
+tests\helpers\index.js, code is 11, comment is 0, blank is 0.
+tests\index.js, code is 5, comment is 0, blank is 1.
+tests\tests.js, code is 346, comment is 493, blank is 34.
+===============================================================================

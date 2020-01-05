@@ -1,6 +1,6 @@
 import { object, string, bool } from 'yup'
 
-import { LANGUAGES, ROLES } from '../../config'
+import { LANGUAGES, ROLES, SOCIAL_PROVIDERS } from '../../config'
 
 export const createSchema = object().shape({
   email: string().required().email(),
@@ -44,14 +44,13 @@ export const userGet = object().shape({
 })
 
 export const socialSchema = object().shape({
-  provider: string().required().oneOf(['facebook', 'google']),
+  provider: string().required().oneOf(SOCIAL_PROVIDERS),
   idToken: string().required().min(5),
   accessToken: string().required().min(5),
   locale: string().required().oneOf(LANGUAGES)
 })
 
 export const setRoleSchema = object().shape({
-  tokenId: string().required().length(64),
   role: string().required().oneOf(ROLES),
   locale: string().required().oneOf(LANGUAGES)
 })

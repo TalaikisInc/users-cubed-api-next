@@ -1,6 +1,5 @@
 syntax="proto3";
 
 message TokenDestroy {
-    string tokenId = 1;
-    string locale = 2;
+    string locale = 1;
 }

@@ -18,7 +18,7 @@ const _getData = (id, done) => {
     if (err) {
       done(err.message)
     } else {
-      done(null, JSON.parse(data.Body.toString()))
+      done(null, JSON.parse(data.Body.toString('utf8')))
     }
   })
 }
@@ -108,7 +108,8 @@ const multiRemove = promisify(_multiRemove)
 const _list = (dir, done) => {
   const params = {
     Bucket: USERS_BUCKET_NAME,
-    MaxKeys: 100
+    MaxKeys: 100,
+    Prefix: dir
   }
 
   s3.listObjectsV2(params, (err, data) => {

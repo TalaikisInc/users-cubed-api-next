@@ -544,18 +544,18 @@ export const countries = [
 
 const _userFields = (data, email, done) => {
   const { firstName, lastName, dialCode, password, tosAgreement, phone, address, zipCode, city, country, avatarUrl, dob } = data.body
-  const _phone = typeof phone === 'string' && phone.length >= 11 ? phone : false
-  const _dialCode = typeof dialCode === 'string' && typeof dialCodes.filter((e) => e.dial === dialCode) !== 'undefined' ? dialCode : false
-  const _firstName = typeof firstName === 'string' && firstName.trim().length > 0 ? firstName.trim() : false
-  const _lastName = typeof lastName === 'string' && lastName.trim().length > 0 ? lastName.trim() : false
+  const _phone = typeof phone === 'string' && phone.length >= 11 ? phone : ''
+  const _dialCode = typeof dialCode === 'string' && typeof dialCodes.filter((e) => e.dial === dialCode) !== 'undefined' ? dialCode : ''
+  const _firstName = typeof firstName === 'string' && firstName.trim().length > 0 ? firstName.trim() : ''
+  const _lastName = typeof lastName === 'string' && lastName.trim().length > 0 ? lastName.trim() : ''
   const _password = typeof password === 'string' && password.trim().length > 11 ? password.trim() : false
   const _tosAgreement = typeof tosAgreement === 'boolean' && tosAgreement === true ? tosAgreement : false
-  const _address = typeof address === 'string' && address.trim().length > 0 ? address.trim() : false
-  const _zipCode = typeof zipCode === 'string' && zipCode.trim().length >= 5 ? zipCode.trim() : false
-  const _city = typeof city === 'string' && city.trim().length > 0 ? city.trim() : false
-  const _country = typeof country === 'string' && typeof countries.filter((e) => e.country === country) !== 'undefined' ? country.trim() : false
-  const _avatarUrl = typeof avatarUrl === 'string' && avatarUrl.trim().length > 0 ? avatarUrl.trim() : false
-  const _dob = typeof dob === 'string' && dob.trim().length > 0 ? dob.trim() : false
+  const _address = typeof address === 'string' && address.trim().length > 0 ? address.trim() : ''
+  const _zipCode = typeof zipCode === 'string' && zipCode.trim().length >= 5 ? zipCode.trim() : ''
+  const _city = typeof city === 'string' && city.trim().length > 0 ? city.trim() : ''
+  const _country = typeof country === 'string' && typeof countries.filter((e) => e.country === country) !== 'undefined' ? country.trim() : ''
+  const _avatarUrl = typeof avatarUrl === 'string' && avatarUrl.trim().length > 0 ? avatarUrl.trim() : ''
+  const _dob = typeof dob === 'string' && dob.trim().length > 0 ? dob.trim() : ''
 
   done(null, {
     email,
@@ -576,7 +576,7 @@ const _userFields = (data, email, done) => {
 
 const userFields = promisify(_userFields)
 
-const loose = async (data, email) => {
+export const loose = async (data, email) => {
   return await userFields(data, email)
 }
 

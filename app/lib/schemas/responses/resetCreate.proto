@@ -1,5 +1,5 @@
 syntax="proto3";
 
 message ResetCreate {
-  string error = 1;
+  string status = 1;
 }

@@ -1,4 +1,4 @@
-import { STRIPE_TEST_SECRET, STRIPE_LIVE_SECRET, STRIPE_ACCOUNT } from '../../config'
+import { STRIPE_TEST_SECRET, STRIPE_LIVE_SECRET, STRIPE_ACCOUNT, STRIPE_WEBHOOK_SECRET } from '../../config'
 const SECRET = process.env.STRIPE_ENV === 'production' ? STRIPE_LIVE_SECRET : STRIPE_TEST_SECRET
 const stripe = require('stripe')(SECRET, {
   maxNetworkRetries: 2
@@ -44,5 +44,19 @@ export const webhook = async (req, done) => {
     done(event)
   } catch (err) {
     done(err)
+  }
+}
+
+export const getEvent = (body, done) => {
+  try {
+    stripe.events.retrieve(body.id, (err, event) => {
+      if (!err && event) {
+        done(null, event.type ? event.type : '')
+      } else {
+        done(err.message)
+      }
+    })
+  } catch (err) {
+    done(err.message)
   }
 }

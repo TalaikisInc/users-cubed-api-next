@@ -40,7 +40,7 @@ All requests should have following headers:
 * X-API-Key
 * Accept `application/x-protobuf`
 
-User's request should have additional token:
+User's requests (edit, sign out, profile edit, etc.) should have additional token:
 
 * Authorization `Bearer ...`
 
@@ -49,6 +49,8 @@ The request schemas are in `app/lib/schemas/requests`
 All API responses have `Action` header with `messageType` for frontend decoding.
 
 All request from frontend should have `Action` header for routing.
+
+Dates should be converted with `parseInt(decoded.dateField, 10)`
 
 ## Technologies
 
@@ -96,11 +98,31 @@ serverless logs -f users-cubed-api-next -t -s production -e production
 
 ...
 
-## Possible improvements
+## Possible improvements / TODO
+
+Primary:
+
+* First user = admin
+* Insert new join route (+ schema storage) - admin's ability to associate new modules with user object
+* Test email / password / phone change
+* Update existing profile when sign in with social
+* Refer. contact, upload tests
+* Blog
+* shop
+
+Other:
+
+* Throthling error 429 status code (client side reporting)
+* Phone confirm
+* Cleanup for old data in S3
+* Autocompile proto files to avoid parser overhead
+
+Nice to have:
 
 * Encryption password for each user (using Vault or KMS)
 * Move to JSON repositories with S3 Select for more complex schema and query models
-* Throthling eror 429 status code (client side reporting)
+* Move from Auth0 to original clients
+* Get users by role
 
 ## Licence
 
