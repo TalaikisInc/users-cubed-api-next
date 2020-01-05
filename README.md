@@ -10,10 +10,6 @@ This is the 4th generation user management/ CMS system for rapid project starts.
 
 System is easily expandable with `actions` and uses only one route `/`,  making development for both frontend and backend parts fast and easy.
 
-## STATUS
-
-This repo is in development.
-
 ## Features
 
 * User signin/ signout/ signup/ reset password/ confirm, delete account
