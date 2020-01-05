@@ -2,8 +2,8 @@
     "plugins": [
         "object-to-json-parse",
         "@babel/plugin-transform-async-to-generator",
-        // "transform-remove-console",
-        // "minify-mangle-names"
+        "transform-remove-console",
+        "minify-mangle-names"
     ],
     "presets": [
         "@babel/preset-env",
