@@ -96,24 +96,24 @@ serverless logs -f users-cubed-api-next -t -s production -e production
 
 ## Frontend
 
-...
+* [Users Cubed Next Frontend](https://github.com/TalaikisInc/users-cubed-next-frontend) - SSR frontend for the API
 
 ## Possible improvements / TODO
 
 Primary:
 
-* First user = admin
-* Insert new join route (+ schema storage) - admin's ability to associate new modules with user object
+* Finish modules API (1) when creating user -> query for schema (2) finish admin actions
 * Test email / password / phone change
 * Update existing profile when sign in with social
-* Refer. contact, upload tests
-* Blog
-* shop
+* Refer. contact, upload, if user[0] is admin tests
+* Blog API
+* Shop API
 
 Other:
 
+* HTML email templates
 * Phone confirm
-* Cleanup for old data in S3
+* Cleanup for old data (not confirmed users) in S3
 
 Nice to have:
 

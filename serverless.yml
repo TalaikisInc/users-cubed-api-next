@@ -18,9 +18,19 @@ provider:
   timeout: 10
   versionFunctions: false
   apiKeys:
-    - ${env:API_KEY}
+  - name: API_KEY
+    value: ${env:API_KEY}
   apiGateway:
     apiKeySourceType: HEADER
+    minimumCompressionSize: 1024
+  usagePlan:
+    quota:
+      limit: 10000
+      offset: 2
+      period: MONTH
+    throttle:
+      burstLimit: 200
+      rateLimit: 100
 functions:
   handler:
     handler: index.handler
@@ -29,8 +39,21 @@ functions:
       - http:
           path: /
           method: post
-          cors: true
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+              - X-Amz-User-Agent
+              - Action
+              - Access-Control-Allow-Origin
+            allowCredentials: false
+            cacheControl: 'max-age=600, s-maxage=600, proxy-revalidate'
           private: true
+          async: true
     environment:
       HASH_SECRET: ${env:HASH_SECRET}
       TWILIO_FROM: ${env:TWILIO_FROM}

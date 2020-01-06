@@ -108,7 +108,7 @@ const multiRemove = promisify(_multiRemove)
 const _list = (dir, done) => {
   const params = {
     Bucket: USERS_BUCKET_NAME,
-    MaxKeys: 100,
+    MaxKeys: 10,
     Prefix: dir
   }
 

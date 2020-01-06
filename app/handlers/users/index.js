@@ -122,6 +122,8 @@ export const genUser = async (data, final) => {
       const exists = await db.read('users', u.email).catch(async () => {
         const hashedPassword = await hash(u.password).catch(() => final({ s: 400, e: t('error.hash') }))
         if (hashedPassword) {
+          const ls = await db.listDir('users').catch(() => final({ s: 400, e: t('error.user_create') }))
+          const role = ls.length === 0 ? ROLES[1] : ROLES[0]
           const now = Date.now()
           const newObj = {
             firstName: u.firstName ? u.firstName : '',
@@ -145,7 +147,7 @@ export const genUser = async (data, final) => {
             social,
             registeredAt: now,
             updatedAt: now,
-            role: ROLES[0]
+            role
           }
 
           await db.create('users', u.email, newObj).catch(() => final({ s: 400, e: t('error.user_create') }))

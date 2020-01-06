@@ -9,8 +9,8 @@
     "build:proto": "pbjs -t json ./app/lib/schemas/requests/* > ./app/lib/schemas/reqBundle.json && pbjs -t json ./app/lib/schemas/responses/* > ./app/lib/schemas/resBundle.json",
     "upgrade:list": "ncu",
     "upgrade:install": "ncu -u",
-    "offline": "serverless offline start -v -s development -e development",
-    "deploy": "cross-env NODE_ENV=production serverless deploy -v -s production -e production",
+    "offline": "serverless offline start -v -s dev -e development",
+    "deploy": "cross-env NODE_ENV=production serverless deploy -v -s prod -e production",
     "build:js": "babel ./api.js --out-file ./dist/index.js --no-comments",
     "wapid": "web-push generate-vapid-keys"
   },
@@ -79,6 +79,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "faker": "^4.1.0",
     "git-precommit-checks": "^3.0.0",
+    "handlebars": "^4.5.3",
     "husky": "^3.1.0",
     "js-meter": "^1.1.4",
     "lint-staged": "^9.5.0",

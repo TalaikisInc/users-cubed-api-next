@@ -75,7 +75,6 @@ const _protoResponse = async (statusCode, output, messageType, done) => {
     headers: {
       'Content-Type': 'application/x-protobuf',
       'Access-Control-Allow-Origin': ALLOW_ORIGIN,
-      'Access-Control-Allow-Credentials': true,
       Action: messageType
     },
     body: buffer.toString('base64'),
