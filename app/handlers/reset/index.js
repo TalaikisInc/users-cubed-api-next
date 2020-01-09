@@ -65,19 +65,19 @@ export default async (data, final) => {
   const valid = await resetSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const u = await user(data).catch(() => final({ s: 400, e: t('error.required') }))
+    const u = await user(data).catch(() => final(null, { s: 400, e: t('error.required') }))
     if (u.email) {
-      const userData = await db.read('users', u.email).catch(() => final({ s: 400, e: t('error.no_user') }))
+      const userData = await db.read('users', u.email).catch(() => final(null, { s: 400, e: t('error.no_user') }))
       if (userData) {
-        await sendReset(u.email, userData.phone).catch(() => final({ s: 500, e: t('error.email') }))
+        await sendReset(u.email, userData.phone).catch(() => final(null, { s: 500, e: t('error.email') }))
         final(null, { s: 200, o: { status: 'ok' } })
       } else {
-        final({ s: 400, e: t('error.no_user') })
+        final(null, { s: 400, e: t('error.no_user') })
       }
     } else {
-      final({ s: 400, e: t('error.required') })
+      final(null, { s: 400, e: t('error.required') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }

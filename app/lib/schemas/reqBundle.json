@@ -1,5 +1,19 @@
 {
   "nested": {
+    "Body": {
+      "fields": {
+        "body": {
+          "keyType": "string",
+          "type": "string",
+          "id": 1
+        },
+        "headers": {
+          "keyType": "string",
+          "type": "string",
+          "id": 2
+        }
+      }
+    },
     "Confirm": {
       "fields": {
         "token": {

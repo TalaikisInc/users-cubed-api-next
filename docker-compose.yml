@@ -1,9 +1,0 @@
-deploy:
-  image: node:latest
-  environment:
-    - HOME=/home
-  volumes:
-    - .:/app
-    - $HOME/.aws:/home/.aws
-  working_dir: /src
-  command: "./deploy.sh"

@@ -8,17 +8,17 @@ export const create = async (data, final) => {
   const valid = await moduleCrete.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch(() => final({ s: 403, e: t('error.unauthorized') }))
+    const tokenData = await auth(data).catch(() => final(null, { s: 403, e: t('error.unauthorized') }))
     if (tokenData.role !== ROLES[1]) {
-      final({ s: 403, e: t('error.unauthorized') })
+      final(null, { s: 403, e: t('error.unauthorized') })
     } else {
-      const schema = await db.read('schemas', 'user').catch(() => final({ s: 400, e: t('error.cannot_read') }))
+      const schema = await db.read('schemas', 'user').catch(() => final(null, { s: 400, e: t('error.cannot_read') }))
       schema.modules[data.body.field] = []
-      await db.update('schemas', 'user', schema).catch(() => final({ s: 500, e: t('error.cannot_update') }))
+      await db.update('schemas', 'user', schema).catch(() => final(null, { s: 500, e: t('error.cannot_update') }))
       final(null, { s: 200, o: { status: 'ok' } })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
 
@@ -27,6 +27,6 @@ export const migrate = async (data, final) => {
   // for each existing user - update its schema
   if (valid) {
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }

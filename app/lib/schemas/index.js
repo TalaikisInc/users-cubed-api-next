@@ -549,7 +549,7 @@ const _userFields = (data, email, done) => {
   const _firstName = typeof firstName === 'string' && firstName.trim().length > 0 ? firstName.trim() : ''
   const _lastName = typeof lastName === 'string' && lastName.trim().length > 0 ? lastName.trim() : ''
   const _password = typeof password === 'string' && password.trim().length > 11 ? password.trim() : false
-  const _tosAgreement = typeof tosAgreement === 'boolean' && tosAgreement === true ? tosAgreement : false
+  const _tosAgreement = typeof tosAgreement === 'string' && tosAgreement === '1'
   const _address = typeof address === 'string' && address.trim().length > 0 ? address.trim() : ''
   const _zipCode = typeof zipCode === 'string' && zipCode.trim().length >= 5 ? zipCode.trim() : ''
   const _city = typeof city === 'string' && city.trim().length > 0 ? city.trim() : ''

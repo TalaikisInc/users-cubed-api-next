@@ -5,7 +5,7 @@ import legit from 'legit'
 import { promisify } from 'util'
 import { validate } from 'isemail'
 
-import { protoResponse, decode } from '../proto'
+import { protoResponse, decode, decodeBody } from '../proto'
 import db from '../db'
 import { t } from '../translations'
 import { apiAuth } from '../auth'
@@ -56,7 +56,7 @@ export const finalizeRequest = (collection, id, action, obj, final) => {
       if (!err) {
         final(null, { s: 200, o: { status: 'ok' } })
       } else {
-        final({ s: 500, e: t('error.internal') })
+        final(null, { s: 500, e: t('error.internal') })
       }
     })
   } else {
@@ -64,7 +64,7 @@ export const finalizeRequest = (collection, id, action, obj, final) => {
       if (!err) {
         final(null, { s: 200, o: { status: 'ok' } })
       } else {
-        final({ s: 500, e: t('error.internal') })
+        final(null, { s: 500, e: t('error.internal') })
       }
     })
   }
@@ -86,14 +86,12 @@ const _validEmail = async (email, done) => {
 export const validEmail = promisify(_validEmail)
 
 const _decodeRequest = async (event, done) => {
-  const authorized = await apiAuth(event).catch((e) => done(e))
+  const decodedEvent = await decodeBody(event).catch((e) => done(e))
+  const authorized = await apiAuth(decodedEvent).catch((e) => done(e))
   if (authorized) {
-    const action = event.headers.Action
-    const handler = typeof handlers[action] !== 'undefined' ? handlers[action] : handlers.NOT_FOUND
-    const body = await decode(event.body, handler.class).catch((e) => done(e))
     const obj = {
-      body,
-      headers: event.headers
+      body: authorized.body,
+      headers: authorized.headers
     }
     done(null, obj)
   } else {
@@ -106,13 +104,13 @@ export const decodeRequest = promisify(_decodeRequest)
 const _response = async (event, done) => {
   const payload = await decodeRequest(event).catch(async (e) => done(null, await sendErr(403, e)))
   if (payload) {
-    const action = event.headers.Action
+    const action = payload.headers.Action
     const handler = typeof handlers[action] !== 'undefined' ? handlers[action] : handlers.NOT_FOUND
-    await handler.h(payload, async (e, r) => {
-      if (!e && r && r.s && r.o) {
-        done(null, await protoResponse(r.s, r.o, handler.class))
-      } else if (e && e.s && e.e) {
-        done(null, await sendErr(e.s, e.e))
+    await handler.h(payload, async (_, res) => {
+      if (res && res.s && res.o) {
+        done(null, await protoResponse(res.s, res.o, handler.class))
+      } else if (res && res.s && res.e) {
+        done(null, await sendErr(res.s, res.e))
       }
     })
   } else {

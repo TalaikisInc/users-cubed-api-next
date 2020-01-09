@@ -36,7 +36,7 @@ All requests should have following headers:
 * X-API-Key
 * Accept `application/x-protobuf`
 
-User's requests (edit, sign out, profile edit, etc.) should have additional token:
+User's requests (edit, sign out, profile edit, etc.) should have additional token*:
 
 * Authorization `Bearer ...`
 
@@ -44,14 +44,18 @@ The request schemas are in `app/lib/schemas/requests`
 
 All API responses have `Action` header with `messageType` for frontend decoding.
 
-All requests from frontend should have `Action` header for routing.
+All requests from frontend should have `Action` header* for routing.
 
-Dates should be converted with `parseInt(decoded.dateField, 10)`
+Response dates should be converted with `parseInt(decoded.dateField, 10)`
+
+* Headers should be object in the body, e.g. `{ body: { bodyField: 'a' }, headers: { .... }}`, so not only body can be encoded, but also client side custom headers (e.g. `Action`).
+
+** Version 2.0 accepts only flat bodies and only string values, making all, but `body.proto`  files in `schemas/requests` obsolete, they are for body fields reference only.
 
 ## Technologies
 
 * AWS Lambda via [serverless framework](https://serverless.com/)
-* AWS S3 (as database) via [AWS SDK](https://github.com/aws/aws-sdk-js)
+* AWS S3 (as a database) via [AWS SDK](https://github.com/aws/aws-sdk-js)
 * [Protocol Buffers](https://developers.google.com/protocol-buffers) (backend - frontend communication)
 * [Node.js](https://github.com/nodejs/node)
 * Social signup/ signin via [Auth0](https://auth0.com/)
@@ -98,10 +102,15 @@ serverless logs -f users-cubed-api-next -t -s production -e production
 
 * [Users Cubed Next Frontend](https://github.com/TalaikisInc/users-cubed-next-frontend) - SSR frontend for the API
 
+## Security considerations
+
+You should secure store for your secret environment variables. This is not implemented here, but should be in critical applications. Keys should be encrypted at rest, in transit with least of privilege.
+
 ## Possible improvements / TODO
 
 Primary:
 
+* fix s3-lambda permissions, encryption, response
 * Finish modules API (1) when creating user -> query for schema (2) finish admin actions
 * Test email / password / phone change
 * Update existing profile when sign in with social
@@ -114,13 +123,14 @@ Other:
 * HTML email templates
 * Phone confirm
 * Cleanup for old data (not confirmed users) in S3
+* Shop categories
 
 Nice to have:
 
-* Encryption password for each user (using Vault or KMS)
 * Move to JSON repositories with S3 Select for more complex schema and query models
 * Move from Auth0 to original clients
 * Get users by role
+* Lambda per handler, monitoring, alarms, SSM, but it's out of scope of this project
 
 ## Licence
 

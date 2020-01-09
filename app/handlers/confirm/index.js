@@ -40,25 +40,25 @@ export const confirm = async (data, final) => {
   if (valid) {
     await setLocale(data)
     const id = data.body.token
-    const tokenData = await db.read('confirms', id).catch(() => final({ s: 403, e: t('error.token_notfound') }))
+    const tokenData = await db.read('confirms', id).catch(() => final(null, { s: 403, e: t('error.token_notfound') }))
     if (tokenData.expiry > Date.now()) {
       if (tokenData.token === id) {
-        const userData = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.no_user') }))
+        const userData = await db.read('users', tokenData.email).catch(() => final(null, { s: 400, e: t('error.no_user') }))
         await selectType(tokenData, userData, async (e, data) => {
           if (!e && data) {
-            await db.destroy('confirms', id).catch(() => final({ s: 400, e: t('error.token_delete') }))
+            await db.destroy('confirms', id).catch(() => final(null, { s: 400, e: t('error.token_delete') }))
             final(null, data)
           } else {
-            final({ s: 400, e })
+            final(null, { s: 400, e })
           }
         })
       } else {
-        final({ s: 403, e: t('error.token_invalid') })
+        final(null, { s: 403, e: t('error.token_invalid') })
       }
     } else {
-      final({ s: 403, e: t('error.token_expired') })
+      final(null, { s: 403, e: t('error.token_expired') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }

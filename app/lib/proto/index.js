@@ -4,7 +4,10 @@ import { promisify } from 'util'
 
 import { ALLOW_ORIGIN } from '../../config'
 import { sendErr } from '../utils'
+import { t } from '../translations'
 const definitionsDirectory = resolve(__dirname, '../schemas')
+const resBundle = resolve(definitionsDirectory, 'resBundle.json')
+const reqBundle = resolve(definitionsDirectory, 'reqBundle.json')
 
 const decoder = (p, base64Buffer, messageType, done) => {
   protobuf.load(p, (err, root) => {
@@ -24,8 +27,7 @@ const decoder = (p, base64Buffer, messageType, done) => {
 }
 
 const _decode = async (base64Buffer, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'reqBundle.json')
-  decoder(p, base64Buffer, messageType, done)
+  decoder(reqBundle, base64Buffer, messageType, done)
 }
 
 export const decode = promisify(_decode)
@@ -48,38 +50,54 @@ const encoder = (p, output, messageType, done) => {
 }
 
 const _encode = (output, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'resBundle.json')
-  encoder(p, output, messageType, done)
+  encoder(resBundle, output, messageType, done)
 }
 
 export const encode = promisify(_encode)
 
-const _encodeRequest = (output, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'reqBundle.json')
-  encoder(p, output, messageType, done)
+// @TODO remove messageType
+const _encodeRequest = async (output, messageType, done) => {
+  _encodeBody(output, done)
 }
 
 export const encodeRequest = promisify(_encodeRequest)
 
 const _decodeResponse = (base64Buffer, messageType, done) => {
-  const p = resolve(definitionsDirectory, 'resBundle.json')
-  decoder(p, base64Buffer, messageType, done)
+  decoder(resBundle, base64Buffer, messageType, done)
 }
 
 export const decodeResponse = promisify(_decodeResponse)
 
+const _encodeBody = (base64Buffer, done) => {
+  encoder(resBundle, base64Buffer, 'Body', done)
+}
+
+export const encodeBody = promisify(_encodeBody)
+
+const _decodeBody = (base64Buffer, done) => {
+  decoder(reqBundle, base64Buffer, 'Body', done)
+}
+
+export const decodeBody = promisify(_decodeBody)
+
 const _protoResponse = async (statusCode, output, messageType, done) => {
-  const buffer = await encode(output, messageType).catch(async (e) => done(await sendErr(500, e)))
-  done(null, {
-    statusCode,
-    headers: {
-      'Content-Type': 'application/x-protobuf',
-      'Access-Control-Allow-Origin': ALLOW_ORIGIN,
-      Action: messageType
-    },
-    body: buffer.toString('base64'),
-    isBase64Encoded: true
-  })
+  const buffer = await encode(output, messageType).catch(async (e) => done(null, await sendErr(500, e)))
+  if (buffer) {
+    const body = buffer.toString('base64')
+    done(null, {
+      statusCode,
+      headers: {
+        'Content-Type': 'application/x-protobuf',
+        Accept: 'application/x-protobuf',
+        'Access-Control-Allow-Origin': ALLOW_ORIGIN,
+        Action: messageType
+      },
+      body,
+      isBase64Encoded: true
+    })
+  } else {
+    done(null, await sendErr(500, t('error.unknown')))
+  }
 }
 
 export const protoResponse = promisify(_protoResponse)

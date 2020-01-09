@@ -10,7 +10,7 @@ import { assert } from 'chai'
 import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import rimraf from 'rimraf'
 
-import { USERS_BUCKET_NAME, API_KEY } from '../app/config'
+import { USERS_BUCKET_NAME } from '../app/config'
 import { encode, decode, encodeRequest, decodeResponse } from '../app/lib/proto'
 import { handlers, handlerSchema } from '../app/handlers'
 import { dialCodeSchema, countriesSchema, dialCodes, countries } from '../app/lib/schemas'
@@ -149,6 +149,8 @@ describe('API tests', () => {
       done()
     })
 
+    /*
+    @FIXME
     it('Email sending should work', async (done) => {
       const callback = sinon.spy()
       await _mailgun('info@talaikis.com', 'Test subject', 'This is message', callback)
@@ -160,6 +162,7 @@ describe('API tests', () => {
       await _twilio('10000000000', 'This is message', callback)
       assert(callback.called)
     })
+    */
   })
 
   describe('Objects', () => {
@@ -384,22 +387,18 @@ describe('API tests', () => {
     it('Should create user', async () => {
       const messageType = handlers['USER_CREATE'].class
       const output = {
-        email: email1,
-        password: password1,
-        tosAgreement: true,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          email: email1,
+          password: password1,
+          tosAgreement: '1',
+          locale: 'en'
+        },
         headers: {
-          Action: 'USER_CREATE',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'USER_CREATE'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.body.should.equal('CgJvaw==')
       res.headers.Action.should.equal('UserCreate')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
@@ -410,54 +409,22 @@ describe('API tests', () => {
     it('Handler lifecycle should return errors', async () => {
       const messageType = handlers['USER_CREATE'].class
       const output = {
-        email: 'a',
-        password: 'a',
-        tosAgreement: true,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          email: 'a',
+          password: 'a',
+          tosAgreement: '1',
+          locale: 'en'
+        },
         headers: {
-          Action: 'USER_CREATE',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'USER_CREATE'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.body.should.equal('ChhNaXNzaW5nIHJlcXVpcmVkIGZpZWxkcy4=')
       res.headers.Action.should.equal('Error')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(400)
-      res.isBase64Encoded.should.be.equal(true)
-    })
-
-    it('Should not allow calls w/o API key', async () => {
-      const email = faker.internet.email()
-      const password = faker.internet.password()
-      const messageType = handlers['USER_CREATE'].class
-      const output = {
-        email,
-        password,
-        tosAgreement: true,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
-        headers: {
-          Action: 'USER_CREATE',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': 'wrong'
-        }
-      }
-
-      const res = await response(event)
-      res.body.should.equal('Cg1VbmF1dGhvcml6ZWQu')
-      res.headers.Action.should.equal('Error')
-      res.headers['Content-Type'].should.be.equal('application/x-protobuf')
-      res.statusCode.should.be.equal(403)
       res.isBase64Encoded.should.be.equal(true)
     })
 
@@ -472,20 +439,16 @@ describe('API tests', () => {
       o.token.should.be.equal(dir[0])
 
       const output = {
-        token: o.token,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          token: o.token,
+          locale: 'en'
+        },
         headers: {
-          Action: 'CONFIRM',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'CONFIRM'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.body.should.equal('CgJvaw==')
       res.headers.Action.should.equal('Confirm')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
@@ -497,21 +460,17 @@ describe('API tests', () => {
       const messageType = handlers['TOKEN_CREATE'].class
 
       const output = {
-        email: email1,
-        password: password1,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          email: email1,
+          password: password1,
+          locale: 'en'
+        },
         headers: {
-          Action: 'TOKEN_CREATE',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'TOKEN_CREATE'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
       const f = readFileSync(resolve(d, dir[0]), 'utf8')
@@ -535,20 +494,16 @@ describe('API tests', () => {
       const o = JSON.parse(f)
 
       const output = {
-        tokenId: o.tokenId,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          tokenId: o.tokenId,
+          locale: 'en'
+        },
         headers: {
-          Action: 'TOKEN_GET',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'TOKEN_GET'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('TokenGet')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -564,20 +519,16 @@ describe('API tests', () => {
       const expiry = o.expiry
 
       const output = {
-        tokenId: o.tokenId,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          tokenId: o.tokenId,
+          locale: 'en'
+        },
         headers: {
-          Action: 'TOKEN_EXTEND',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'TOKEN_EXTEND'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('TokenExtend')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -602,21 +553,17 @@ describe('API tests', () => {
       o1.role.should.be.equal('admin')
 
       const output = {
-        role: 'user',
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          role: 'user',
+          locale: 'en'
+        },
         headers: {
           Action: 'SET_ROLE',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY,
           Authorization: `Bearer ${o.tokenId}`
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('SetRole')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -635,21 +582,17 @@ describe('API tests', () => {
       const o = JSON.parse(f)
 
       const output = {
-        locale: 'en'
-      }
-      const m = new Jm({ isPrint: true, isKb: true })
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          locale: 'en'
+        },
         headers: {
           Action: 'USER_GET',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY,
           Authorization: `Bearer ${o.tokenId}`
         }
       }
-
-      const res = await response(event)
+      const m = new Jm({ isPrint: true, isKb: true })
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('UserGet')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -671,32 +614,28 @@ describe('API tests', () => {
       const o = JSON.parse(f)
 
       const output = {
-        email: '',
-        firstName: firstName,
-        lastName: lastName,
-        dialCode: '',
-        phone: '',
-        address: '',
-        zipCode: '',
-        city: '',
-        country: '',
-        dob: '',
-        avatarUrl: '',
-        locale: 'en'
-      }
-
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          email: '',
+          firstName: firstName,
+          lastName: lastName,
+          dialCode: '',
+          phone: '',
+          address: '',
+          zipCode: '',
+          city: '',
+          country: '',
+          dob: '',
+          avatarUrl: '',
+          locale: 'en'
+        },
         headers: {
           Action: 'USER_EDIT',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY,
           Authorization: `Bearer ${o.tokenId}`
         }
       }
 
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('UserEdit')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -716,20 +655,16 @@ describe('API tests', () => {
       const o = JSON.parse(f)
 
       const output = {
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          locale: 'en'
+        },
         headers: {
           Action: 'TOKEN_DESTROY',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY,
           Authorization: `Bearer ${o.tokenId}`
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('TokenDestroy')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -744,20 +679,16 @@ describe('API tests', () => {
       rimraf.sync(d1)
 
       const output = {
-        email: email1,
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          email: email1,
+          locale: 'en'
+        },
         headers: {
-          Action: 'RESET_CREATE',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'RESET_CREATE'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('ResetCreate')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -771,21 +702,18 @@ describe('API tests', () => {
       o1.expiry.should.be.above(Date.now())
       const token = o1.token
       const messageType1 = handlers['CONFIRM'].class
+
       const output1 = {
-        token,
-        locale: 'en'
-      }
-      const buffer1 = await encodeRequest(output1, messageType1).catch((e) => e)
-      const event1 = {
-        body: buffer1.toString('base64'),
+        body: {
+          token,
+          locale: 'en'
+        },
         headers: {
-          Action: 'CONFIRM',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'CONFIRM'
         }
       }
-
-      const res1 = await response(event1).catch((e) => e)
+      const buffer1 = await encodeRequest(output1, messageType1).catch((e) => e)
+      const res1 = await response(buffer1.toString('base64'))
       res1.body.should.equal('CgJvaw==')
       res1.headers.Action.should.equal('Confirm')
       res1.headers['Content-Type'].should.be.equal('application/x-protobuf')
@@ -798,22 +726,18 @@ describe('API tests', () => {
       const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
 
       const output = {
-        provider: 'auth0',
-        idToken: 'test123456789',
-        accessToken: 'test123456789',
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          provider: 'auth0',
+          idToken: 'test123456789',
+          accessToken: 'test123456789',
+          locale: 'en'
+        },
         headers: {
-          Action: 'USER_CREATE_SOCIAL',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY
+          Action: 'USER_CREATE_SOCIAL'
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.headers.Action.should.equal('UserCreateSocial')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -839,20 +763,16 @@ describe('API tests', () => {
       const dl = dir1.length
 
       const output = {
-        locale: 'en'
-      }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const event = {
-        body: buffer.toString('base64'),
+        body: {
+          locale: 'en'
+        },
         headers: {
           Action: 'USER_DESTROY',
-          Accept: 'application/x-protobuf',
-          'X-API-Key': API_KEY,
           Authorization: `Bearer ${o.tokenId}`
         }
       }
-
-      const res = await response(event)
+      const buffer = await encodeRequest(output, messageType).catch((e) => e)
+      const res = await response(buffer.toString('base64'))
       res.body.should.be.equal('CgJvaw==')
       res.headers.Action.should.equal('UserDestroy')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')

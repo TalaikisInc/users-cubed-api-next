@@ -8,7 +8,7 @@ strictEqual(typeof process.env.MAILGUN_DOMAIN, 'string', 'You need MAILGUN_DOMAI
 strictEqual(typeof process.env.MAILGUN_KEY, 'string', 'You need MAILGUN_KEY!')
 strictEqual(typeof process.env.ENCRYPTION_SALT, 'string', 'You need ENCRYPTION_SALT!')
 strictEqual(typeof process.env.ENCRYPTION_PASSWORD, 'string', 'You need ENCRYPTION_PASSWORD!')
-strictEqual(typeof process.env.USERS_BUCKET_NAME, 'string', 'You need USERS_BUCKET_NAME!')
+strictEqual(typeof process.env.BUCKET, 'string', 'You need USERS_BUCKET_NAME!')
 strictEqual(typeof process.env.AUTH0_CLIENT_ID, 'string', 'You need AUTH0_CLIENT_ID!')
 strictEqual(typeof process.env.AUTH0_DOMAIN, 'string', 'You need AUTH0_CLIENT_ID!')
 strictEqual(typeof process.env.S3_ACCESS_KEY, 'string', 'You need S3_ACCESS_KEY!')
@@ -56,7 +56,7 @@ export const ENCRYPTION_SALT = process.env.ENCRYPTION_SALT
 
 export const ENCRYPTION_PASSWORD = process.env.ENCRYPTION_PASSWORD
 
-export const USERS_BUCKET_NAME = process.env.USERS_BUCKET_NAME
+export const USERS_BUCKET_NAME = process.env.BUCKET
 
 export const WORKERS = {
   tokenClean: 60 * 60,

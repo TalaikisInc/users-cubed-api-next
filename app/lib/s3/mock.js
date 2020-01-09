@@ -2,8 +2,7 @@ import { promisify } from 'util'
 import { resolve } from 'path'
 import AWSMock from 'mock-aws-s3'
 
-import { USERS_BUCKET_NAME, ENCRYPTION_PASSWORD } from '../../config'
-import { md5 } from '../security'
+import { USERS_BUCKET_NAME } from '../../config'
 const s3db = {}
 AWSMock.config.basePath = resolve(__dirname, '../../../tests/buckets')
 const s3 = AWSMock.S3({ params: { Bucket: USERS_BUCKET_NAME } })
@@ -35,32 +34,11 @@ const _put = (params, done) => {
   })
 }
 
-const _saveUser = async (id, data, role, done) => {
-  const s = typeof data === 'object' ? JSON.stringify(data) : data
-  const params = {
-    Body: Buffer.from(s),
-    Bucket: USERS_BUCKET_NAME,
-    Key: id,
-    ServerSideEncryption: 'AES256',
-    ContentMD5: md5(s),
-    SSECustomerKey: Buffer.from(ENCRYPTION_PASSWORD),
-    SSECustomerKeyMD5: md5(ENCRYPTION_PASSWORD),
-    Tagging: `role=${role}`
-  }
-  _put(params, done)
-}
-
-const saveUser = promisify(_saveUser)
-
 const _save = async (id, data, done) => {
   const s = typeof data === 'object' ? JSON.stringify(data) : data
   const params = {
     Body: Buffer.from(s),
     Bucket: USERS_BUCKET_NAME,
-    ServerSideEncryption: 'AES256',
-    ContentMD5: md5(s),
-    SSECustomerKey: Buffer.from(ENCRYPTION_PASSWORD),
-    SSECustomerKeyMD5: md5(ENCRYPTION_PASSWORD),
     Key: id
   }
   _put(params, done)
@@ -124,7 +102,6 @@ const _list = (dir, done) => {
 const listItems = promisify(_list)
 
 s3db.getData = getData
-s3db.saveUser = saveUser
 s3db.save = save
 s3db.remove = remove
 s3db.multiRemove = multiRemove

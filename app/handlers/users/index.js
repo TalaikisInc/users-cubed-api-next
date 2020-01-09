@@ -53,9 +53,9 @@ export const getUser = async (data, final) => {
   const valid = await userGet.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch((e) => final({ s: 403, e }))
+    const tokenData = await auth(data).catch((e) => final(null, { s: 403, e }))
     if (tokenData) {
-      const u = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.cannot_read') }))
+      const u = await db.read('users', tokenData.email).catch(() => final(null, { s: 400, e: t('error.cannot_read') }))
       delete u.password
       const o = {
         email: u.email,
@@ -79,10 +79,10 @@ export const getUser = async (data, final) => {
       }
       final(null, { s: 200, o })
     } else {
-      final({ s: 400, e: t('error.no_user') })
+      final(null, { s: 400, e: t('error.no_user') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
 
@@ -117,13 +117,13 @@ export const genUser = async (data, final) => {
   const valid = await createSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const u = await user(data).catch(() => final({ s: 400, e: t('error.required') }))
+    const u = await user(data).catch(() => final(null, { s: 400, e: t('error.required') }))
     if (u.email && u.password && u.tosAgreement) {
       const exists = await db.read('users', u.email).catch(async () => {
-        const hashedPassword = await hash(u.password).catch(() => final({ s: 400, e: t('error.hash') }))
+        const hashedPassword = await hash(u.password).catch(() => final(null, { s: 400, e: t('error.hash') }))
         if (hashedPassword) {
-          const ls = await db.listDir('users').catch(() => final({ s: 400, e: t('error.user_create') }))
-          const role = ls.length === 0 ? ROLES[1] : ROLES[0]
+          const ls = await db.listDir('users').catch(() => final(null, { s: 400, e: t('error.user_create') }))
+          const role = !ls || (ls && ls.length === 0) ? ROLES[1] : ROLES[0]
           const now = Date.now()
           const newObj = {
             firstName: u.firstName ? u.firstName : '',
@@ -150,29 +150,29 @@ export const genUser = async (data, final) => {
             role
           }
 
-          await db.create('users', u.email, newObj).catch(() => final({ s: 400, e: t('error.user_create') }))
+          await db.create('users', u.email, newObj).catch(() => final(null, { s: 400, e: t('error.user_create') }))
           if (FIRST_CONFIRM === 'email') {
-            await sendEmailConfirmation(u.email).catch(() => final({ s: 400, e: t('error.email') }))
+            await sendEmailConfirmation(u.email).catch(() => final(null, { s: 400, e: t('error.email') }))
             final(null, { s: 200, o: { status: 'ok' } })
           }
 
           if (FIRST_CONFIRM === 'phone') {
-            await sendPhoneConfirmation(u.phone, u.email).catch(() => final({ s: 400, e: t('error.sms') }))
+            await sendPhoneConfirmation(u.phone, u.email).catch(() => final(null, { s: 400, e: t('error.sms') }))
             final(null, { s: 200, o: { status: 'ok' } })
           }
         } else {
-          final({ s: 500, e: t('error.unknown') })
+          final(null, { s: 500, e: t('error.unknown') })
         }
       })
 
       if (exists) {
-        final({ s: 500, e: t('error.user_exists') })
+        final(null, { s: 500, e: t('error.user_exists') })
       }
     } else {
-      final({ s: 400, e: t('error.required') })
+      final(null, { s: 400, e: t('error.required') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
 
@@ -243,14 +243,14 @@ export const edit = async (data, final) => {
   const valid = await userUpdate.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch(() => final({ s: 403, e: t('error.unauthorized') }))
-    const u = await loose(data, data.body.email).catch(async (e) => final({ s: 400, e }))
-    const userData = await db.read('users', tokenData.email).catch(() => final({ s: 500, e: t('error.cannot_read') }))
+    const tokenData = await auth(data).catch(() => final(null, { s: 403, e: t('error.unauthorized') }))
+    const u = await loose(data, data.body.email).catch(async (e) => final(null, { s: 400, e }))
+    const userData = await db.read('users', tokenData.email).catch(() => final(null, { s: 500, e: t('error.cannot_read') }))
     if (userData.confirmed.email || userData.confirmed.phone) {
-      const newData = await editFields(u, userData).catch(() => final({ s: 400, e: t('error.unknown') }))
+      const newData = await editFields(u, userData).catch(() => final(null, { s: 400, e: t('error.unknown') }))
       if (newData) {
-        await db.update('users', tokenData.email, newData).catch(() => final({ s: 500, e: t('error.cannot_update') }))
-        const r = await db.read('users', tokenData.email).catch(() => final({ s: 500, e: t('error.cannot_read') }))
+        await db.update('users', tokenData.email, newData).catch(() => final(null, { s: 500, e: t('error.cannot_update') }))
+        const r = await db.read('users', tokenData.email).catch(() => final(null, { s: 500, e: t('error.cannot_read') }))
         if (r) {
           const o = {
             email: r.email,
@@ -268,14 +268,14 @@ export const edit = async (data, final) => {
           }
           final(null, { s: 200, o })
         } else {
-          final({ s: 500, e: t('error.cannot_read') })
+          final(null, { s: 500, e: t('error.cannot_read') })
         }
       }
     } else {
-      final({ s: 400, e: t('error.confirmed') })
+      final(null, { s: 400, e: t('error.confirmed') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
 
@@ -283,21 +283,21 @@ export const destroyUser = async (data, final) => {
   const valid = await userDestroy.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch(() => final({ s: 403, e: t('error.unauthorized') }))
-    const userData = await db.read('users', tokenData.email).catch(() => final({ s: 403, e: t('error.cannot_read') }))
+    const tokenData = await auth(data).catch(() => final(null, { s: 403, e: t('error.unauthorized') }))
+    const userData = await db.read('users', tokenData.email).catch(() => final(null, { s: 403, e: t('error.cannot_read') }))
     if (userData) {
       const refs = typeof userData.referred === 'object' && Array.isArray(userData.referred) ? userData.referred : []
-      await db.destroy('users', tokenData.email).catch(() => final({ s: 400, e: t('error.user_delete') }))
-      const e = await joinedTableDelete('refers', refs).catch(() => final({ s: 400, e: t('error.join_delete') }))
+      await db.destroy('users', tokenData.email).catch(() => final(null, { s: 400, e: t('error.user_delete') }))
+      const e = await joinedTableDelete('refers', refs).catch(() => final(null, { s: 400, e: t('error.join_delete') }))
       // @TODO for each user module - joindelete
       if (!e) {
         final(null, { s: 200, o: { status: 'ok' } })
       }
     } else {
-      final({ s: 400, e: t('error.no_user') })
+      final(null, { s: 400, e: t('error.no_user') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
 
@@ -354,10 +354,10 @@ export const signinSocial = async (data, final) => {
     const email = profile.email
     const emailVerified = profile.email_verified
     const blocked = profile.blocked
-    const _validEmail = await validEmail(email).catch((e) => final({ s: 500, e }))
+    const _validEmail = await validEmail(email).catch((e) => final(null, { s: 500, e }))
 
     if (blocked || !emailVerified || !_validEmail) {
-      final({ s: 400, e: t('error.social') })
+      final(null, { s: 400, e: t('error.social') })
     } else {
       const u = await db.read('users', email).catch(async () => {
         const p = {
@@ -411,19 +411,19 @@ export const signinSocial = async (data, final) => {
           role: ROLES[0]
         }
 
-        await db.create('users', p.email, newObj).catch(() => final({ s: 400, e: t('error.user_create') }))
-        const tokenId = await getUserToken(email, ROLES[0]).catch((e) => final({ s: 400, e }))
+        await db.create('users', p.email, newObj).catch(() => final(null, { s: 400, e: t('error.user_create') }))
+        const tokenId = await getUserToken(email, ROLES[0]).catch((e) => final(null, { s: 400, e }))
         final(null, { s: 200, o: { tokenId } })
       })
 
       if (u) {
         // @TODO update existing profile
-        const tokenId = await getUserToken(u.email, u.role).catch((e) => final({ s: 400, e }))
+        const tokenId = await getUserToken(u.email, u.role).catch((e) => final(null, { s: 400, e }))
         final(null, { s: 200, o: { tokenId } })
       }
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
 
@@ -431,19 +431,19 @@ export const setRole = async (data, final) => {
   const valid = await setRoleSchema.isValid(data.body)
   if (valid) {
     await setLocale(data)
-    const tokenData = await auth(data).catch(() => final({ s: 403, e: t('error.unauthorized') }))
+    const tokenData = await auth(data).catch(() => final(null, { s: 403, e: t('error.unauthorized') }))
     if (tokenData && tokenData.role === ROLES[1]) {
-      const userData = await db.read('users', tokenData.email).catch(() => final({ s: 400, e: t('error.no_user') }))
+      const userData = await db.read('users', tokenData.email).catch(() => final(null, { s: 400, e: t('error.no_user') }))
       userData.role = data.body.role
       tokenData.role = data.body.role
-      await db.update('users', tokenData.email, userData).catch(() => final({ s: 403, e: t('error.cannot_update') }))
-      await db.update('tokens', tokenData.tokenId, tokenData).catch(() => final({ s: 403, e: t('error.cannot_update') }))
+      await db.update('users', tokenData.email, userData).catch(() => final(null, { s: 403, e: t('error.cannot_update') }))
+      await db.update('tokens', tokenData.tokenId, tokenData).catch(() => final(null, { s: 403, e: t('error.cannot_update') }))
       final(null, { s: 200, o: { status: 'ok' } })
     } else {
-      final({ s: 403, e: t('error.unauthorized') })
+      final(null, { s: 403, e: t('error.unauthorized') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
 

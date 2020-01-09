@@ -12,17 +12,17 @@ export default async (data, final) => {
       await setLocale(locale)
     }
 
-    const valid = await validEmail(data.body.email).catch(() => final({ s: 400, e: t('error.invalid_email') }))
+    const valid = await validEmail(data.body.email).catch(() => final(null, { s: 400, e: t('error.invalid_email') }))
     if (valid) {
       const subject = `Message from: ${data.body.name}`
       const e = await sendEmail(data.body.email, subject, data.body.msg)
       if (!e) {
-        final({ s: 200, o: { status: 'ok' } })
+        final(null, { s: 200, o: { status: 'ok' } })
       }
     } else {
-      final({ s: 400, e: t('error.invalid_email') })
+      final(null, { s: 400, e: t('error.invalid_email') })
     }
   } else {
-    final({ s: 400, e: t('error.required') })
+    final(null, { s: 400, e: t('error.required') })
   }
 }
