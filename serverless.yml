@@ -9,6 +9,7 @@ plugins:
   # - serverless-plugin-log-retention
   # - serverless-plugin-aws-alerts
   - serverless-offline
+  - serverless-iam-roles-per-function
 provider:
   name: aws
   region: ${env:REGION}
@@ -21,11 +22,15 @@ provider:
   allowed-stages:
     - dev
     - prod
+  iamRoleStatementsName: cubed-${env:STAGE}-${self:app}-lambdaRole
   iamRoleStatements:
     - Effect: Allow
       Action:
-       - s3:*
-      Resource: "arn:aws:s3:::${self:custom.bucket}/*"
+       - s3:GetObject
+       - s3:PutObject
+       - s3:DeleteObject
+       - s3:ListBucket
+      Resource: "*"
   apiKeys:
     - name: API_KEY
       value: ${env:API_KEY}
@@ -78,9 +83,6 @@ functions:
       STRIPE_LIVE_SECRET: ${env:STRIPE_LIVE_SECRET}
       AUTH0_DOMAIN: ${env:AUTH0_DOMAIN}
       AUTH0_CLIENT_ID: ${env:AUTH0_CLIENT_ID}
-      S3_ACCESS_KEY: ${env:S3_ACCESS_KEY}
-      S3_ACCESS_SECRET: ${env:S3_ACCESS_SECRET}
-      S3_REGION: ${env:S3_REGION}
       ENCRYPTION_SALT: ${env:ENCRYPTION_SALT}
       ENCRYPTION_PASSWORD: ${env:ENCRYPTION_PASSWORD}
       API_KEY: ${env:API_KEY}

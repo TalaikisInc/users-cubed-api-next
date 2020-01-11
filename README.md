@@ -110,7 +110,7 @@ You should secure store for your secret environment variables. This is not imple
 
 Primary:
 
-* fix s3-lambda permissions, encryption, response
+* fix encryption, response
 * Finish modules API (1) when creating user -> query for schema (2) finish admin actions
 * Test email / password / phone change
 * Update existing profile when sign in with social

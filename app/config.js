@@ -13,7 +13,6 @@ strictEqual(typeof process.env.AUTH0_CLIENT_ID, 'string', 'You need AUTH0_CLIENT
 strictEqual(typeof process.env.AUTH0_DOMAIN, 'string', 'You need AUTH0_CLIENT_ID!')
 strictEqual(typeof process.env.S3_ACCESS_KEY, 'string', 'You need S3_ACCESS_KEY!')
 strictEqual(typeof process.env.S3_ACCESS_SECRET, 'string', 'You need S3_ACCESS_SECRET!')
-strictEqual(typeof process.env.S3_REGION, 'string', 'You need S3_REGION!')
 strictEqual(typeof process.env.API_KEY, 'string', 'You need API_KEY!')
 
 export const MOBILE_PROVIDER = 'twilio'
@@ -69,10 +68,6 @@ export const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN
 export const REDIRECT_URL = `${FRONTEND_URL}/dashboard`
 
 export const LANGUAGES = ['en', 'fr']
-
-export const S3_ACCESS_KEY = process.env.AWS_ACCESS_KEY_ID
-export const S3_ACCESS_SECRET = process.env.AWS_SECRET_ACCESS_KEY
-export const S3_REGION = process.env.S3_REGION
 export const UPLOAD_TABLE = 'avatars'
 
 export const API_KEY = process.env.API_KEY

@@ -5,7 +5,7 @@ AWS.config.apiVersions = {
   s3: '2006-03-01',
   accessKeyId: process.env.S3_ACCESS_KEY,
   secretAccessKey: process.env.S3_ACCESS_SECRET,
-  region: process.env.S3_REGION
+  region: process.env.REGION
 }
 const s3 = new AWS.S3()
 const { user } = require('./schemas')
@@ -69,12 +69,12 @@ const _setEncryption = (done) => {
 
 const setEncryption = promisify(_setEncryption)
 
-// The base64-encoded 128-bit MD5 digest of the server-side encryption configuration. This parameter is auto-populated when using the command from the CLI.
-
 const init = async () => {
-  console.log('Creating bucket...')
-  const res = await createBucket().catch((e) => console.log(e.message))
-  console.log(res)
+  // console.log('Creating bucket...')
+  // const res = await createBucket().catch((e) => console.log(e.message))
+  // console.log(res)
+  console.log('Setting encryption...')
+  await setEncryption()
   // console.log('Creating schema...')
   // await save('schemas/user', user).catch((e) => console.log(e.message))
 }

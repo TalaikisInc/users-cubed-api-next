@@ -65,7 +65,7 @@ const _decrypt = (encrypted, key, iv, done) => {
 }
 
 export const md5 = (data) => {
-  return createHash('md5').update(data).digest('hex')
+  return createHash('md5').update(data).digest('base64')
 }
 
 export const encrypt = promisify(_encrypt)

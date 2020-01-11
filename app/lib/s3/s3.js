@@ -1,15 +1,8 @@
 import AWS from 'aws-sdk'
 import { promisify } from 'util'
 
-import { USERS_BUCKET_NAME, S3_ACCESS_KEY, S3_ACCESS_SECRET, S3_REGION } from '../../config'
-/*
-AWS.config.apiVersions = {
-  s3: '2006-03-01',
-  accessKeyId: S3_ACCESS_KEY,
-  secretAccessKey: S3_ACCESS_SECRET,
-  region: S3_REGION
-}
-*/
+import { USERS_BUCKET_NAME } from '../../config'
+import { md5 } from '../security'
 const s3 = new AWS.S3()
 const s3db = {}
 
@@ -21,7 +14,6 @@ const _getData = (id, done) => {
 
   s3.getObject(params, (err, data) => {
     if (err) {
-      console.log(err)
       done(err.message)
     } else {
       const o = JSON.parse(data.Body.toString('utf8'))
@@ -37,6 +29,9 @@ const _save = async (id, data, done) => {
   const params = {
     Body: Buffer.from(s),
     Bucket: USERS_BUCKET_NAME,
+    ServerSideEncryption: 'AES256',
+    StorageClass: 'STANDARD_IA',
+    ContentMD5: md5(s),
     Key: id
   }
   s3.putObject(params, (err, data) => {
