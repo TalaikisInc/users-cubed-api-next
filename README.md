@@ -31,22 +31,16 @@ Tech features:
 
 ## API Clients
 
-All requests should have following headers:
+All requests should have following headers inside encoded body*:
 
 * X-API-Key
-* Accept `application/x-protobuf`
+* Action
 
 User's requests (edit, sign out, profile edit, etc.) should have additional token*:
 
 * Authorization `Bearer ...`
 
-The request schemas are in `app/lib/schemas/requests`
-
-All API responses have `Action` header with `messageType` for frontend decoding.
-
-All requests from frontend should have `Action` header* for routing.
-
-Response dates should be converted with `parseInt(decoded.dateField, 10)`
+The request body schemas are in `app/lib/schemas/requests`
 
 * Headers should be object in the body, e.g. `{ body: { bodyField: 'a' }, headers: { .... }}`, so not only body can be encoded, but also client side custom headers (e.g. `Action`).
 
