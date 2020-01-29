@@ -1,0 +1,5 @@
+syntax="proto3";
+
+message UserDestroy {
+  string status = 1;
+}

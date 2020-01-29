@@ -29,7 +29,6 @@ const social = {
 module.exports.userObj = {
   firstName: '',
   lastName: '',
-  dialCode: '',
   phone: '',
   email: '',
   tosAgreement: false,

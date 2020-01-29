@@ -1,6 +1,0 @@
-syntax="proto3";
-
-message ModuleMigrate {
-  string field = 1;
-  string locale = 2;
-}

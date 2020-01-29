@@ -1,5 +1,0 @@
-syntax="proto3";
-
-message SetRole {
-  string status = 1;
-}

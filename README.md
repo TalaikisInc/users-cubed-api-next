@@ -68,6 +68,8 @@ npm install -g serverless
 npm i
 ```
 
+Note, some libraries should be built for Linux environment. On Windows 10 Linux bash they can be rebuilt using: `npm i --force`
+
 ## Deploy
 
 ```bash
@@ -121,6 +123,7 @@ Primary:
 Other:
 
 * HTML email templates
+* move to SQS for notifications
 * Phone confirm
 * Cleanup for old data (not confirmed users) in S3
 * Shop categories

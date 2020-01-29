@@ -1,5 +1,0 @@
-syntax="proto3";
-
-message UserCreateSocial {
-  string tokenId = 1;
-}

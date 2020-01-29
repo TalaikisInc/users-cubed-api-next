@@ -1,0 +1,51 @@
+syntax="proto3";
+
+message UserGet {
+  string email = 1;
+  string firstName = 2;
+  string lastName = 3;
+  string phone = 4;
+  string address = 5;
+  string zipCode = 6;
+  string city = 7;
+  string country = 8;
+  string dob = 9;
+  string avatarUrl = 10;
+  string role = 11;
+  // Confirmed confirmed = 11;
+  // Social social = 12;
+
+  /*
+  message Confirmed {
+    bool email = 1;
+    bool phone = 2;
+  }
+  
+  message SocialItem {
+      string idToken = 1;
+      string accessToken = 2;
+      string nickname = 3;
+      string picture = 4;
+      string email = 5;
+      bool email_verified = 6;
+      string given_name = 7;
+      string family_name = 8;
+      string name = 9;
+      string phone_number = 10;
+      bool phone_verified = 11;
+      bool blocked = 12;
+      string last_ip = 13;
+      int64 created_at = 14;
+      int64 updated_at = 15;
+      string user_id = 16;
+  }
+
+  message Social {
+    SocialItem auth0 = 1;
+    SocialItem facebok = 2;
+    SocialItem google = 3;
+    SocialItem twitter = 4;
+    SocialItem linkedin = 5;
+  }
+  */
+}

@@ -1,7 +1,6 @@
-import { resolve } from 'path'
+import { join } from 'path'
 import { randomBytes } from 'crypto'
 import AWSMock from 'mock-aws-s3'
-import { describe, it, before, after, afterEach } from 'mocha'
 import faker from 'faker'
 // import request from 'supertest'
 import Jm from 'js-meter'
@@ -11,33 +10,36 @@ import { readFileSync, readdirSync, writeFileSync } from 'fs'
 import rimraf from 'rimraf'
 
 import { USERS_BUCKET_NAME } from '../app/config'
-import { encode, decode, encodeRequest, decodeResponse } from '../app/lib/proto'
+import { encode, decode, encodeRequest, decodeResponse, sendErr, encodeBody, decodeBody, sendOk, responseConstructor } from '../app/lib/proto'
 import { handlers, handlerSchema } from '../app/handlers'
-import { dialCodeSchema, countriesSchema, dialCodes, countries } from '../app/lib/schemas'
+import { countriesSchema, countries } from '../app/lib/schemas'
 import { en, langSchema } from '../app/lib/translations/locales/en'
 import { setLocale, t } from '../app/lib/translations'
-import { validEmail, _request, sendErr, sendOk, finalizeRequest, response } from '../app/lib/utils'
-import { randomID, tokenHeader, hash, md5, uuidv4, xss, encrypt, decrypt } from '../app/lib/security'
+import { validEmail, _request, finalizeRequest } from '../app/lib/utils'
+import { randomID, tokenHeader, hash, uuidv4, xss, encrypt, decrypt } from '../app/lib/security'
 import db, { joinedTableDelete } from '../app/lib/db'
 import { _mailgun } from '../app/lib/email/mailgun'
 import { _twilio } from '../app/lib/phone/twilio'
-require('dotenv').config({ path: resolve(__dirname, '../.env.development') })
+import { camelize } from './helpers'
+require('dotenv').config({ path: join(__dirname, '../.env.development') })
 require('chai')
   .use(require('chai-as-promised'))
   .use(require('chai-asserttype-extra'))
-  .use(require('chai-as-promised'))
   .use(require('chai-json-schema'))
   .use(require('chai-uuid'))
   .use(require('sinon-chai'))
   .should()
-AWSMock.config.basePath = resolve(__dirname, 'buckets')
+AWSMock.config.basePath = join(__dirname, 'buckets')
 const s3 = AWSMock.S3({ params: { Bucket: USERS_BUCKET_NAME } })
 // const server = request('http://localhost:4000')
+const id1 = faker.internet.email()
+const email1 = faker.internet.email().toLowerCase()
+const password1 = faker.internet.password()
 
 describe('API tests', () => {
-  const id1 = faker.internet.email()
-
   before((done) => {
+    const d = join(__dirname, 'buckets', USERS_BUCKET_NAME)
+    rimraf.sync(d)
     const params = { Bucket: USERS_BUCKET_NAME }
     s3.createBucket(params, (err) => {
       if (err) {
@@ -71,7 +73,6 @@ describe('API tests', () => {
     it('Db read should work', (done) => {
       const table = 'users'
       const data = { name: 'John', phone: '+000000000' }
-
       db.read(table, id1)
         .then((d) => {
           d.should.be.deep.equal(data)
@@ -171,11 +172,6 @@ describe('API tests', () => {
       done()
     })
 
-    it('Test dial codes object', (done) => {
-      dialCodes.should.be.jsonSchema(dialCodeSchema)
-      done()
-    })
-
     it('Test translations object', (done) => {
       en.should.be.jsonSchema(langSchema)
       done()
@@ -184,16 +180,16 @@ describe('API tests', () => {
 
   describe('Responses', () => {
     it('Send error should work', async () => {
-      const res = await sendErr(400, 'Test Error')
+      const res = await sendErr(555, 'Test Error')
       res.body.should.be.equal('CgpUZXN0IEVycm9y')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
-      res.statusCode.should.be.equal(400)
+      res.statusCode.should.be.equal(555)
       res.isBase64Encoded.should.be.equal(true)
     })
 
     it('Send ok status should work', async () => {
       const res = await sendOk()
-      res.body.should.be.equal('CgJPaw==')
+      res.body.should.be.equal('CgJvaw==')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
@@ -241,13 +237,6 @@ describe('API tests', () => {
           done()
         })
         .catch((e) => done(e))
-    })
-
-    it('MD5 should work', (done) => {
-      const data = 'test string 123456789 ###@~'
-      const m = md5(data)
-      m.should.be.equal('c20e23fd5e8994922eea49239a9a2131')
-      done()
     })
 
     it('Uuidv4 should work correctly', (done) => {
@@ -324,20 +313,22 @@ describe('API tests', () => {
   })
 
   it('Should encode and decode protobuffers', async () => {
-    const action = 'USER_CREATE'
     const email = faker.internet.email()
     const password = faker.internet.password()
-    const messageType = 'DecoderTest'
     const output = {
-      action,
-      email,
-      password,
-      tosAgreement: true
+      body: {
+        email,
+        password,
+        tosAgreement: '1'
+      },
+      headers: {
+        test: 'test'
+      }
     }
-    const buffer = await encode(output, messageType).catch((e) => e)
-    const str = buffer.toString('base64')
-    str.should.be.string()
-    const obj = await decode(str, messageType).catch((e) => e)
+    const buffer = await encodeBody(output).catch((e) => e)
+    buffer.should.be.string()
+    buffer.should.not.be.equal('Error encoding')
+    const obj = await decodeBody(buffer).catch((e) => e)
     obj.should.be.deep.equal(output)
   })
 
@@ -349,10 +340,10 @@ describe('API tests', () => {
       password: true,
       tosAgreement: 'test'
     }
-    encode(output, messageType)
+    const handler = require(join(__dirname, '../app', 'lib', 'schemas', 'requests', `${camelize(messageType)}.js`))
+    encode(handler, output)
       .then((buffer) => {
-        const str = buffer.toString('base64')
-        str.should.be.string()
+        buffer.should.be.string()
         done()
       })
       .catch(() => done())
@@ -366,11 +357,12 @@ describe('API tests', () => {
       password: true,
       tosAgreement: 'test'
     }
-    encode(output, messageType)
+    const handler = require(join(__dirname, '../app', 'lib', 'schemas', 'requests', `${camelize(messageType)}.js`))[messageType]
+    encode(handler, output)
       .then((buffer) => {
-        const str = buffer.toString('base64')
-        ;(typeof str).should.be.equal('string')
-        decode(str, messageType)
+        const handler = require(join(__dirname, '../app', 'lib', 'schemas', 'responses', `${camelize(messageType)}.js`))[messageType]
+        ;(typeof buffer).should.be.equal('string')
+        decode(handler, buffer)
           .then((obj) => {
             obj.should.be.deep.equal(output)
             done()
@@ -381,11 +373,7 @@ describe('API tests', () => {
   })
 
   describe('User', () => {
-    const email1 = faker.internet.email()
-    const password1 = faker.internet.password()
-
     it('Should create user', async () => {
-      const messageType = handlers['USER_CREATE'].class
       const output = {
         body: {
           email: email1,
@@ -397,8 +385,14 @@ describe('API tests', () => {
           Action: 'USER_CREATE'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const event = {
+        body: {
+          body: buffer
+        },
+        headers: output.headers
+      }
+      const res = await responseConstructor(event)
       res.body.should.equal('CgJvaw==')
       res.headers.Action.should.equal('UserCreate')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
@@ -407,7 +401,6 @@ describe('API tests', () => {
     })
 
     it('Handler lifecycle should return errors', async () => {
-      const messageType = handlers['USER_CREATE'].class
       const output = {
         body: {
           email: 'a',
@@ -419,8 +412,8 @@ describe('API tests', () => {
           Action: 'USER_CREATE'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.body.should.equal('ChhNaXNzaW5nIHJlcXVpcmVkIGZpZWxkcy4=')
       res.headers.Action.should.equal('Error')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
@@ -429,10 +422,9 @@ describe('API tests', () => {
     })
 
     it('Should confirm account', async () => {
-      const messageType = handlers['CONFIRM'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'confirms')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'confirms')
       const dir = readdirSync(d)
-      const f = readFileSync(resolve(d, dir[0]), 'utf8')
+      const f = readFileSync(join(d, dir[0]), 'utf8')
       const o = JSON.parse(f)
       o.email.should.be.equal(email1)
       o.expiry.should.be.above(Date.now())
@@ -447,8 +439,8 @@ describe('API tests', () => {
           Action: 'CONFIRM'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.body.should.equal('CgJvaw==')
       res.headers.Action.should.equal('Confirm')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
@@ -457,8 +449,6 @@ describe('API tests', () => {
     })
 
     it('Should sign in', async () => {
-      const messageType = handlers['TOKEN_CREATE'].class
-
       const output = {
         body: {
           email: email1,
@@ -469,11 +459,11 @@ describe('API tests', () => {
           Action: 'TOKEN_CREATE'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const f = readFileSync(resolve(d, dir[0]), 'utf8')
+      const f = readFileSync(join(d, dir[0]), 'utf8')
       const o = JSON.parse(f)
       o.expiry.should.be.above(Date.now())
       o.tokenId.should.be.equal(dir[0])
@@ -487,10 +477,9 @@ describe('API tests', () => {
     })
 
     it('Should get token', async () => {
-      const messageType = handlers['TOKEN_GET'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const f = readFileSync(resolve(d, dir[0]), 'utf8')
+      const f = readFileSync(join(d, dir[0]), 'utf8')
       const o = JSON.parse(f)
 
       const output = {
@@ -502,8 +491,8 @@ describe('API tests', () => {
           Action: 'TOKEN_GET'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('TokenGet')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -511,10 +500,9 @@ describe('API tests', () => {
     })
 
     it('Should extend token', async () => {
-      const messageType = handlers['TOKEN_EXTEND'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const f = readFileSync(resolve(d, dir[0]), 'utf8')
+      const f = readFileSync(join(d, dir[0]), 'utf8')
       const o = JSON.parse(f)
       const expiry = o.expiry
 
@@ -527,23 +515,22 @@ describe('API tests', () => {
           Action: 'TOKEN_EXTEND'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('TokenExtend')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
-      const f1 = readFileSync(resolve(d, dir[0]), 'utf8')
+      const f1 = readFileSync(join(d, dir[0]), 'utf8')
       const o1 = JSON.parse(f1)
       const newExpiry = o1.expiry
       newExpiry.should.be.above(expiry)
     })
 
     it('Should set role', async () => {
-      const messageType = handlers['SET_ROLE'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const fPath = resolve(d, dir[0])
+      const fPath = join(d, dir[0])
       const f = readFileSync(fPath, 'utf8')
       const o = JSON.parse(f)
       o.role = 'admin'
@@ -562,22 +549,21 @@ describe('API tests', () => {
           Authorization: `Bearer ${o.tokenId}`
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('SetRole')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
-      const f2 = readFileSync(resolve(d, dir[0]), 'utf8')
+      const f2 = readFileSync(join(d, dir[0]), 'utf8')
       const o2 = JSON.parse(f2)
       o2.role.should.be.equal('user')
     })
 
     it('Should get own account', async () => {
-      const messageType = handlers['USER_GET'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const fPath = resolve(d, dir[0])
+      const fPath = join(d, dir[0])
       const f = readFileSync(fPath, 'utf8')
       const o = JSON.parse(f)
 
@@ -591,34 +577,33 @@ describe('API tests', () => {
         }
       }
       const m = new Jm({ isPrint: true, isKb: true })
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('UserGet')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
-      const decoded = await decodeResponse(res.body, messageType).catch((e) => e)
+      const handler = require('../app/lib/schemas/responses/userGet.js').UserGet
+      const decoded = await decodeResponse(handler, res.body).catch((e) => e)
       const meter = m.stop()
       console.log(meter)
-      decoded.confirmed.email.should.be.equal(true)
+      decoded.email.should.be.equal(o.email)
     })
 
     it('Should edit user', async () => {
       const firstName = faker.name.firstName()
       const lastName = faker.name.lastName()
-      const messageType = handlers['USER_EDIT'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const fPath = resolve(d, dir[0])
+      const fPath = join(d, dir[0])
       const f = readFileSync(fPath, 'utf8')
       const o = JSON.parse(f)
 
       const output = {
         body: {
           email: '',
-          firstName: firstName,
-          lastName: lastName,
-          dialCode: '',
+          firstName,
+          lastName,
           phone: '',
           address: '',
           zipCode: '',
@@ -634,23 +619,23 @@ describe('API tests', () => {
         }
       }
 
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('UserEdit')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
-      const decoded = await decodeResponse(res.body, messageType).catch((e) => e)
+      const handler = require('../app/lib/schemas/responses/userEdit.js').UserEdit
+      const decoded = await decodeResponse(handler, res.body).catch((e) => e)
       decoded.firstName.should.be.equal(firstName)
       decoded.lastName.should.be.equal(lastName)
       decoded.email.should.be.equal(o.email)
     })
 
     it('Should sign out', async () => {
-      const messageType = handlers['TOKEN_DESTROY'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const fPath = resolve(d, dir[0])
+      const fPath = join(d, dir[0])
       const f = readFileSync(fPath, 'utf8')
       const o = JSON.parse(f)
 
@@ -663,8 +648,8 @@ describe('API tests', () => {
           Authorization: `Bearer ${o.tokenId}`
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('TokenDestroy')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
@@ -674,8 +659,7 @@ describe('API tests', () => {
     })
 
     it('Should reset password', async () => {
-      const messageType = handlers['RESET_CREATE'].class
-      const d1 = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'confirms')
+      const d1 = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'confirms')
       rimraf.sync(d1)
 
       const output = {
@@ -687,22 +671,21 @@ describe('API tests', () => {
           Action: 'RESET_CREATE'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('ResetCreate')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
+
       const dir1 = readdirSync(d1)
-      const fPath1 = resolve(d1, dir1[0])
+      const fPath1 = join(d1, dir1[0])
       const f1 = readFileSync(fPath1, 'utf8')
       const o1 = JSON.parse(f1)
       o1.email.should.be.equal(email1)
       o1.type.should.be.equal('reset')
       o1.expiry.should.be.above(Date.now())
       const token = o1.token
-      const messageType1 = handlers['CONFIRM'].class
-
       const output1 = {
         body: {
           token,
@@ -712,8 +695,8 @@ describe('API tests', () => {
           Action: 'CONFIRM'
         }
       }
-      const buffer1 = await encodeRequest(output1, messageType1).catch((e) => e)
-      const res1 = await response(buffer1.toString('base64'))
+      const buffer1 = await encodeBody(output1).catch((e) => e)
+      const res1 = await responseConstructor({ body: { body: buffer1, headers: output1.headers } })
       res1.body.should.equal('CgJvaw==')
       res1.headers.Action.should.equal('Confirm')
       res1.headers['Content-Type'].should.be.equal('application/x-protobuf')
@@ -722,8 +705,7 @@ describe('API tests', () => {
     })
 
     it('Should sign in with social', async () => {
-      const messageType = handlers['USER_CREATE_SOCIAL'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
 
       const output = {
         body: {
@@ -736,14 +718,14 @@ describe('API tests', () => {
           Action: 'USER_CREATE_SOCIAL'
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.headers.Action.should.equal('UserCreateSocial')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')
       res.statusCode.should.be.equal(200)
       res.isBase64Encoded.should.be.equal(true)
       const userDir = readdirSync(d)
-      const fPath = resolve(d, userDir[0])
+      const fPath = join(d, userDir[0])
       const f = readFileSync(fPath, 'utf8')
       const o = JSON.parse(f)
       o.expiry.should.be.above(Date.now())
@@ -752,13 +734,12 @@ describe('API tests', () => {
     })
 
     it('Should delete user', async () => {
-      const messageType = handlers['USER_DESTROY'].class
-      const d = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
+      const d = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'tokens')
       const dir = readdirSync(d)
-      const fPath = resolve(d, dir[0])
+      const fPath = join(d, dir[0])
       const f = readFileSync(fPath, 'utf8')
       const o = JSON.parse(f)
-      const d1 = resolve(__dirname, 'buckets', USERS_BUCKET_NAME, 'users')
+      const d1 = join(__dirname, 'buckets', USERS_BUCKET_NAME, 'users')
       const dir1 = readdirSync(d1)
       const dl = dir1.length
 
@@ -771,8 +752,8 @@ describe('API tests', () => {
           Authorization: `Bearer ${o.tokenId}`
         }
       }
-      const buffer = await encodeRequest(output, messageType).catch((e) => e)
-      const res = await response(buffer.toString('base64'))
+      const buffer = await encodeRequest(output).catch((e) => e)
+      const res = await responseConstructor({ body: { body: buffer, headers: output.headers } })
       res.body.should.be.equal('CgJvaw==')
       res.headers.Action.should.equal('UserDestroy')
       res.headers['Content-Type'].should.be.equal('application/x-protobuf')

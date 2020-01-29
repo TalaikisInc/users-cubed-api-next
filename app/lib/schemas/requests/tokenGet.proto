@@ -1,6 +1,0 @@
-syntax="proto3";
-
-message TokenGet {
-  string tokenId = 1;
-  string locale = 2;
-}

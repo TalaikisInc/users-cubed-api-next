@@ -1,0 +1,7 @@
+syntax="proto3";
+
+message UserSetRole {
+  string email = 1;
+  string role = 2;
+  string locale = 3;
+}

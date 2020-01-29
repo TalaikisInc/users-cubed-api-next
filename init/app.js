@@ -70,13 +70,13 @@ const _setEncryption = (done) => {
 const setEncryption = promisify(_setEncryption)
 
 const init = async () => {
-  // console.log('Creating bucket...')
-  // const res = await createBucket().catch((e) => console.log(e.message))
-  // console.log(res)
+  console.log('Creating bucket...')
+  const res = await createBucket().catch((e) => console.log(e.message))
+  console.log(res)
   console.log('Setting encryption...')
   await setEncryption()
-  // console.log('Creating schema...')
-  // await save('schemas/user', user).catch((e) => console.log(e.message))
+  console.log('Creating schema...')
+  await save('schemas/user', user).catch((e) => console.log(e.message))
 }
 
 init()

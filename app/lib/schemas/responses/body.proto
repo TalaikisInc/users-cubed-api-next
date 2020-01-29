@@ -1,6 +1,0 @@
-syntax="proto3";
-
-message Body {
-  map<string, string> body = 1;
-  map<string, string> headers = 2;
-}

@@ -1,5 +1,0 @@
-syntax="proto3";
-
-message ContactUs {
-  string status = 1;
-}

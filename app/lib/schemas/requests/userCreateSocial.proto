@@ -1,8 +1,0 @@
-syntax="proto3";
-
-message UserCreateSocial {
-  string provider = 1;
-  string idToken = 2;
-  string accessToken = 3;
-  string locale = 4;
-}

@@ -1,24 +1,17 @@
-service: users-cubed-api-next
+service: serverless-simple-http-endpoint
 app: users-cubed-api-next
 org: talaikis
 
 plugins:
   - serverless-dotenv-plugin
-  - serverless-apigw-binary
-  # - serverless-api-compression
-  # - serverless-plugin-log-retention
-  # - serverless-plugin-aws-alerts
   - serverless-offline
+  - serverless-plugin-log-retention
   - serverless-iam-roles-per-function
+
 provider:
   name: aws
   region: ${env:REGION}
-  stage: ${env:STAGE}
   runtime: ${env:LAMBDA_RUNTIME}
-  memorySize: 256
-  timeout: 10
-  versionFunctions: false
-  # cfnRole: arn:aws:iam::XXXXXX:role/role
   allowed-stages:
     - dev
     - prod
@@ -30,47 +23,16 @@ provider:
        - s3:PutObject
        - s3:DeleteObject
        - s3:ListBucket
+       - logs:CreateLogGroup
+       - logs:CreateLogStream
+       - logs:PutLogEvents
+       - sns:Publish
       Resource: "*"
-  apiKeys:
-    - name: API_KEY
-      value: ${env:API_KEY}
-  apiGateway:
-    apiKeySourceType: HEADER
-    minimumCompressionSize: 1024
-  usagePlan:
-    quota:
-      limit: 10000
-      offset: 2
-      period: MONTH
-    throttle:
-      burstLimit: 20
-      rateLimit: 10
+
 functions:
-  handler:
-    handler: app/index.handler
+  cubed:
+    handler: index.handler
     name: ${env:LAMBDA_NAME}
-    events:
-      - http:
-          path: /
-          method: post
-          integration: lambda
-          request:
-            passThrough: WHEN_NO_MATCH
-          cors:
-            origin: '*'
-            headers:
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-              - Action
-              - Accept
-              - Access-Control-Allow-Origin
-            allowCredentials: false
-          private: true
-          async: true
     environment:
       HASH_SECRET: ${env:HASH_SECRET}
       TWILIO_FROM: ${env:TWILIO_FROM}
@@ -88,46 +50,29 @@ functions:
       API_KEY: ${env:API_KEY}
       BUCKET: ${env:BUCKET}
       NODE_ENV: ${env:NODE_ENV}
+    events:
+      - http:
+          path: cubed
+          method: post
+          cors: true
+
 custom:
-  # contentCompression: 1024
-  # logRetentionInDays: 30
-  bucket: ${env:BUCKET}
-  apigwBinary:
-    types:
-      - "*/*"
-  #alerts:
-    #dashboards: true
-    #nameTemplate: $[functionName]-$[metricName]-Alarm
-    #topics:
-      #ok: ${self:service}-${opt:stage}-alerts-ok
-      #alarm: ${self:service}-${opt:stage}-alerts-alarm
-      #insufficientData: ${self:service}-${opt:stage}-alerts-insufficientData
-    #definitions:
-      #functionErrors:
-        #period: 300
-      #customAlarm:
-        #description: 'My custom alarm'
-        #namespace: 'AWS/Lambda'
-        #nameTemplate: $[functionName]-Duration-IMPORTANT-Alarm
-        #metric: duration
-        #threshold: 200
-        #statistic: Average
-        #period: 300
-        #evaluationPeriods: 1
-        #datapointsToAlarm: 1
-        #comparisonOperator: GreaterThanOrEqualToThreshold
-    #alarms:
-      #- functionThrottles
-      #- functionErrors
-      #- functionInvocations
-      #- functionDuration
+  logRetentionInDays: 1
   serverless-offline:
     apiKey: ${env:API_KEY}
     port: 4000
+
 package:
   exclude:
     - git/**
-    - test/**
+    - tests/**
     - out/**
     - .nyc_output/**
     - init/
+    - resources
+    - .eslintrc.js
+    - .gitignore
+    - .node-version
+    - .nvmrc
+    - commitlint.config.js
+    - README.md

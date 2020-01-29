@@ -1,5 +1,0 @@
-syntax="proto3";
-
-message UserGet {
-  string locale = 1;
-}

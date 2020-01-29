@@ -1,0 +1,8 @@
+syntax="proto3";
+
+message Upload {
+  string name = 1;
+  string mimetype = 2;
+  string data = 3;
+  string locale = 4;
+}

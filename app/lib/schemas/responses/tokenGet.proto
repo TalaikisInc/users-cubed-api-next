@@ -1,8 +1,0 @@
-syntax="proto3";
-
-message TokenGet {
-  int64 expiry = 1;
-  string tokenId = 2;
-  string role = 3;
-  string email = 4;
-}
