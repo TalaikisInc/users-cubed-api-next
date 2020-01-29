@@ -112,7 +112,6 @@ You should secure store for your secret environment variables. This is not imple
 
 Primary:
 
-* fix encryption, response
 * Finish modules API (1) when creating user -> query for schema (2) finish admin actions
 * Test email / password / phone change
 * Update existing profile when sign in with social
@@ -125,15 +124,14 @@ Other:
 * HTML email templates
 * move to SQS for notifications
 * Phone confirm
-* Cleanup for old data (not confirmed users) in S3
+* Cleanup for old data (not confirmed users, tokens) in S3
 * Shop categories
 
 Nice to have:
 
-* Move to JSON repositories with S3 Select for more complex schema and query models
-* Move from Auth0 to original clients
+* Complex schemas
 * Get users by role
-* Lambda per handler, monitoring, alarms, SSM, but it's out of scope of this project
+* Lambda per handler, monitoring, alarms
 
 ## Licence
 
