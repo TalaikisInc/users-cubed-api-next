@@ -1532,6 +1532,1158 @@
                     "filename": "tests\\tests.js"
                 }
             ]
+        },
+        {
+            "version": "0.1.7",
+            "counttime": "2020-01-29 22:58:51",
+            "filesum": 190,
+            "codesum": 27911,
+            "commentsum": 472,
+            "blanksum": 1305,
+            "filelist": [
+                {
+                    "blank": 1,
+                    "code": 6,
+                    "comment": 2,
+                    "filename": ".babelrc"
+                },
+                {
+                    "blank": 9,
+                    "code": 27,
+                    "comment": 0,
+                    "filename": ".env.development"
+                },
+                {
+                    "blank": 9,
+                    "code": 26,
+                    "comment": 0,
+                    "filename": ".env.production"
+                },
+                {
+                    "blank": 2,
+                    "code": 29,
+                    "comment": 0,
+                    "filename": ".eslintrc.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": ".gitignore"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".node-version"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".nvmrc"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".nyc_output\\f0c74205-754e-42c0-8e0a-1d41b4670846.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".nyc_output\\processinfo\\f0c74205-754e-42c0-8e0a-1d41b4670846.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 1,
+                    "comment": 0,
+                    "filename": ".nyc_output\\processinfo\\index.json"
+                },
+                {
+                    "blank": 1,
+                    "code": 66,
+                    "comment": 0,
+                    "filename": ".serverless\\cloudformation-template-create-stack.json"
+                },
+                {
+                    "blank": 31,
+                    "code": 594,
+                    "comment": 0,
+                    "filename": ".serverless\\cloudformation-template-update-stack.json"
+                },
+                {
+                    "filename": ".serverless\\custom-resources.zip",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "filename": ".serverless\\serverless-simple-http-endpoint.zip",
+                    "isbinaryfile": true,
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0
+                },
+                {
+                    "blank": 37,
+                    "code": 801,
+                    "comment": 0,
+                    "filename": ".serverless\\serverless-state.json"
+                },
+                {
+                    "blank": 0,
+                    "code": 60,
+                    "comment": 0,
+                    "filename": "actions\\index.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 12,
+                    "comment": 0,
+                    "filename": "api.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "commitlint.config.js"
+                },
+                {
+                    "blank": 19,
+                    "code": 65,
+                    "comment": 1,
+                    "filename": "config.js"
+                },
+                {
+                    "blank": 15,
+                    "code": 24,
+                    "comment": 5,
+                    "filename": "handlers\\blog\\index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "handlers\\blog\\schema.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 61,
+                    "comment": 0,
+                    "filename": "handlers\\confirm\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "handlers\\confirm\\schema.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 25,
+                    "comment": 0,
+                    "filename": "handlers\\contact-us\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "handlers\\contact-us\\schema.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "handlers\\generics\\notFound.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 107,
+                    "comment": 4,
+                    "filename": "handlers\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 29,
+                    "comment": 1,
+                    "filename": "handlers\\module\\index.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 10,
+                    "comment": 0,
+                    "filename": "handlers\\module\\schema.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 16,
+                    "comment": 3,
+                    "filename": "handlers\\notifications\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "handlers\\notifications\\schema.js"
+                },
+                {
+                    "blank": 9,
+                    "code": 101,
+                    "comment": 15,
+                    "filename": "handlers\\refer\\index.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "handlers\\refer\\schema.js"
+                },
+                {
+                    "blank": 10,
+                    "code": 72,
+                    "comment": 0,
+                    "filename": "handlers\\reset\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "handlers\\reset\\schema.js"
+                },
+                {
+                    "blank": 17,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "handlers\\shop\\index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "handlers\\shop\\schema.js"
+                },
+                {
+                    "blank": 6,
+                    "code": 97,
+                    "comment": 0,
+                    "filename": "handlers\\token\\index.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "handlers\\token\\schema.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 24,
+                    "comment": 0,
+                    "filename": "handlers\\upload\\index.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "handlers\\upload\\schema.js"
+                },
+                {
+                    "blank": 43,
+                    "code": 396,
+                    "comment": 3,
+                    "filename": "handlers\\users\\index.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 47,
+                    "comment": 0,
+                    "filename": "handlers\\users\\schema.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "index.js"
+                },
+                {
+                    "blank": 11,
+                    "code": 71,
+                    "comment": 0,
+                    "filename": "init\\app.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 50,
+                    "comment": 0,
+                    "filename": "init\\email.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "init\\index.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 50,
+                    "comment": 0,
+                    "filename": "init\\schemas.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "init\\utils.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "lib\\auth\\index.js"
+                },
+                {
+                    "blank": 9,
+                    "code": 38,
+                    "comment": 0,
+                    "filename": "lib\\db\\functions.js"
+                },
+                {
+                    "blank": 5,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "lib\\db\\index.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "lib\\email\\index.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 35,
+                    "comment": 3,
+                    "filename": "lib\\email\\mailgun.js"
+                },
+                {
+                    "blank": 4,
+                    "code": 34,
+                    "comment": 0,
+                    "filename": "lib\\email\\ses.js"
+                },
+                {
+                    "blank": 60,
+                    "code": 453,
+                    "comment": 13,
+                    "filename": "lib\\email\\templates\\password-reset\\content.html"
+                },
+                {
+                    "blank": 12,
+                    "code": 16,
+                    "comment": 1,
+                    "filename": "lib\\email\\templates\\password-reset\\content.txt"
+                },
+                {
+                    "blank": 60,
+                    "code": 407,
+                    "comment": 10,
+                    "filename": "lib\\email\\templates\\receipt\\content.html"
+                },
+                {
+                    "blank": 6,
+                    "code": 11,
+                    "comment": 1,
+                    "filename": "lib\\email\\templates\\receipt\\content.txt"
+                },
+                {
+                    "blank": 60,
+                    "code": 415,
+                    "comment": 12,
+                    "filename": "lib\\email\\templates\\user-confirm\\content.html"
+                },
+                {
+                    "blank": 5,
+                    "code": 8,
+                    "comment": 1,
+                    "filename": "lib\\email\\templates\\user-confirm\\content.txt"
+                },
+                {
+                    "blank": 4,
+                    "code": 37,
+                    "comment": 0,
+                    "filename": "lib\\middleware\\logger.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 3,
+                    "comment": 0,
+                    "filename": "lib\\payments\\index.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 55,
+                    "comment": 0,
+                    "filename": "lib\\payments\\stripe.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 8,
+                    "comment": 0,
+                    "filename": "lib\\phone\\index.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 18,
+                    "comment": 0,
+                    "filename": "lib\\phone\\sns.js"
+                },
+                {
+                    "blank": 6,
+                    "code": 33,
+                    "comment": 0,
+                    "filename": "lib\\phone\\twilio.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 23,
+                    "comment": 0,
+                    "filename": "lib\\proto\\compiler.js"
+                },
+                {
+                    "blank": 16,
+                    "code": 109,
+                    "comment": 6,
+                    "filename": "lib\\proto\\index.js"
+                },
+                {
+                    "blank": 3,
+                    "code": 31,
+                    "comment": 0,
+                    "filename": "lib\\proto\\protoFunctions.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\s3\\index.js"
+                },
+                {
+                    "blank": 18,
+                    "code": 92,
+                    "comment": 0,
+                    "filename": "lib\\s3\\mock.js"
+                },
+                {
+                    "blank": 21,
+                    "code": 136,
+                    "comment": 1,
+                    "filename": "lib\\s3\\s3.js"
+                },
+                {
+                    "blank": 7,
+                    "code": 309,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\index.js"
+                },
+                {
+                    "blank": 16,
+                    "code": 197,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\body.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\body.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\confirm.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\confirm.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\confirmPhone.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\confirmPhone.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 109,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\contactUs.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\contactUs.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 110,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\decoderTest.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\decoderTest.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\moduleCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\moduleCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\moduleMigrate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\moduleMigrate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\notify.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\notify.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\refer.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\refer.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\referRegister.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\referRegister.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\referUse.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\referUse.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\resetCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\resetCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\setRole.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\setRole.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 95,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\tokenCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\tokenCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\tokenDestroy.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\tokenDestroy.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\tokenExtend.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\tokenExtend.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\tokenGet.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\tokenGet.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 109,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\upload.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\upload.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 110,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\userCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\userCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 109,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\userCreateSocial.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\userCreateSocial.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\userDestroy.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\userDestroy.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 221,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\userEdit.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 15,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\userEdit.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\userGet.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\userGet.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 95,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\requests\\userSetRole.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 6,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\requests\\userSetRole.proto"
+                },
+                {
+                    "blank": 16,
+                    "code": 197,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\body.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\body.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\confirm.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\confirm.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\confirmPhone.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\confirmPhone.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\contactUs.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\contactUs.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 110,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\decoderTest.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\decoderTest.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\error.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\error.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\moduleCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\moduleCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\moduleMigrate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\moduleMigrate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\notFound.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\notFound.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\notify.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\notify.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\ok.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\ok.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\refer.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\refer.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\referRegister.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\referRegister.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\referUse.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\referUse.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\resetCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\resetCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\setRole.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\setRole.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\tokenCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\tokenCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\tokenDestroy.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\tokenDestroy.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\tokenExtend.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\tokenExtend.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 110,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\tokenGet.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 7,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\tokenGet.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 81,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\upload.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\upload.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\userCreate.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\userCreate.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\userCreateSocial.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\userCreateSocial.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 67,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\userDestroy.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 4,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\userDestroy.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 207,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\userEdit.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "lib\\schemas\\responses\\userEdit.proto"
+                },
+                {
+                    "blank": 10,
+                    "code": 207,
+                    "comment": 6,
+                    "filename": "lib\\schemas\\responses\\userGet.js"
+                },
+                {
+                    "blank": 2,
+                    "code": 14,
+                    "comment": 35,
+                    "filename": "lib\\schemas\\responses\\userGet.proto"
+                },
+                {
+                    "blank": 21,
+                    "code": 103,
+                    "comment": 0,
+                    "filename": "lib\\security\\index.js"
+                },
+                {
+                    "blank": 9,
+                    "code": 36,
+                    "comment": 1,
+                    "filename": "lib\\sns\\index.js"
+                },
+                {
+                    "blank": 6,
+                    "code": 45,
+                    "comment": 2,
+                    "filename": "lib\\sqs\\index.js"
+                },
+                {
+                    "blank": 6,
+                    "code": 14,
+                    "comment": 0,
+                    "filename": "lib\\translations\\index.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 94,
+                    "comment": 0,
+                    "filename": "lib\\translations\\locales\\en.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "lib\\translations\\locales\\fr.js"
+                },
+                {
+                    "blank": 13,
+                    "code": 80,
+                    "comment": 0,
+                    "filename": "lib\\utils\\index.js"
+                },
+                {
+                    "blank": 0,
+                    "code": 16442,
+                    "comment": 0,
+                    "filename": "package-lock.json"
+                },
+                {
+                    "blank": 3,
+                    "code": 138,
+                    "comment": 0,
+                    "filename": "package.json"
+                },
+                {
+                    "blank": 11,
+                    "code": 28,
+                    "comment": 0,
+                    "filename": "README.md"
+                },
+                {
+                    "blank": 0,
+                    "code": 19,
+                    "comment": 0,
+                    "filename": "resources\\api-gateway-errors.yml"
+                },
+                {
+                    "blank": 5,
+                    "code": 62,
+                    "comment": 12,
+                    "filename": "serverless.yml"
+                },
+                {
+                    "blank": 0,
+                    "code": 0,
+                    "comment": 0,
+                    "filename": "tests\\buckets\\.gitkeep"
+                },
+                {
+                    "blank": 1,
+                    "code": 16,
+                    "comment": 0,
+                    "filename": "tests\\helpers\\index.js"
+                },
+                {
+                    "blank": 1,
+                    "code": 5,
+                    "comment": 0,
+                    "filename": "tests\\index.js"
+                },
+                {
+                    "blank": 61,
+                    "code": 690,
+                    "comment": 40,
+                    "filename": "tests\\tests.js"
+                }
+            ]
         }
     ]
 }

@@ -51,7 +51,7 @@ export const COMPANY = 'Talaikis Ltd.'
 
 export const FIRST_CONFIRM = 'email'
 
-export const USER_TOKEN_EXPIRY = 60 * 60 * 15
+export const USER_TOKEN_EXPIRY = 60 * 60 * 24
 
 export const FRONTEND_URL = 'https://cubed.talaikis.com/'
 
