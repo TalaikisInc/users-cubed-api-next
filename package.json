@@ -48,7 +48,7 @@
     "mock-aws-s3": "^3.0.0",
     "protocol-buffers-encodings": "^1.1.0",
     "stripe": "^8.7.0",
-    "validator": "^12.2.0",
+    "validator": "^13.7.0",
     "xss-filters": "^1.2.7",
     "yup": "^0.28.0"
   },
