@@ -38,7 +38,7 @@
     "@babel/register": "^7.8.3",
     "@dazn/lambda-powertools-logger": "^1.15.2",
     "@dazn/lambda-powertools-middleware-stop-infinite-loop": "^1.15.2",
-    "aws-sdk": "^2.610.0",
+    "aws-sdk": "^2.814.0",
     "bluebird": "^3.7.2",
     "frenchkiss": "^0.2.1",
     "handlebars": "^4.7.2",
