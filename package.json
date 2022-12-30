@@ -81,7 +81,7 @@
     "husky": "^4.2.1",
     "js-meter": "^1.1.4",
     "lint-staged": "^10.0.2",
-    "mocha": "^7.0.1",
+    "mocha": "^10.2.0",
     "npm-check-updates": "^4.0.1",
     "nyc": "^15.0.0",
     "protocol-buffers": "^4.1.0",
